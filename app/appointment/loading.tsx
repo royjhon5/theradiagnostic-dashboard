@@ -1,21 +1,20 @@
-"use client";
+import { Loader2 } from "lucide-react";
+import React from "react";
 
-import { Progress } from "@/components/ui/progress";
-import React, { useEffect, useState } from "react";
-
-export default function Loading() {
-  const [progress, setProgress] = useState(13);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prev) => (prev >= 95 ? 95 : prev + 7));
-    }, 300);
-    return () => clearInterval(timer);
-  }, []);
-
+const Loading: React.FC = () => {
   return (
-    <div className="fixed top-0 left-0 w-full z-50">
-      <Progress value={progress} className="h-1 w-full" />
+    <div className="flex flex-row h-full justify-center items-center">
+      <Loader2 size={40} className="animate-spin mr-2" />
+      <span className="flex items-center">
+        Optimizing software
+        <span className="ml-2 flex space-x-1">
+          <span className="dot dot1" />
+          <span className="dot dot2" />
+          <span className="dot dot3" />
+        </span>
+      </span>
     </div>
   );
-}
+};
+
+export default Loading;
