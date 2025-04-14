@@ -1,41 +1,32 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from "react";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from "lexical";
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from 'lexical'
+import { ToolbarContext } from "@/components/editor/context/toolbar-context";
+import { useEditorModal } from "@/components/editor/editor-hooks/use-modal";
 
-import { ToolbarContext } from '@/components/editor/context/toolbar-context'
+export function ToolbarPlugin() {
+  const [editor] = useLexicalComposerContext();
+  const [activeEditor, setActiveEditor] = useState(editor);
+  const [blockType, setBlockType] = useState<string>("paragraph");
+  const [modal, showModal] = useEditorModal();
 
-import { useEditorModal } from '@/components/editor/editor-hooks/use-modal'
-
-export function ToolbarPlugin({
-  children,
-}: {
-  children: (props: {
-    blockType: string
-  }) => React.ReactNode
-}) {
-  const [editor] = useLexicalComposerContext()
-
-  const [activeEditor, setActiveEditor] = useState(editor)
-  const [blockType, setBlockType] = useState<string>('paragraph')
-
-  const [modal, showModal] = useEditorModal()
-
-  const $updateToolbar = () => {}
+  const $updateToolbar = () => {
+    // Add logic here
+  };
 
   useEffect(() => {
     return activeEditor.registerCommand(
       SELECTION_CHANGE_COMMAND,
       (_payload, newEditor) => {
-        setActiveEditor(newEditor)
-        return false
+        setActiveEditor(newEditor);
+        return false;
       },
       COMMAND_PRIORITY_CRITICAL
-    )
-  }, [editor])
+    );
+  }, [activeEditor]);
 
   return (
     <ToolbarContext
@@ -47,8 +38,8 @@ export function ToolbarPlugin({
     >
       {modal}
 
-      {children({ blockType })}
-
+      {/* Render toolbar content directly here */}
+      <div>{blockType}</div>
     </ToolbarContext>
-  )
+  );
 }

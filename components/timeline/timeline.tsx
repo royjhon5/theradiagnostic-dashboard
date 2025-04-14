@@ -116,7 +116,6 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
       icon,
       iconColor,
       status = "completed",
-      connectorColor,
       showConnector = true,
       iconsize,
       loading,
@@ -390,7 +389,6 @@ TimelineTitle.displayName = "TimelineTitle";
 const TimelineIcon = ({
   icon,
   color = "primary",
-  status = "completed",
   iconSize = "md",
 }: {
   icon?: React.ReactNode;
