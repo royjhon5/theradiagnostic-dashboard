@@ -1,5 +1,5 @@
 import { TimelineLayout } from "@/components/timeline/timeline-layout";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import { timelineData } from "../data";
 import { CalendarCheck2 } from "lucide-react";
