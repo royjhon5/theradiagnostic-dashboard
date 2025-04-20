@@ -1,5 +1,9 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import doctorData from "../doctordata.json";
+import { Badge } from "@/components/ui/badge";
+import { IconCircleFilled } from "@tabler/icons-react";
 
 export default function DoctorsListing() {
   return (
@@ -16,72 +20,39 @@ export default function DoctorsListing() {
           <div className="text-sm text-zinc-500 text-center">Specialist</div>
           <div className="text-sm text-zinc-500 text-center">Status</div>
         </div>
-
-        <div className="space-y-3">
-          {/* Doctor 1 */}
-          <div className="grid grid-cols-3 items-center py-2 px-3 bg-zinc-100 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src="/placeholder.svg" alt="Marcus Curtis" />
-                <AvatarFallback>MC</AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-medium text-center">
-                Marcus Curtis
-              </span>
+        <ScrollArea className="h-80">
+          {doctorData.map((doctor, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-3 items-center py-2 px-3"
+            >
+              <div className="flex flex-start gap-2">
+                <Avatar>
+                  <AvatarImage src={doctor.image_avatar} alt="Marcus Curtis" />
+                </Avatar>
+                <span className="text-sm font-small text-center">
+                  {doctor.fullname}
+                </span>
+              </div>
+              <div className="text-sm text-zinc-500 text-center">
+                {doctor.specialist}
+              </div>
+              <div className="flex flex-row justify-center items-center">
+                <Badge variant="outline">
+                  <IconCircleFilled
+                    className={
+                      doctor.status === "active"
+                        ? "animate-pulse fill-green-500 mr-2"
+                        : "fill-red-700 mr-2"
+                    }
+                  />
+                  {doctor.status === "active" ? "Active" : "Offline"}
+                </Badge>
+              </div>
             </div>
-            <div className="text-sm text-zinc-500 text-center">Oncology</div>
-            <div className="text-sm font-medium text-red-500 text-center">
-              Full
-            </div>
-          </div>
-
-          {/* Doctor 2 */}
-          <div className="grid grid-cols-3 items-center py-2 px-3 bg-zinc-100 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src="/placeholder.svg" alt="Gretchen Calzoni" />
-                <AvatarFallback>GC</AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-medium">Gretchen Calzoni</span>
-            </div>
-            <div className="text-sm text-zinc-500 text-center">Dentist</div>
-            <div className="text-sm font-medium text-green-500 text-center">
-              Available
-            </div>
-          </div>
-
-          {/* Doctor 3 */}
-          <div className="grid grid-cols-3 items-center py-2 px-3 bg-zinc-100 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src="/placeholder.svg" alt="Marcus Curtis" />
-                <AvatarFallback>MC</AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-medium">Marcus Curtis</span>
-            </div>
-            <div className="text-sm text-zinc-500 text-center">Neurologist</div>
-            <div className="text-sm font-medium text-red-500 text-center">
-              Full
-            </div>
-          </div>
-
-          {/* Doctor 4 */}
-          <div className="grid grid-cols-3 items-center py-2 px-3 bg-zinc-100 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src="/placeholder.svg" alt="Craig Rosser" />
-                <AvatarFallback>CR</AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-medium">Craig Rosser</span>
-            </div>
-            <div className="text-sm text-zinc-500 text-center">
-              Cardiologist
-            </div>
-            <div className="text-sm font-medium text-green-500 text-center">
-              Available
-            </div>
-          </div>
-        </div>
+          ))}
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </CardContent>
     </Card>
   );

@@ -26,6 +26,7 @@ import {
 import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import newlogo from "../public/logo/logo.png";
+import { CircleUser } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = React.useState<null | {
@@ -88,6 +89,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Accounting",
         url: "#",
         icon: IconMoneybag,
+      },
+      {
+        title: "Account Registration",
+        url: "#",
+        icon: CircleUser,
       },
     ],
   };
