@@ -16,7 +16,6 @@ export function middleware(request: NextRequest) {
 
   const isLoggedIn = user?.username && user?.role;
 
-  // Allow access to login page if not logged in
   if (pathname === "/login" || pathname === "/") {
     if (isLoggedIn) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
@@ -24,7 +23,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Define protected routes and allowed roles
   const protectedRoutes: Record<string, string[]> = {
     "/client_list/registration": ["staff", "doctor"],
     "/client_list": ["staff", "doctor"],
@@ -40,12 +38,10 @@ export function middleware(request: NextRequest) {
     "/settings": ["admin", "doctor", "accountant", "stafff"],
   };
 
-  // Redirect unauthenticated users
   if (!isLoggedIn) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Restrict access based on role
   for (const route in protectedRoutes) {
     if (pathname.startsWith(route)) {
       const allowedRoles = protectedRoutes[route];
