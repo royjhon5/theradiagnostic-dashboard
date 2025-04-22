@@ -4,12 +4,8 @@ import * as React from "react";
 import {
   IconCalendar,
   IconCalendarCheck,
-  IconDashboard,
   IconListCheck,
-  IconMoneybag,
-  IconPrescription,
   IconStethoscope,
-  IconVaccine,
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -23,74 +19,120 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import newlogo from "../public/logo/logo.png";
+import { OtherMenu } from "./other-menu";
+import {
+  BadgeDollarSign,
+  ClipboardMinus,
+  LayoutDashboard,
+  ChartNoAxesCombined,
+  Settings,
+  History,
+  BriefcaseMedical,
+  TestTube,
+} from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [user, setUser] = React.useState<null | {
-    user_metadata?: { full_name?: string; email?: string; avatar_url?: string };
-  }>(null);
+  const [user, setUser] = React.useState({
+    name: "Unknown User",
+    email: "No Email",
+    avatar: "/default-avatar.png",
+    role: "admin",
+  });
   React.useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) {
-        console.error("Error fetching user:", error);
-      } else {
-        setUser(data.user);
+      try {
+        const res = await fetch("/api/user");
+        const data = await res.json();
+        if (data?.user) {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user from cookie:", error);
       }
     };
+
     fetchUser();
   }, []);
-  const data = {
-    user: {
-      name: user?.user_metadata?.full_name ?? "Unknown User",
-      email: user?.user_metadata?.email ?? "No Email",
-      avatar: user?.user_metadata?.avatar_url ?? "/default-avatar.png",
+  const fullNavMain = [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: LayoutDashboard,
+      hideForRoles: ["staff"],
     },
-    navMain: [
-      {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: IconDashboard,
-      },
-      {
-        title: "Appointments",
-        url: "/appointment",
-        icon: IconCalendarCheck,
-      },
-      {
-        title: "Doctors",
-        url: "#",
-        icon: IconStethoscope,
-      },
-      {
-        title: "Pharmacy Data",
-        url: "#",
-        icon: IconPrescription,
-      },
-      {
-        title: "Medical Records",
-        url: "#",
-        icon: IconVaccine,
-      },
-      {
-        title: "Client List",
-        url: "/client_list",
-        icon: IconListCheck,
-      },
-      {
-        title: "Calendar",
-        url: "#",
-        icon: IconCalendar,
-      },
-      {
-        title: "Accounting",
-        url: "#",
-        icon: IconMoneybag,
-      },
-    ],
-  };
+    {
+      title: "Appointments",
+      url: "/appointment",
+      icon: IconCalendarCheck,
+      hideForRoles: ["accountant"],
+    },
+    {
+      title: "Lab Test Management",
+      url: "/lab_test_management",
+      icon: TestTube,
+      hideForRoles: ["staff", "doctor", "accountant"],
+    },
+    {
+      title: "Doctors",
+      url: "/doctors",
+      icon: BriefcaseMedical,
+      hideForRoles: ["staff", "doctor", "accountant"],
+    },
+    {
+      title: "Transactions",
+      url: "/transactions",
+      icon: BadgeDollarSign,
+      hideForRoles: ["staff", "doctor"],
+    },
+    {
+      title: "Reports",
+      url: "#",
+      icon: ClipboardMinus,
+      hideForRoles: ["staff", "doctor", "admin"],
+    },
+    {
+      title: "Client List",
+      url: "/client_list",
+      icon: IconListCheck,
+      hideForRoles: ["admin", "accountant"],
+    },
+    {
+      title: "Medical Records",
+      url: "#",
+      icon: IconCalendar,
+      hideForRoles: ["admin", "staff", "accountant"],
+    },
+    {
+      title: "Analytics",
+      url: "#",
+      icon: ChartNoAxesCombined,
+      hideForRoles: ["admin", "staff"],
+    },
+  ];
+
+  const OterMenuMain = [
+    {
+      title: "Activity History",
+      url: "#",
+      icon: History,
+      hideForRoles: ["doctor", "accountant", "admin"],
+    },
+    {
+      title: "Settings",
+      url: "/settings",
+      icon: Settings,
+    },
+  ];
+
+  const navMain = fullNavMain.filter(
+    (item) => !item.hideForRoles?.includes(user.role)
+  );
+
+  const otherMenu = OterMenuMain.filter(
+    (item) => !item.hideForRoles?.includes(user.role)
+  );
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -118,10 +160,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
+        <OtherMenu items={otherMenu} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );
