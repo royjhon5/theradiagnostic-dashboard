@@ -1,6 +1,7 @@
 "use client";
 
 import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumbs";
+import TestPackageData from "./data/TestPackageData";
 
 export default function AddLabTestManagement() {
   return (
@@ -10,7 +11,9 @@ export default function AddLabTestManagement() {
           <h2 className="text-2xl">Add Laboratory Test Package</h2>
           <DynamicBreadcrumb />
         </div>
-        <div></div>
+        <div>
+          <TestPackageData />
+        </div>
       </div>
     </div>
   );
