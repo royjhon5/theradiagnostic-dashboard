@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -9,22 +10,21 @@ export function middleware(request: NextRequest) {
     try {
       user = JSON.parse(userCookie.value);
     } catch (err) {
-      console.error(err);
+      console.error("Failed to parse user cookie:", err);
     }
   }
 
-  if (pathname === "/" || pathname === "/login") {
-    if (user?.username && user?.role) {
+  const isLoggedIn = user?.username && user?.role;
+
+  // Allow access to login page if not logged in
+  if (pathname === "/login" || pathname === "/") {
+    if (isLoggedIn) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
-    if (!user) {
-      if (pathname === "/") {
-        return NextResponse.redirect(new URL("/login", request.url));
-      }
-      return NextResponse.next();
-    }
+    return NextResponse.next();
   }
 
+  // Define protected routes and allowed roles
   const protectedRoutes: Record<string, string[]> = {
     "/client_list/registration": ["staff", "doctor"],
     "/client_list": ["staff", "doctor"],
@@ -37,12 +37,19 @@ export function middleware(request: NextRequest) {
     "/medical_records": ["doctor"],
     "/analytics": ["doctor", "accountant"],
     "/activity_history": ["staff"],
+    "/settings": ["admin", "doctor", "accountant", "stafff"],
   };
 
+  // Redirect unauthenticated users
+  if (!isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // Restrict access based on role
   for (const route in protectedRoutes) {
     if (pathname.startsWith(route)) {
       const allowedRoles = protectedRoutes[route];
-      if (!user || !allowedRoles.includes(user.role)) {
+      if (!allowedRoles.includes(user.role)) {
         return NextResponse.redirect(new URL("/unauthorized", request.url));
       }
     }
@@ -53,13 +60,18 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
+    "/login",
     "/dashboard/:path*",
     "/appointment/:path*",
     "/transactions/:path*",
     "/client_list/:path*",
     "/lab_test_management/:path*",
     "/doctors/:path*",
-    "/transactions/:path*",
-    // add more routes here if needed
+    "/reports/:path*",
+    "/medical_records/:path*",
+    "/analytics/:path*",
+    "/activity_history/:path*",
+    "/settings/:path*",
   ],
 };
