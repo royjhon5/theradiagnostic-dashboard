@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation"; // <-- Import hook
-import { type Icon } from "@tabler/icons-react";
+import type { FC } from "react";
 import Link from "next/link";
 
 import {
@@ -19,7 +19,7 @@ export function NavMain({
   items: {
     title: string;
     url: string;
-    icon?: Icon;
+    icon?: FC<React.SVGProps<SVGSVGElement>>;
   }[];
 }) {
   const pathname = usePathname(); // <-- Get current pathname

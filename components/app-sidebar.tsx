@@ -1,12 +1,6 @@
 "use client";
 
 import * as React from "react";
-import {
-  IconCalendar,
-  IconCalendarCheck,
-  IconListCheck,
-} from "@tabler/icons-react";
-
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -30,12 +24,14 @@ import {
   History,
   BriefcaseMedical,
   TestTube,
+  CalendarCheck,
+  ListCheck,
+  Calendar,
 } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = React.useState({
-    name: "Unknown User",
-    email: "No Email",
+    username: "Unknown User",
     avatar: "/default-avatar.png",
     role: "admin",
   });
@@ -64,7 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     {
       title: "Appointments",
       url: "/appointment",
-      icon: IconCalendarCheck,
+      icon: CalendarCheck,
       hideForRoles: ["accountant"],
     },
     {
@@ -94,13 +90,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     {
       title: "Client List",
       url: "/client_list",
-      icon: IconListCheck,
+      icon: ListCheck,
       hideForRoles: ["admin", "accountant"],
     },
     {
       title: "Medical Records",
       url: "#",
-      icon: IconCalendar,
+      icon: Calendar,
       hideForRoles: ["admin", "staff", "accountant"],
     },
     {
