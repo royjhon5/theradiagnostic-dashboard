@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     "user",
     JSON.stringify({ username: user.username, role: user.role }),
     {
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 60 * 60 * 24,
       path: "/",
     }
