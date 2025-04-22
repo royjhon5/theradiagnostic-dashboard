@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
   const userCookie = request.cookies.get("user");
-  let user;
 
-  if (userCookie) {
+  let user = null;
+  if (userCookie?.value) {
     try {
       user = JSON.parse(userCookie.value);
     } catch (err) {
@@ -14,7 +13,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  const isLoggedIn = user?.username && user?.role;
+  const isLoggedIn = !!(user?.username && user?.role);
 
   if (pathname === "/login" || pathname === "/") {
     if (isLoggedIn) {
@@ -35,7 +34,7 @@ export function middleware(request: NextRequest) {
     "/medical_records": ["doctor"],
     "/analytics": ["doctor", "accountant"],
     "/activity_history": ["staff"],
-    "/settings": ["admin", "doctor", "accountant", "stafff"],
+    "/settings": ["admin", "doctor", "accountant", "staff"],
   };
 
   if (!isLoggedIn) {
@@ -43,7 +42,7 @@ export function middleware(request: NextRequest) {
   }
 
   for (const route in protectedRoutes) {
-    if (pathname.startsWith(route)) {
+    if (pathname === route || pathname.startsWith(route + "/")) {
       const allowedRoles = protectedRoutes[route];
       if (!allowedRoles.includes(user.role)) {
         return NextResponse.redirect(new URL("/unauthorized", request.url));
@@ -53,21 +52,3 @@ export function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: [
-    "/",
-    "/login",
-    "/dashboard/:path*",
-    "/appointment/:path*",
-    "/transactions/:path*",
-    "/client_list/:path*",
-    "/lab_test_management/:path*",
-    "/doctors/:path*",
-    "/reports/:path*",
-    "/medical_records/:path*",
-    "/analytics/:path*",
-    "/activity_history/:path*",
-    "/settings/:path*",
-  ],
-};
