@@ -11,7 +11,7 @@ import {
 const THEME_COOKIE = "active_theme";
 const FONT_COOKIE = "active_font";
 const DEFAULT_THEME = "blue-scaled";
-const DEFAULT_FONT = "Poppins";
+const DEFAULT_FONT = "'Poppins', sans-serif";
 
 function setCookie(name: string, value: string) {
   if (typeof window === "undefined") return;
