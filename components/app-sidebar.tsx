@@ -5,7 +5,6 @@ import {
   IconCalendar,
   IconCalendarCheck,
   IconListCheck,
-  IconStethoscope,
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
