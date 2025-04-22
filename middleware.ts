@@ -15,11 +15,18 @@ export function middleware(request: NextRequest) {
 
   const isLoggedIn = !!(user?.username && user?.role);
 
-  if (pathname === "/login" || pathname === "/") {
+  if (pathname === "/login") {
     if (isLoggedIn) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     return NextResponse.next();
+  }
+
+  if (pathname === "/") {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   const protectedRoutes: Record<string, string[]> = {
@@ -55,7 +62,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/",
+    "/", // 👈 Make sure this is included!
     "/login",
     "/dashboard/:path*",
     "/appointment/:path*",
