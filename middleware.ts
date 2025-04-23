@@ -17,6 +17,9 @@ export function middleware(request: NextRequest) {
 
   if (pathname === "/login") {
     if (isLoggedIn) {
+      if (user.role === "staff") {
+        return NextResponse.redirect(new URL("/appointment", request.url));
+      }
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     return NextResponse.next();
@@ -36,7 +39,7 @@ export function middleware(request: NextRequest) {
     "/settings/laboratory_test": ["admin", "doctor", "accountant", "staff"],
     "/settings": ["admin", "doctor", "accountant", "staff"],
     "/dashboard": ["admin", "accountant", "doctor"],
-    "/appointment": ["admin", "doctor"],
+    "/appointment": ["admin", "doctor", "staff"],
     "/transactions": ["admin", "accountant"],
     "/doctors": ["admin"],
     "/reports": ["accountant"],
