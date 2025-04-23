@@ -22,7 +22,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Link from "next/link";
 
 export default function LabTest() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -189,7 +188,7 @@ export default function LabTest() {
           </button>
         </div>
       </div>
-      <div className="bg-background rounded-lg mt-2">
+      <div className="bg-background rounded-lg mt-2 shadow-md">
         <h2 className="font-bold text-lg bg-primary text-white rounded-t-lg pl-2">
           Available Test Lab
         </h2>
@@ -210,16 +209,7 @@ export default function LabTest() {
               </div>
             </RadioGroup>
           </div>{" "}
-          <div className="flex flex-row gap-4">
-            <Button size="lg" className="bg-[#11C7BC] cursor-pointer">
-              Add New Lab Test
-            </Button>
-            <Link href="/lab_test_management/add_test_package">
-              <Button size="lg" className="bg-[#11C7BC] cursor-pointer">
-                Add Test Package
-              </Button>
-            </Link>
-          </div>
+          <div className="flex flex-row gap-4"></div>
         </div>
         <div>
           <Table className="border-t-3">
@@ -251,7 +241,7 @@ export default function LabTest() {
           </Table>
         </div>
       </div>
-      <div className="bg-background rounded-lg mt-10">
+      <div className="bg-background rounded-lg mt-10 shadow-md">
         <h2 className="font-bold text-lg bg-primary text-white rounded-t-lg pl-2">
           Recent Client Laboratory Request
         </h2>

@@ -16,7 +16,10 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { BadgeInfo } from "lucide-react";
+import { ArrowLeft, BadgeInfo, Save } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 const formSchema = z.object({
   package_name: z.string().min(1),
   description: z.string().min(1),
@@ -79,6 +82,11 @@ export default function TestPackageData() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 flex flex-col gap-3">
       <div className="col-span-2">
+        <div className="w-full justify-end flex items-center">
+          <h1 className="text-xs font-bold italic mb-1">
+            Package ID : 0001-256-6{" "}
+          </h1>
+        </div>
         <div className="bg-background p-2 border-l rounded-lg border-primary shadow-sm">
           <div className="flex flex-col md:flex-row gap-4 md:justify-between">
             {/* Avatar */}
@@ -277,6 +285,18 @@ export default function TestPackageData() {
               </div>
             </div>
           </div>
+        </div>
+        <Separator />
+        <div className="flex flex-col md:flex-row justify-between items-center mt-5">
+          <Link href={"/settings"}>
+            <Button className="cursor-pointer" size="lg">
+              <ArrowLeft />
+              Go Back
+            </Button>
+          </Link>
+          <Button className="bg-[#11C7BC] cursor-pointer" size="lg">
+            <Save /> Save Package
+          </Button>
         </div>
       </div>
     </div>

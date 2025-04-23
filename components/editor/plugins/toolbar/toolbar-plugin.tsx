@@ -1,32 +1,41 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from "lexical";
+import { useEffect } from 'react'
+import { useState } from 'react'
 
-import { ToolbarContext } from "@/components/editor/context/toolbar-context";
-import { useEditorModal } from "@/components/editor/editor-hooks/use-modal";
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from 'lexical'
 
-export function ToolbarPlugin() {
-  const [editor] = useLexicalComposerContext();
-  const [activeEditor, setActiveEditor] = useState(editor);
-  const [blockType, setBlockType] = useState<string>("paragraph");
-  const [modal, showModal] = useEditorModal();
+import { ToolbarContext } from '@/components/editor/context/toolbar-context'
 
-  const $updateToolbar = () => {
-    // Add logic here
-  };
+import { useEditorModal } from '@/components/editor/editor-hooks/use-modal'
+
+export function ToolbarPlugin({
+  children,
+}: {
+  children: (props: {
+    blockType: string
+  }) => React.ReactNode
+}) {
+  const [editor] = useLexicalComposerContext()
+
+  const [activeEditor, setActiveEditor] = useState(editor)
+  const [blockType, setBlockType] = useState<string>('paragraph')
+
+  const [modal, showModal] = useEditorModal()
+
+  const $updateToolbar = () => {}
 
   useEffect(() => {
     return activeEditor.registerCommand(
       SELECTION_CHANGE_COMMAND,
       (_payload, newEditor) => {
-        setActiveEditor(newEditor);
-        return false;
+        setActiveEditor(newEditor)
+        return false
       },
       COMMAND_PRIORITY_CRITICAL
-    );
-  }, [activeEditor]);
+    )
+  }, [editor])
 
   return (
     <ToolbarContext
@@ -38,8 +47,8 @@ export function ToolbarPlugin() {
     >
       {modal}
 
-      {/* Render toolbar content directly here */}
-      <div>{blockType}</div>
+      {children({ blockType })}
+
     </ToolbarContext>
-  );
+  )
 }

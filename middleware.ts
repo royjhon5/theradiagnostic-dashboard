@@ -32,16 +32,17 @@ export function middleware(request: NextRequest) {
   const protectedRoutes: Record<string, string[]> = {
     "/client_list/registration": ["staff", "doctor"],
     "/client_list": ["staff", "doctor"],
+    "/settings/test_package": ["admin", "doctor", "accountant", "staff"],
+    "/settings/laboratory_test": ["admin", "doctor", "accountant", "staff"],
+    "/settings": ["admin", "doctor", "accountant", "staff"],
     "/dashboard": ["admin", "accountant", "doctor"],
     "/appointment": ["admin", "doctor"],
     "/transactions": ["admin", "accountant"],
-    "/lab_test_management": ["admin"],
     "/doctors": ["admin"],
     "/reports": ["accountant"],
     "/medical_records": ["doctor"],
     "/analytics": ["doctor", "accountant"],
     "/activity_history": ["staff"],
-    "/settings": ["admin", "doctor", "accountant", "staff"],
   };
 
   if (!isLoggedIn) {
