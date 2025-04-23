@@ -10,6 +10,7 @@ export function middleware(request: NextRequest) {
       user = JSON.parse(userCookie.value);
     } catch (err) {
       console.error("Failed to parse user cookie:", err);
+      return NextResponse.redirect(new URL("/login", request.url));
     }
   }
 
@@ -17,19 +18,33 @@ export function middleware(request: NextRequest) {
 
   if (pathname === "/login") {
     if (isLoggedIn) {
-      if (user.role === "staff") {
-        return NextResponse.redirect(new URL("/appointment", request.url));
-      }
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return NextResponse.redirect(
+        new URL(
+          user.role === "staff" ? "/appointment" : "/dashboard",
+          request.url
+        )
+      );
     }
     return NextResponse.next();
   }
 
   if (pathname === "/") {
-    if (!isLoggedIn) {
+    if (!isLoggedIn)
       return NextResponse.redirect(new URL("/login", request.url));
-    }
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(
+      new URL(
+        user.role === "staff" ? "/appointment" : "/dashboard",
+        request.url
+      )
+    );
+  }
+
+  if (pathname.startsWith("/dashboard") && user?.role === "staff") {
+    return NextResponse.redirect(new URL("/appointment", request.url));
+  }
+
+  if (!isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   const protectedRoutes: Record<string, string[]> = {
@@ -48,16 +63,12 @@ export function middleware(request: NextRequest) {
     "/activity_history": ["staff"],
   };
 
-  if (!isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
   for (const route in protectedRoutes) {
-    if (pathname === route || pathname.startsWith(route + "/")) {
-      const allowedRoles = protectedRoutes[route];
-      if (!allowedRoles.includes(user.role)) {
+    if (pathname === route || pathname.startsWith(`${route}/`)) {
+      if (!protectedRoutes[route].includes(user.role)) {
         return NextResponse.redirect(new URL("/unauthorized", request.url));
       }
+      break;
     }
   }
 
