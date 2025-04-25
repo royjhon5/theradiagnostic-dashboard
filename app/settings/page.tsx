@@ -52,7 +52,7 @@ export default function Settings() {
       id: "reports",
       title: "Report Settings",
       icon: <FileText size={36} />,
-      route: "/settings/reports",
+      route: "#",
       content: [
         "Report Templates: Customize report formats for receipts, financial summaries, and laboratory reports.",
         "Schedule Automatic Reports: Define settings for generating and distributing periodic reports.",
@@ -62,7 +62,7 @@ export default function Settings() {
       id: "security",
       title: "Security Settings",
       icon: <Shield size={36} />,
-      route: "/settings/security",
+      route: "#",
       content: [
         "Access Controls: Manage security protocols for accessing the system, implementing multi-factor authentication if necessary.",
         "Audit Logs: Configure monitoring of user actions and changes to sensitive data to maintain data integrity and security.",
@@ -72,7 +72,7 @@ export default function Settings() {
       id: "integration",
       title: "Integration Settings",
       icon: <LinkIcon size={36} />,
-      route: "/settings/integration",
+      route: "#",
       content: [
         "API Management: Set up and configure APIs for integration with other healthcare applications or third-party software.",
         "Data Import/Export Options: Manage data exchange settings to ensure smooth interoperability with other systems.",
@@ -84,7 +84,7 @@ export default function Settings() {
       id: "backup",
       title: "Backup & Recovery",
       icon: <Database size={36} />,
-      route: "/settings/backup",
+      route: "#",
       content: [
         "Data Backup Frequency: Configure settings for automatic data backups to safeguard client and transaction information.",
         "Data Recovery Options: Guidelines and settings for restoring data in the event of loss or corruption.",
@@ -94,7 +94,7 @@ export default function Settings() {
       id: "preferences",
       title: "General Preferences",
       icon: <Languages size={36} />,
-      route: "/settings/preferences",
+      route: "#",
       content: [
         "Language and Regional Settings: Adjust language preferences and configure regional settings such as date formats and currency.",
         "Time Zone Settings: Set the appropriate time zone for all date/time scheduling functionalities.",

@@ -66,7 +66,7 @@ export default function NewLabTest() {
           </div>
         </div>
         {/* input fields */}
-        <div className="bg-background p-4 rounded-lg shadow-sm mt-2">
+        <div className="bg-background p-4 rounded-lg shadow-sm mt-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -115,14 +115,14 @@ export default function NewLabTest() {
             </form>
           </Form>
         </div>
-        <div className="grid grid-cols-1 mt-2 gap-2">
-          <div className="bg-background rounded-lg shadow-sm">
+        <div className="grid grid-cols-1 gap-2">
+          <div className="bg-background mt-4 rounded-lg shadow-sm">
             <div className="p-4">
               <h1 className="text-xl text-bold">Description</h1>
             </div>
             <Editor />
           </div>
-          <div className="bg-background rounded-lg shadow-sm">
+          <div className="bg-background mt-4 rounded-lg shadow-sm">
             <div className="p-4">
               <h1 className="text-xl text-bold">Addtional Notes</h1>
             </div>

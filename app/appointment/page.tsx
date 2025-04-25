@@ -28,7 +28,7 @@ export default function AppointMent() {
             <TabsContent value="calendar" className="bg-background rounded-xl">
               <CalendarAppointment />
             </TabsContent>
-            <TabsContent value="list" className="">
+            <TabsContent value="list">
               <DataTable data={data} columns={DataColumns} />
             </TabsContent>
           </Tabs>

@@ -109,7 +109,7 @@ export default function TestPackageData() {
           </div>
         </div>
         {/* input fields */}
-        <div className="bg-background p-4 rounded-lg shadow-sm mt-2">
+        <div className="bg-background p-4 rounded-lg shadow-sm mt-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -218,7 +218,7 @@ export default function TestPackageData() {
           </Form>
         </div>
         {/* ends here */}
-        <div className="bg-background mt-2 shadow-sm rounded-lg">
+        <div className="bg-background mt-4 shadow-sm rounded-lg">
           <h2 className="font-bold text-lg bg-primary text-white rounded-t-lg pl-2">
             Select Individual Test to Add to Package
           </h2>

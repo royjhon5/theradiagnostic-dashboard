@@ -1,3 +1,5 @@
+"use client";
+
 import { Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,13 +19,16 @@ import {
   FilePlus,
   XIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface DataTableRowActionsProps {
   row: Row<GlobalData>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentRow } = useMainContext();
+  const { setCurrentRow } = useMainContext();
+  const router = useRouter();
+
   return (
     <>
       <DropdownMenu modal={false}>
@@ -40,7 +45,6 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original);
-              setOpen("edit");
             }}
             className="cursor-pointer"
           >
@@ -52,8 +56,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              setCurrentRow(row.original);
-              setOpen("delete");
+              const encoded = encodeURIComponent(JSON.stringify(row.original));
+              router.push(`/appointment/create_assessment?data=${encoded}`);
             }}
             className="cursor-pointer"
           >
@@ -66,7 +70,6 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original);
-              setOpen("delete");
             }}
             className="cursor-pointer"
           >
@@ -79,7 +82,6 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original);
-              setOpen("delete");
             }}
             className="cursor-pointer"
           >

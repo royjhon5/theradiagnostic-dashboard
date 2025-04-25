@@ -20,7 +20,11 @@ export function middleware(request: NextRequest) {
     if (isLoggedIn) {
       return NextResponse.redirect(
         new URL(
-          user.role === "staff" ? "/appointment" : "/dashboard",
+          user.role === "staff"
+            ? "/appointment"
+            : user.role === "accountant"
+              ? "/transactions"
+              : "/dashboard",
           request.url
         )
       );
@@ -33,7 +37,11 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     return NextResponse.redirect(
       new URL(
-        user.role === "staff" ? "/appointment" : "/dashboard",
+        user.role === "staff"
+          ? "/appointment"
+          : user.role === "accountant"
+            ? "/transactions"
+            : "/dashboard",
         request.url
       )
     );
@@ -43,6 +51,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/appointment", request.url));
   }
 
+  if (pathname.startsWith("/dashboard") && user?.role === "accountant") {
+    return NextResponse.redirect(new URL("/transactions", request.url));
+  }
+
   if (!isLoggedIn) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -50,11 +62,13 @@ export function middleware(request: NextRequest) {
   const protectedRoutes: Record<string, string[]> = {
     "/client_list/registration": ["staff", "doctor"],
     "/client_list": ["staff", "doctor"],
-    "/settings/test_package": ["admin", "doctor", "accountant", "staff"],
-    "/settings/laboratory_test": ["admin", "doctor", "accountant", "staff"],
+    "/settings/test_package": ["admin"],
+    "/settings/laboratory_test": ["admin"],
+    "/settings/user_management": ["admin"],
     "/settings": ["admin", "doctor", "accountant", "staff"],
-    "/dashboard": ["admin", "accountant", "doctor"],
+    "/appointment/create_assessment": ["admin", "doctor", "staff"],
     "/appointment": ["admin", "doctor", "staff"],
+    "/dashboard": ["admin", "doctor"],
     "/transactions": ["admin", "accountant"],
     "/doctors": ["admin"],
     "/reports": ["accountant"],

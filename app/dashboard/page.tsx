@@ -6,17 +6,42 @@ import { SectionCards } from "./components/section-cards";
 import { Calendar } from "@/components/ui/calendar";
 import CardTimeLine from "./components/timeline-card";
 import ClientDashboard from "./components/client-stats";
+import { cookies } from "next/headers";
+import TodaysAppointment from "./components/todays-appointment-card";
+import AvailableStaffCard from "./components/available-staff-card";
 
 export default async function Page() {
+  const cookieStore = await cookies();
+  const userCookie = cookieStore.get("user");
+  let role = null;
+  if (userCookie?.value) {
+    try {
+      const userData = JSON.parse(userCookie.value);
+      role = userData.role;
+    } catch (error) {
+      console.error("Failed to parse user cookie:", error);
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-5">
       <div className="col-span-4">
         <div className="flex flex-col gap-2 py-4 md:gap-3 md:py-6">
-          <SectionCards />
+          {role === "doctor" ? "" : <SectionCards />}
           <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-3 @5xl/main:grid-cols-3">
-            <DoctorsListing />
-            <PatientListing />
-            <ClientDashboard />
+            {role === "doctor" ? (
+              <>
+                <TodaysAppointment />
+                <AvailableStaffCard />
+                <ClientDashboard />
+              </>
+            ) : (
+              <>
+                <DoctorsListing />
+                <PatientListing />
+                <ClientDashboard />
+              </>
+            )}
           </div>
           <div className="px-4 lg:px-6">
             <div className="grid grid-cols-1">

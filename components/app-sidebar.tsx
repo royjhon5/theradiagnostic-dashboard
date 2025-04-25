@@ -55,7 +55,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: "Dashboard",
       url: "/dashboard",
       icon: LayoutDashboard,
-      hideForRoles: ["staff"],
+      hideForRoles: ["staff", "accountant"],
     },
     {
       title: "Appointments",

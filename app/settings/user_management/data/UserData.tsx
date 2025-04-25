@@ -101,7 +101,7 @@ export default function UserData() {
           </div>
         </div>
         {/* input fields */}
-        <div className="bg-background p-4 rounded-lg shadow-sm mt-2">
+        <div className="bg-background p-4 rounded-lg shadow-sm mt-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -220,7 +220,7 @@ export default function UserData() {
             </form>
           </Form>
         </div>
-        <div className="grid grid-cols-1 mt-2 gap-2">
+        <div className="grid grid-cols-1 mt-4 gap-2">
           <div className="bg-background rounded-lg shadow-sm">
             <div className="p-4">
               <h2 className="font-bold">Access Permission</h2>
@@ -258,14 +258,14 @@ export default function UserData() {
               ))}
             </div>
           </div>
-          <div className="bg-background rounded-lg shadow-sm">
+          <div className="bg-background rounded-lg shadow-sm mt-4">
             <div className="p-4">
               <h2 className="font-bold">Addtional Notes for User</h2>
             </div>
             <Editor />
           </div>
         </div>
-        <div className="flex flex-col md:flex-row justify-between items-center mt-5">
+        <div className="flex flex-col md:flex-row justify-between items-center mt-4">
           <Link href={"/settings"}>
             <Button className="cursor-pointer" size="lg">
               <ArrowLeft /> Go Back
