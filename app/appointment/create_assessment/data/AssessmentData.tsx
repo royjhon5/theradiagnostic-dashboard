@@ -20,6 +20,8 @@ import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { Editor } from "@/components/blocks/editor-00/editor";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 const formSchema = z.object({
   package_name: z.string().min(1),
   description: z.string().min(1),
@@ -69,6 +71,26 @@ export default function AssessmentData() {
       console.error("Form submission error", error);
     }
   }
+
+  const medhist1 = [
+    { id: "Chronic Conditions", label: "Chronic Conditions" },
+    { id: "Allergies", label: "Allergies" },
+    {
+      id: "Past Surgeries/Procedures",
+      label: "Past Surgeries/Procedures",
+    },
+    { id: "Family Medical History", label: "Family Medical History" },
+  ];
+
+  const medhist2 = [
+    { id: "Smoker", label: "Smoker" },
+    { id: "Alcohol Consumption", label: "Alcohol Consumption" },
+    {
+      id: "Substance Use",
+      label: "Substance Use",
+    },
+    { id: "Physical Activity", label: "Physical Activity" },
+  ];
 
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMMM dd, yyyy - EEEE");
@@ -231,11 +253,49 @@ export default function AssessmentData() {
             <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
               Medical History
             </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+              {medhist1.map((medhist, index) => (
+                <div
+                  key={`${medhist.id}-${index}`}
+                  className="flex items-center space-x-3"
+                >
+                  <Checkbox
+                    id={`${medhist.id}-${index}`}
+                    className="h-5 w-5 rounded-sm border-gray-300 bg-gray-200"
+                  />
+                  <Label
+                    htmlFor={`${medhist.id}-${index}`}
+                    className="text-base font-medium"
+                  >
+                    {medhist.label}
+                  </Label>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="bg-background rounded-lg mt-4 shadow-md">
             <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
               Medical History
             </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+              {medhist2.map((medhists, index) => (
+                <div
+                  key={`${medhists.id}-${index}`}
+                  className="flex items-center space-x-3"
+                >
+                  <Checkbox
+                    id={`${medhists.id}-${index}`}
+                    className="h-5 w-5 rounded-sm border-gray-300 bg-gray-200"
+                  />
+                  <Label
+                    htmlFor={`${medhists.id}-${index}`}
+                    className="text-base font-medium"
+                  >
+                    {medhists.label}
+                  </Label>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
