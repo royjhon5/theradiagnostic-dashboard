@@ -10,7 +10,6 @@ import {
   Trash2,
 } from "lucide-react";
 import { parseAsStringEnum, useQueryState } from "nuqs";
-import * as React from "react";
 
 import { DataTableRangeFilter } from "@/components/data-table-range-filter";
 import { Badge } from "@/components/ui/badge";
@@ -67,6 +66,14 @@ import type {
   FilterOperator,
   JoinOperator,
 } from "@/types/data-table";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 const FILTERS_KEY = "filters";
 const JOIN_OPERATOR_KEY = "joinOperator";
@@ -90,13 +97,13 @@ export function DataTableFilterList<TData>({
   shallow = true,
   ...props
 }: DataTableFilterListProps<TData>) {
-  const id = React.useId();
-  const labelId = React.useId();
-  const descriptionId = React.useId();
-  const [open, setOpen] = React.useState(false);
-  const addButtonRef = React.useRef<HTMLButtonElement>(null);
+  const id = useId();
+  const labelId = useId();
+  const descriptionId = useId();
+  const [open, setOpen] = useState(false);
+  const addButtonRef = useRef<HTMLButtonElement>(null);
 
-  const columns = React.useMemo(() => {
+  const columns = useMemo(() => {
     return table
       .getAllColumns()
       .filter((column) => column.columnDef.enableColumnFilter);
@@ -124,7 +131,7 @@ export function DataTableFilterList<TData>({
     })
   );
 
-  const onFilterAdd = React.useCallback(() => {
+  const onFilterAdd = useCallback(() => {
     const column = columns[0];
 
     if (!column) return;
@@ -143,7 +150,7 @@ export function DataTableFilterList<TData>({
     ]);
   }, [columns, filters, debouncedSetFilters]);
 
-  const onFilterUpdate = React.useCallback(
+  const onFilterUpdate = useCallback(
     (
       filterId: string,
       updates: Partial<Omit<ExtendedColumnFilter<TData>, "filterId">>
@@ -161,7 +168,7 @@ export function DataTableFilterList<TData>({
     [debouncedSetFilters]
   );
 
-  const onFilterRemove = React.useCallback(
+  const onFilterRemove = useCallback(
     (filterId: string) => {
       const updatedFilters = filters.filter(
         (filter) => filter.filterId !== filterId
@@ -174,12 +181,12 @@ export function DataTableFilterList<TData>({
     [filters, setFilters]
   );
 
-  const onFiltersReset = React.useCallback(() => {
+  const onFiltersReset = useCallback(() => {
     void setFilters(null);
     void setJoinOperator("and");
   }, [setFilters, setJoinOperator]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (
         event.target instanceof HTMLInputElement ||
@@ -212,7 +219,7 @@ export function DataTableFilterList<TData>({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [filters, onFilterRemove]);
 
-  const onTriggerKeyDown = React.useCallback(
+  const onTriggerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
       if (
         REMOVE_FILTER_SHORTCUTS.includes(event.key.toLowerCase()) &&
@@ -350,9 +357,9 @@ function DataTableFilterItem<TData>({
   onFilterUpdate,
   onFilterRemove,
 }: DataTableFilterItemProps<TData>) {
-  const [showFieldSelector, setShowFieldSelector] = React.useState(false);
-  const [showOperatorSelector, setShowOperatorSelector] = React.useState(false);
-  const [showValueSelector, setShowValueSelector] = React.useState(false);
+  const [showFieldSelector, setShowFieldSelector] = useState(false);
+  const [showOperatorSelector, setShowOperatorSelector] = useState(false);
+  const [showValueSelector, setShowValueSelector] = useState(false);
 
   const column = columns.find((column) => column.id === filter.id);
   if (!column) return null;
@@ -365,7 +372,7 @@ function DataTableFilterItem<TData>({
   const columnMeta = column.columnDef.meta;
   const filterOperators = getFilterOperators(filter.variant);
   // eslint-disable-next-line
-  const onItemKeyDown = React.useCallback(
+  const onItemKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (
         event.target instanceof HTMLInputElement ||

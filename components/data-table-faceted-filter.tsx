@@ -40,6 +40,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   const [open, setOpen] = useState(false);
 
   const columnFilterValue = column?.getFilterValue();
+  // eslint-disable-next-line
   const selectedValues = new Set(
     Array.isArray(columnFilterValue) ? columnFilterValue : []
   );

@@ -10,7 +10,6 @@ import {
   X,
 } from "lucide-react";
 import { useQueryState } from "nuqs";
-import * as React from "react";
 
 import { DataTableRangeFilter } from "@/components/data-table-range-filter";
 import { Button } from "@/components/ui/button";
@@ -43,6 +42,14 @@ import { generateId } from "@/lib/id";
 import { getFiltersStateParser } from "@/lib/parsers";
 import { cn } from "@/lib/utils";
 import type { ExtendedColumnFilter, FilterOperator } from "@/types/data-table";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 const FILTERS_KEY = "filters";
 const DEBOUNCE_MS = 300;
@@ -66,22 +73,23 @@ export function DataTableFilterMenu<TData>({
   align = "start",
   ...props
 }: DataTableFilterMenuProps<TData>) {
-  const id = React.useId();
+  const id = useId();
 
-  const columns = React.useMemo(() => {
+  const columns = useMemo(() => {
     return table
       .getAllColumns()
       .filter((column) => column.columnDef.enableColumnFilter);
   }, [table]);
 
-  const [open, setOpen] = React.useState(false);
-  const [selectedColumn, setSelectedColumn] =
-    React.useState<Column<TData> | null>(null);
-  const [inputValue, setInputValue] = React.useState("");
-  const triggerRef = React.useRef<HTMLButtonElement>(null);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [open, setOpen] = useState(false);
+  const [selectedColumn, setSelectedColumn] = useState<Column<TData> | null>(
+    null
+  );
+  const [inputValue, setInputValue] = useState("");
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const onOpenChange = React.useCallback((open: boolean) => {
+  const onOpenChange = useCallback((open: boolean) => {
     setOpen(open);
 
     if (!open) {
@@ -92,7 +100,7 @@ export function DataTableFilterMenu<TData>({
     }
   }, []);
 
-  const onInputKeyDown = React.useCallback(
+  const onInputKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (
         REMOVE_FILTER_SHORTCUTS.includes(event.key.toLowerCase()) &&
@@ -103,7 +111,7 @@ export function DataTableFilterMenu<TData>({
         setSelectedColumn(null);
       }
     },
-    [inputValue, selectedColumn],
+    [inputValue, selectedColumn]
   );
 
   const [filters, setFilters] = useQueryState(
@@ -114,11 +122,11 @@ export function DataTableFilterMenu<TData>({
         clearOnDefault: true,
         shallow,
         throttleMs,
-      }),
+      })
   );
   const debouncedSetFilters = useDebouncedCallback(setFilters, debounceMs);
 
-  const onFilterAdd = React.useCallback(
+  const onFilterAdd = useCallback(
     (column: Column<TData>, value: string) => {
       if (!value.trim() && column.columnDef.meta?.variant !== "boolean") {
         return;
@@ -132,7 +140,7 @@ export function DataTableFilterMenu<TData>({
         value: filterValue,
         variant: column.columnDef.meta?.variant ?? "text",
         operator: getDefaultFilterOperator(
-          column.columnDef.meta?.variant ?? "text",
+          column.columnDef.meta?.variant ?? "text"
         ),
         filterId: generateId({ length: 8 }),
       };
@@ -145,26 +153,26 @@ export function DataTableFilterMenu<TData>({
         setInputValue("");
       }, 100);
     },
-    [filters, debouncedSetFilters],
+    [filters, debouncedSetFilters]
   );
 
-  const onFilterRemove = React.useCallback(
+  const onFilterRemove = useCallback(
     (filterId: string) => {
       const updatedFilters = filters.filter(
-        (filter) => filter.filterId !== filterId,
+        (filter) => filter.filterId !== filterId
       );
       debouncedSetFilters(updatedFilters);
       requestAnimationFrame(() => {
         triggerRef.current?.focus();
       });
     },
-    [filters, debouncedSetFilters],
+    [filters, debouncedSetFilters]
   );
 
-  const onFilterUpdate = React.useCallback(
+  const onFilterUpdate = useCallback(
     (
       filterId: string,
-      updates: Partial<Omit<ExtendedColumnFilter<TData>, "filterId">>,
+      updates: Partial<Omit<ExtendedColumnFilter<TData>, "filterId">>
     ) => {
       debouncedSetFilters((prevFilters) => {
         const updatedFilters = prevFilters.map((filter) => {
@@ -176,14 +184,14 @@ export function DataTableFilterMenu<TData>({
         return updatedFilters;
       });
     },
-    [debouncedSetFilters],
+    [debouncedSetFilters]
   );
 
-  const onFiltersReset = React.useCallback(() => {
+  const onFiltersReset = useCallback(() => {
     debouncedSetFilters([]);
   }, [debouncedSetFilters]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (
         event.target instanceof HTMLInputElement ||
@@ -217,7 +225,7 @@ export function DataTableFilterMenu<TData>({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, filters, onFilterRemove]);
 
-  const onTriggerKeyDown = React.useCallback(
+  const onTriggerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
       if (
         REMOVE_FILTER_SHORTCUTS.includes(event.key.toLowerCase()) &&
@@ -227,7 +235,7 @@ export function DataTableFilterMenu<TData>({
         onFilterRemove(filters[filters.length - 1]?.filterId ?? "");
       }
     },
-    [filters, onFilterRemove],
+    [filters, onFilterRemove]
   );
 
   return (
@@ -337,7 +345,7 @@ interface DataTableFilterItemProps<TData> {
   columns: Column<TData>[];
   onFilterUpdate: (
     filterId: string,
-    updates: Partial<Omit<ExtendedColumnFilter<TData>, "filterId">>,
+    updates: Partial<Omit<ExtendedColumnFilter<TData>, "filterId">>
   ) => void;
   onFilterRemove: (filterId: string) => void;
 }
@@ -350,10 +358,9 @@ function DataTableFilterItem<TData>({
   onFilterRemove,
 }: DataTableFilterItemProps<TData>) {
   {
-    const [showFieldSelector, setShowFieldSelector] = React.useState(false);
-    const [showOperatorSelector, setShowOperatorSelector] =
-      React.useState(false);
-    const [showValueSelector, setShowValueSelector] = React.useState(false);
+    const [showFieldSelector, setShowFieldSelector] = useState(false);
+    const [showOperatorSelector, setShowOperatorSelector] = useState(false);
+    const [showValueSelector, setShowValueSelector] = useState(false);
 
     const column = columns.find((column) => column.id === filter.id);
     if (!column) return null;
@@ -363,8 +370,8 @@ function DataTableFilterItem<TData>({
 
     const columnMeta = column.columnDef.meta;
     const filterOperators = getFilterOperators(filter.variant);
-
-    const onItemKeyDown = React.useCallback(
+    // eslint-disable-next-line
+    const onItemKeyDown = useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (
           event.target instanceof HTMLInputElement ||
@@ -388,7 +395,7 @@ function DataTableFilterItem<TData>({
         showOperatorSelector,
         showValueSelector,
         onFilterRemove,
-      ],
+      ]
     );
 
     return (
@@ -430,7 +437,7 @@ function DataTableFilterItem<TData>({
                           id: column.id as Extract<keyof TData, string>,
                           variant: column.columnDef.meta?.variant ?? "text",
                           operator: getDefaultFilterOperator(
-                            column.columnDef.meta?.variant ?? "text",
+                            column.columnDef.meta?.variant ?? "text"
                           ),
                           value: "",
                         });
@@ -447,7 +454,7 @@ function DataTableFilterItem<TData>({
                       <Check
                         className={cn(
                           "ml-auto",
-                          column.id === filter.id ? "opacity-100" : "opacity-0",
+                          column.id === filter.id ? "opacity-100" : "opacity-0"
                         )}
                       />
                     </CommandItem>
@@ -614,7 +621,7 @@ function onFilterInputRender<TData>({
   inputId: string;
   onFilterUpdate: (
     filterId: string,
-    updates: Partial<Omit<ExtendedColumnFilter<TData>, "filterId">>,
+    updates: Partial<Omit<ExtendedColumnFilter<TData>, "filterId">>
   ) => void;
   showValueSelector: boolean;
   setShowValueSelector: (value: boolean) => void;
@@ -707,7 +714,7 @@ function onFilterInputRender<TData>({
         : [filter.value];
 
       const selectedOptions = options.filter((option) =>
-        selectedValues.includes(option.value),
+        selectedValues.includes(option.value)
       );
 
       return (
@@ -737,7 +744,7 @@ function onFilterInputRender<TData>({
                         >
                           <selectedOption.icon className="size-3.5" />
                         </div>
-                      ) : null,
+                      ) : null
                     )}
                   </div>
                   <span className="truncate">
@@ -781,7 +788,7 @@ function onFilterInputRender<TData>({
                             "ml-auto",
                             selectedValues.includes(option.value)
                               ? "opacity-100"
-                              : "opacity-0",
+                              : "opacity-0"
                           )}
                         />
                       )}
@@ -806,7 +813,7 @@ function onFilterInputRender<TData>({
       const displayValue =
         filter.operator === "isBetween" && dateValue.length === 2
           ? `${formatDate(new Date(Number(dateValue[0])))} - ${formatDate(
-              new Date(Number(dateValue[1])),
+              new Date(Number(dateValue[1]))
             )}`
           : dateValue[0]
             ? formatDate(new Date(Number(dateValue[0])))
@@ -822,7 +829,7 @@ function onFilterInputRender<TData>({
               size="sm"
               className={cn(
                 "h-full rounded-none border px-1.5 font-normal dark:bg-input/30",
-                !filter.value && "text-muted-foreground",
+                !filter.value && "text-muted-foreground"
               )}
             >
               <CalendarIcon className="size-3.5" />
