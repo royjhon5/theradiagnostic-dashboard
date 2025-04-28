@@ -6,6 +6,7 @@ import { ActiveThemeProvider } from "@/components/active-theme";
 import { cn } from "@/lib/utils";
 import LayoutWrapper from "@/components/shared/layout-wrapper";
 import NextTopLoader from "nextjs-toploader";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const META_THEME_COLORS = {
   light: "#ffffff",
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "RJDEV DASHBOARD",
+    title: "TheraDiagnostics",
     description:
       "Reliable diagnostic center offering accurate tests and medical screenings with advanced technology for quick and efficient results. Trusted by patients for quality care",
     creator: "@TheraDiagnostics",
@@ -122,7 +123,9 @@ export default async function RootLayout({
             initialFont={activeFontValue}
           >
             <NextTopLoader crawlSpeed={200} easing="ease" />
-            <LayoutWrapper>{children}</LayoutWrapper>
+            <LayoutWrapper>
+              <NuqsAdapter>{children}</NuqsAdapter>
+            </LayoutWrapper>
           </ActiveThemeProvider>
         </ThemeProvider>
       </body>
