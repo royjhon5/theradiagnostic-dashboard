@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import * as React from "react";
 import { Option } from "@/types/data-table";
+import { useCallback, useState } from "react";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -37,14 +37,14 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
   multiple,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const columnFilterValue = column?.getFilterValue();
   const selectedValues = new Set(
     Array.isArray(columnFilterValue) ? columnFilterValue : []
   );
 
-  const onItemSelect = React.useCallback(
+  const onItemSelect = useCallback(
     (option: Option, isSelected: boolean) => {
       if (!column) return;
 
@@ -65,7 +65,7 @@ export function DataTableFacetedFilter<TData, TValue>({
     [column, multiple, selectedValues]
   );
 
-  const onReset = React.useCallback(
+  const onReset = useCallback(
     (event?: React.MouseEvent) => {
       event?.stopPropagation();
       column?.setFilterValue(undefined);
