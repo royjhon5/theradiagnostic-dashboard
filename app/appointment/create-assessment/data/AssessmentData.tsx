@@ -333,7 +333,7 @@ export default function AssessmentData() {
               onClick={() => {
                 const encoded = encodeURIComponent(JSON.stringify(currentRow));
                 router.push(
-                  `/appointment/laboratory_testing?labtest=${encoded}`
+                  `/appointment/laboratory-testing?labtest=${encoded}`
                 );
               }}
             >

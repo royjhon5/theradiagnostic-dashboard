@@ -57,7 +57,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               const encoded = encodeURIComponent(JSON.stringify(row.original));
-              router.push(`/appointment/create_assessment?data=${encoded}`);
+              router.push(`/appointment/create-assessment?data=${encoded}`);
             }}
             className="cursor-pointer"
           >

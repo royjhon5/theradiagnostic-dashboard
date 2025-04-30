@@ -56,7 +56,7 @@ export function DataTableViewOptions<TData>({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Link href="/client_list/registration">
+      <Link href="/client-list/registration">
         <Button variant="outline" size="sm" className="cursor-pointer">
           <IconPlus />
           <span className="hidden lg:inline">Register New Client</span>

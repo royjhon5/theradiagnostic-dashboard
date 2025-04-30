@@ -65,7 +65,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
     {
       title: "Lab Test Management",
-      url: "/lab_test_management",
+      url: "/lab-test-management",
       icon: TestTube,
       hideForRoles: ["staff", "doctor", "accountant"],
     },
@@ -89,7 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
     {
       title: "Client List",
-      url: "/client_list",
+      url: "/client-list",
       icon: ListCheck,
       hideForRoles: ["admin", "accountant"],
     },

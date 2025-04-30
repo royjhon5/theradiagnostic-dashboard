@@ -22,7 +22,7 @@ export default function Settings() {
       id: "laboratory-test",
       title: "Add Laboratory Test",
       icon: <Microscope size={36} />,
-      route: "/settings/laboratory_test",
+      route: "/settings/laboratory-test",
       content: [
         "Adding a laboratory test integrates new diagnostic procedures into the lab information system, cataloging essential details like name, category, pricing, and preparation instructions, which enhances diagnostic capabilities and improves patient care.",
       ],
@@ -31,7 +31,7 @@ export default function Settings() {
       id: "pricing",
       title: "Pricing & Package Settings",
       icon: <LineChart size={36} />,
-      route: "/settings/test_package",
+      route: "/settings/test-package",
       content: [
         "Pricing and Discounts: Configure standard pricing for services and manage discount structures.",
         "Tax Settings: Set up tax rules and calculations applicable to billing.",
@@ -41,7 +41,7 @@ export default function Settings() {
       id: "user-management",
       title: "User Management",
       icon: <User size={36} />,
-      route: "/settings/user_management",
+      route: "/settings/user-management",
       content: [
         "Add/Remove Users: Options to create new user accounts and remove existing ones.",
         "Role and Permission Settings: Assign or modify user roles and access levels to ensure appropriate permissions.",
