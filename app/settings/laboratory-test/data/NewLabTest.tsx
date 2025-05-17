@@ -10,40 +10,29 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Editor } from "@/components/blocks/editor-00/editor";
 import { ArrowLeft, Save } from "lucide-react";
-const formSchema = z.object({
-  package_name: z.string().min(1),
-  description: z.string().min(1),
-  price: z.string().min(1),
-});
-
+import useCreateLaboratoryTest from "../hooks/useCreateLaboratoryTest";
+import Cookies from "js-cookie";
+import { format } from "date-fns";
 export default function NewLabTest() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {},
-  });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      console.log(values);
-    } catch (error) {
-      console.error("Form submission error", error);
-    }
+  const { form, onSubmit } = useCreateLaboratoryTest();
+  const user = Cookies.get("user");
+  const userId = Cookies.get("userid");
+  const currentDate = new Date();
+  const formattedDate = format(currentDate, "MMMM dd, yyyy - EEEE");
+  let Username: string | null = null;
+  if (user) {
+    const parsedUser = JSON.parse(user);
+    Username = parsedUser.username;
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 flex flex-col gap-3">
       <div className="col-span-2">
-        <div className="w-full justify-end flex items-center">
-          <h1 className="text-xs font-bold italic mb-1">
-            Package ID : 0001-256-6{" "}
-          </h1>
-        </div>
+        <div className="w-full justify-end flex items-center mt-5"></div>
         <div className="bg-background p-2 border-l rounded-lg border-primary shadow-sm">
           <div className="flex flex-col md:flex-row gap-4 md:justify-between">
             {/* Avatar */}
@@ -54,25 +43,25 @@ export default function NewLabTest() {
               </Avatar>
               <div className="flex flex-col gap-0">
                 <p style={{ fontSize: 10 }}>Performed by:</p>
-                <p className="text-md font-bold">Nate Diaz</p>
-                <p className="text-sm">Staff ID: 006-2548-63</p>
+                <p className="text-md font-bold">{Username}</p>
+                <p className="text-sm">ID: {userId}</p>
               </div>
             </div>
             {/* right side */}
             <div className="flex flex-col justify-end md:text-right">
-              <p className="text-md font-bold">May 15, 2025 - Friday</p>
+              <p className="text-md font-bold">{formattedDate}</p>
               <p style={{ fontSize: 10 }}>Date of Addition</p>
             </div>
           </div>
         </div>
         {/* input fields */}
-        <div className="bg-background p-4 rounded-lg shadow-sm mt-4">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="bg-background p-4 rounded-lg shadow-sm mt-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
-                  name="package_name"
+                  name="testName"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Test Name</FormLabel>
@@ -86,7 +75,7 @@ export default function NewLabTest() {
 
                 <FormField
                   control={form.control}
-                  name="description"
+                  name="testCategory"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Test Category</FormLabel>
@@ -112,33 +101,37 @@ export default function NewLabTest() {
                   )}
                 />
               </div>
-            </form>
-          </Form>
-        </div>
-        <div className="grid grid-cols-1 gap-2">
-          <div className="bg-background mt-4 rounded-lg shadow-sm">
-            <div className="p-4">
-              <h1 className="text-xl text-bold">Description</h1>
             </div>
-            <Editor />
-          </div>
-          <div className="bg-background mt-4 rounded-lg shadow-sm">
-            <div className="p-4">
-              <h1 className="text-xl text-bold">Addtional Notes</h1>
+            <div className="grid grid-cols-1 gap-2">
+              <div className="bg-background mt-4 rounded-lg shadow-sm">
+                <div className="p-4">
+                  <h1 className="text-xl text-bold">Description</h1>
+                </div>
+                <Editor />
+              </div>
+              <div className="bg-background mt-4 rounded-lg shadow-sm">
+                <div className="p-4">
+                  <h1 className="text-xl text-bold">Addtional Notes</h1>
+                </div>
+                <Editor />
+              </div>
             </div>
-            <Editor />
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row justify-between items-center mt-5">
-          <Link href={"/settings"}>
-            <Button className="cursor-pointer" size="lg">
-              <ArrowLeft /> Go Back
-            </Button>
-          </Link>
-          <Button className="bg-[#11C7BC] cursor-pointer" size="lg">
-            <Save /> Save Package
-          </Button>
-        </div>
+            <div className="flex flex-col md:flex-row justify-between items-center mt-5">
+              <Link href={"/settings"}>
+                <Button className="cursor-pointer" size="lg">
+                  <ArrowLeft /> Go Back
+                </Button>
+              </Link>
+              <Button
+                type="submit"
+                className="bg-[#11C7BC] cursor-pointer"
+                size="lg"
+              >
+                <Save /> Save Package
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );

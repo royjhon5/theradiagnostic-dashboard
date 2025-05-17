@@ -60,11 +60,12 @@ export function middleware(request: NextRequest) {
   }
 
   const protectedRoutes: Record<string, string[]> = {
-    "/client-list/registration": ["staff", "doctor"],
-    "/client-list": ["staff", "doctor"],
+    "/client-list/registration": ["staff", "doctor", "admin"],
+    "/client-list": ["staff", "doctor", "admin"],
     "/settings/test-package": ["admin"],
     "/settings/laboratory-test": ["admin"],
     "/settings/user-management": ["admin"],
+    "/settings/report-settings": ["admin"],
     "/settings": ["admin", "doctor", "accountant", "staff"],
     "/appointment/create-assessment": ["admin", "doctor", "staff"],
     "/appointment": ["admin", "doctor", "staff"],
@@ -73,10 +74,10 @@ export function middleware(request: NextRequest) {
     "/transactions": ["admin", "accountant"],
     "/dashboard": ["admin", "doctor"],
     "/doctors": ["admin"],
-    "/reports": ["accountant"],
-    "/medical-records": ["doctor"],
-    "/analytics": ["doctor", "accountant"],
-    "/activity-history": ["staff"],
+    "/reports": ["accountant", "admin"],
+    "/medical-records": ["doctor", "admin"],
+    "/analytics": ["doctor", "accountant", "admin"],
+    "/activity-history": ["staff", "admin"],
   };
 
   for (const route in protectedRoutes) {

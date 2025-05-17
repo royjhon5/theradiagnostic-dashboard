@@ -12,20 +12,16 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-
   return (
     <div className="flex flex-col gap-2 md:flex-row md:items-center justify-between">
       <div className="flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2">
         <Input
           placeholder="Search ..."
           value={
-            (table.getColumn("groupline_name")?.getFilterValue() as string) ??
-            ""
+            (table.getColumn("firstName")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table
-              .getColumn("groupline_name")
-              ?.setFilterValue(event.target.value)
+            table.getColumn("firstName")?.setFilterValue(event.target.value)
           }
           className="h-10 w-full lg:w-[350px] bg-background"
         />

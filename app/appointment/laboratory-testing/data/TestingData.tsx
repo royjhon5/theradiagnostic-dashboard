@@ -4,14 +4,15 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Loader, Save, Trash } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { Save, Trash } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { Editor } from "@/components/blocks/editor-00/editor";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Backdrop } from "@/components/backdrop";
+import useGetClientById from "@/app/client-list/client/useGetClientById";
+import { Stepper } from "@/components/ui/stepper";
 interface TestItem {
   id: string;
   name: string;
@@ -20,7 +21,8 @@ interface TestItem {
 }
 export default function TestingData() {
   const searchParams = useSearchParams();
-  const raw = searchParams.get("labtest");
+  const raw = searchParams.get("clientId");
+  const router = useRouter();
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMMM dd, yyyy - EEEE");
   const [tests] = useState<TestItem[]>([
@@ -62,25 +64,35 @@ export default function TestingData() {
       {} as Record<string, boolean>
     )
   );
-  let currentRow: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
+  let currentId: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   if (raw) {
     try {
       const decoded = decodeURIComponent(raw);
-      currentRow = JSON.parse(decoded);
-      console.log("test", currentRow);
+      currentId = JSON.parse(decoded);
+      console.log("test", currentId);
     } catch (error) {
       console.error("Error parsing row data:", error);
     }
   }
-  const [open, setOpen] = useState(false);
+  const { clientDetails } = useGetClientById(currentId);
+
+  const steps = [
+    { title: "Client Registration", description: "Step 1" },
+    { title: "Laboratory Test", description: "Step 2" },
+    { title: "Done", description: "Step 3" },
+  ];
+
+  const [currentStep, setCurrentStep] = useState(2);
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 flex flex-col gap-3 mt-4">
       <div className="col-span-2">
-        <div className="w-full justify-end flex items-center">
-          <h1 className="text-xs font-bold italic mb-1">
-            {/* Package ID : 0001-256-6{" "} */}
-          </h1>
+        <div className="w-full justify-between flex items-center mb-4 bg-background shadow-sm p-4 rounded-lg border">
+          <Stepper
+            steps={steps}
+            currentStep={currentStep}
+            onStepChange={setCurrentStep}
+          />
         </div>
         <div className="bg-background p-2 border-l rounded-lg border-primary shadow-sm">
           <div className="flex flex-col md:flex-row gap-4 md:justify-between">
@@ -91,9 +103,12 @@ export default function TestingData() {
                 <AvatarFallback>CNs</AvatarFallback>
               </Avatar>
               <div className="flex flex-col gap-0">
-                <p style={{ fontSize: 10 }}>Client name</p>
-                <p className="text-md font-bold">{currentRow.client_name}</p>
-                <p className="text-sm">Client ID: {currentRow.priority_no}</p>
+                <p style={{ fontSize: 10 }}>
+                  Client name: {clientDetails?.firstName}{" "}
+                  {clientDetails?.middleName} {clientDetails?.lastName}
+                </p>
+                <p className="text-md font-bold"></p>
+                <p className="text-sm">Client ID: {currentId}</p>
               </div>
             </div>
             {/* right side */}
@@ -170,12 +185,6 @@ export default function TestingData() {
           </h2>
           <Editor />
         </div>
-        <Backdrop open={open} onClose={() => setOpen(false)} variant="blur">
-          <div className="animate-pulse">
-            <Loader className="h-12 w-12 animate-spin text-primary" />
-            Saving
-          </div>
-        </Backdrop>
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mt-5 gap-2">
           <Link href={"/appointment"}>
             <Button className="bg-[#FF2222] cursor-pointer" size="lg">
@@ -186,7 +195,11 @@ export default function TestingData() {
             <Button
               className="bg-[#11C7BC] cursor-pointer"
               size="lg"
-              onClick={() => setOpen(true)}
+              onClick={() =>
+                router.push(
+                  `/appointment/success?priorityNo=${clientDetails?.priorityNo}`
+                )
+              }
             >
               <Save /> Submit Lab Request
             </Button>

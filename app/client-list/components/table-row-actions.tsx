@@ -13,11 +13,11 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { GlobalData } from "../data/data";
 import { useMainContext } from "../context/context-provider";
+import { globalClientData } from "../schema";
 
 interface DataTableRowActionsProps {
-  row: Row<GlobalData>;
+  row: Row<globalClientData>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {

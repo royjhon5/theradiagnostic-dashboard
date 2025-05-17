@@ -95,7 +95,7 @@ interface TimelineItemProps extends Omit<HTMLMotionProps<"li">, "ref"> {
   /** Current status of the item */
   status?: "completed" | "in-progress" | "pending";
   /** Color theme for the connector line */
-  connectorColor?: TimelineColor;
+  connectorcolor?: TimelineColor;
   /** Whether to show the connector line */
   showConnector?: boolean;
   /** Size of the icon */

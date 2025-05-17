@@ -22,9 +22,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { GlobalData } from "../data/data";
 import { DataTableToolbar } from "./table-toolbar";
 import { DataTablePagination } from "./table-pagination";
+import { globalClientData } from "../schema";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,8 +34,8 @@ declare module "@tanstack/react-table" {
 }
 
 interface DataTableProps {
-  columns: ColumnDef<GlobalData>[];
-  data: GlobalData[];
+  columns: ColumnDef<globalClientData>[];
+  data: globalClientData[];
 }
 
 export function DataTable({ columns, data }: DataTableProps) {

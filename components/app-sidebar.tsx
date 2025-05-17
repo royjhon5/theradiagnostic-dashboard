@@ -34,6 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     username: "Unknown User",
     avatar: "/default-avatar.png",
     role: "admin",
+    email: "",
   });
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -47,7 +48,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         console.error("Failed to fetch user from cookie:", error);
       }
     };
-
     fetchUser();
   }, []);
   const fullNavMain = [
@@ -85,25 +85,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: "Reports",
       url: "#",
       icon: ClipboardMinus,
-      hideForRoles: ["staff", "doctor", "admin"],
+      hideForRoles: ["staff", "doctor"],
     },
     {
       title: "Client List",
       url: "/client-list",
       icon: ListCheck,
-      hideForRoles: ["admin", "accountant"],
+      hideForRoles: ["accountant"],
     },
     {
       title: "Medical Records",
       url: "#",
       icon: Calendar,
-      hideForRoles: ["admin", "staff", "accountant"],
+      hideForRoles: ["staff", "accountant"],
     },
     {
       title: "Analytics",
       url: "#",
       icon: ChartNoAxesCombined,
-      hideForRoles: ["admin", "staff"],
+      hideForRoles: ["staff"],
     },
   ];
 
@@ -112,7 +112,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: "Activity History",
       url: "#",
       icon: History,
-      hideForRoles: ["doctor", "accountant", "admin"],
+      hideForRoles: ["doctor", "accountant"],
     },
     {
       title: "Settings",

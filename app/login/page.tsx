@@ -4,33 +4,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import darklight from "../../public/logo/logo.png";
+import useSignIn from "./auth/useSignIn";
+import { Loader2 } from "lucide-react";
 
 export default function SignInPage() {
-  const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const handleLogin = async () => {
-    setError("");
-    const res = await fetch("/api/login", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (res.ok) {
-      router.push("/dashboard");
-    } else {
-      const data = await res.json();
-      setError(data.error);
-    }
-  };
-
+  const { onSubmit, register, handleSubmit, isLoading } = useSignIn();
   return (
     <div className="flex flex-col md:flex-row h-screen">
       <div className="w-full md:w-1/2 bg-background p-8 flex flex-col justify-center flex-1">
@@ -45,53 +25,51 @@ export default function SignInPage() {
             />
           </div>
           <h1 className="text-3xl font-bold text-center mb-2">Sign in</h1>
-          <div className="flex items-center justify-center mb-6">
-            <div className="text-gray-500">OR</div>
-          </div>
-          <div className="space-y-4">
-            <Input
-              type="email"
-              placeholder="Email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="keep-signed-in"
-                  className="border-gray-500 data-[state=checked]:bg-blue-500"
-                />
-                <label
-                  htmlFor="keep-signed-in"
-                  className="text-sm cursor-pointer"
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              <Input
+                type="text"
+                placeholder="Username"
+                {...register("username")}
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                {...register("password")}
+              />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="keep-signed-in"
+                    className="border-gray-500 data-[state=checked]:bg-blue-500"
+                  />
+                  <label
+                    htmlFor="keep-signed-in"
+                    className="text-sm cursor-pointer"
+                  >
+                    Keep me signed in
+                  </label>
+                </div>
+                <Link
+                  href="#"
+                  className="text-sm text-blue-400 hover:underline"
                 >
-                  Keep me signed in
-                </label>
+                  Forgot password?
+                </Link>
               </div>
-              <Link href="#" className="text-sm text-blue-400 hover:underline">
-                Forgot password?
-              </Link>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin" /> Logging In
+                  </>
+                ) : (
+                  "Log In"
+                )}
+              </Button>
             </div>
-            <Button className="w-full" onClick={handleLogin}>
-              Sign in
-            </Button>
-          </div>
-          <div className="mt-6 text-center text-sm">
-            <span>Don&apos;t have an account?</span>{" "}
-            <Link href="#" className="text-blue-400 hover:underline">
-              Sign up
-            </Link>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-          </div>
+          </form>
         </div>
       </div>
-
       <div className="hidden md:flex relative flex-1 bg-gradient-to-b from-blue-500 to-blue-900 p-8 flex-col justify-center items-start">
         <div className="max-w-md mx-auto md:mx-0 md:ml-16 lg:ml-24 z-10">
           <div className="absolute inset-0 flex flex-col gap-10 items-center justify-center text-white backdrop-blur-xs bg-[rgba(3,172,240,0.2)] font-bold px-4 pointer-events-none text-3xl text-center md:text-4xl lg:text-7xl">

@@ -3,10 +3,14 @@
 import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumbs";
 import MainProvider from "./context/context-provider";
 import { DataTable } from "./components/data-table";
-import data from "./data.json";
 import { DataColumns } from "./components/columns";
+import useClient from "./client/useClient";
+import { globalClientSchema } from "./schema";
 
 export default function ClientRegistration() {
+  const { clients } = useClient();
+  console.log(clients);
+  const result = globalClientSchema.parse(clients);
   return (
     <MainProvider>
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
@@ -16,7 +20,7 @@ export default function ClientRegistration() {
             <DynamicBreadcrumb />
           </div>
           <div>
-            <DataTable data={data} columns={DataColumns} />
+            <DataTable data={result} columns={DataColumns} />
           </div>
         </div>
       </div>

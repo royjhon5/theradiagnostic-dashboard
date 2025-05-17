@@ -3,7 +3,6 @@
 import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumbs";
 import { SelectField } from "@/components/dynamic-select";
 import { Button } from "@/components/ui/button";
-import { DatePicker } from "@/components/ui/date-picker";
 import {
   Form,
   FormControl,
@@ -14,36 +13,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-const formSchema = z.object({
-  firstname: z.string().min(1),
-  middlename: z.string().min(1),
-  lastname: z.string().min(1),
-  dob: z.coerce.date(),
-  age: z.string().min(1),
-  gender: z.string().min(1),
-  address: z.string().min(1),
-  province: z.string().min(1),
-  barangay: z.string().min(1),
-  senior: z.string().min(1),
-  validid: z.string().min(1),
-  valididno: z.string().min(1),
-  activeno: z.string().min(1),
-  activeemail: z.string().min(1),
-  medhistory: z.string().min(1),
-  currentmed: z.string().min(1),
-  knownallergies: z.string().min(1),
-  insuranceinfo: z.string().min(1),
-});
+import useCreateClient from "../client/useCreateClient";
+
 export default function ClientRegistration() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      dob: new Date(),
-    },
-  });
+  const { form, onSubmit } = useCreateClient();
   const gender = [
     { label: "Male", value: "Male" },
     { label: "Female", value: "Female" },
@@ -63,13 +36,6 @@ export default function ClientRegistration() {
     { label: "Passport", value: "Passport" },
   ];
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      console.log(values);
-    } catch (error) {
-      console.error("Form submission error", error);
-    }
-  }
   return (
     <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
       <div className="px-4 lg:px-6">
@@ -91,8 +57,7 @@ export default function ClientRegistration() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       {/* first name */}
                       <FormField
-                        control={form.control}
-                        name="firstname"
+                        name="firstName"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>FIRST NAME</FormLabel>
@@ -105,8 +70,7 @@ export default function ClientRegistration() {
                       />
                       {/* middlename */}
                       <FormField
-                        control={form.control}
-                        name="middlename"
+                        name="middleName"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>MIDDLE NAME</FormLabel>
@@ -119,8 +83,7 @@ export default function ClientRegistration() {
                       />
                       {/* last name */}
                       <FormField
-                        control={form.control}
-                        name="lastname"
+                        name="lastName"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>LAST NAME</FormLabel>
@@ -133,15 +96,11 @@ export default function ClientRegistration() {
                       />
                       {/* DOB */}
                       <FormField
-                        control={form.control}
-                        name="dob"
+                        name="dateOfBirth"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Date of Birth</FormLabel>
-                            <DatePicker
-                              value={field.value}
-                              onChange={field.onChange}
-                            />
+                            <Input type="date" {...field} />
                             <FormMessage />
                           </FormItem>
                         )}
@@ -154,7 +113,7 @@ export default function ClientRegistration() {
                           <FormItem>
                             <FormLabel>Age</FormLabel>
                             <FormControl>
-                              <Input type="" {...field} />
+                              <Input type="text" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -182,7 +141,7 @@ export default function ClientRegistration() {
                       {/* current address */}
                       <FormField
                         control={form.control}
-                        name="address"
+                        name="currentAddress"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Current Address</FormLabel>
@@ -224,7 +183,7 @@ export default function ClientRegistration() {
                       {/* senior citizen */}
                       <FormField
                         control={form.control}
-                        name="senior"
+                        name="seniorCitizen"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Senior Citizen</FormLabel>
@@ -242,7 +201,7 @@ export default function ClientRegistration() {
                       {/* valid id */}
                       <FormField
                         control={form.control}
-                        name="validid"
+                        name="validId"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Valid ID</FormLabel>
@@ -260,7 +219,7 @@ export default function ClientRegistration() {
                       {/* Valid ID No */}
                       <FormField
                         control={form.control}
-                        name="valididno"
+                        name="validIdNo"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Valid ID No.</FormLabel>
@@ -274,7 +233,7 @@ export default function ClientRegistration() {
                       {/* Active Phone number */}
                       <FormField
                         control={form.control}
-                        name="activeno"
+                        name="activePhoneNumber"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Active Phone Number</FormLabel>
@@ -288,7 +247,7 @@ export default function ClientRegistration() {
                       {/* Active Email */}
                       <FormField
                         control={form.control}
-                        name="activeemail"
+                        name="activeEmail"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Active Email</FormLabel>
@@ -309,7 +268,7 @@ export default function ClientRegistration() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <FormField
                         control={form.control}
-                        name="medhistory"
+                        name="medicalHistory"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Medical History</FormLabel>
@@ -323,7 +282,7 @@ export default function ClientRegistration() {
                       {/* Current Medication */}
                       <FormField
                         control={form.control}
-                        name="currentmed"
+                        name="currentMedication"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Current Medication</FormLabel>
@@ -337,7 +296,7 @@ export default function ClientRegistration() {
                       {/* KnownAllergies */}
                       <FormField
                         control={form.control}
-                        name="knownallergies"
+                        name="knownAllergies"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Known Allergies</FormLabel>
@@ -352,7 +311,7 @@ export default function ClientRegistration() {
                     <div className="grid grid-cols-1 md:grid-cols-1 py-4">
                       <FormField
                         control={form.control}
-                        name="insuranceinfo"
+                        name="insuranceInfo"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Insurance Info</FormLabel>

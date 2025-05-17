@@ -52,7 +52,7 @@ export default function Settings() {
       id: "reports",
       title: "Report Settings",
       icon: <FileText size={36} />,
-      route: "#",
+      route: "/settings/report-settings",
       content: [
         "Report Templates: Customize report formats for receipts, financial summaries, and laboratory reports.",
         "Schedule Automatic Reports: Define settings for generating and distributing periodic reports.",

@@ -27,6 +27,6 @@ export interface TimelineProps {
   size?: TimelineSize;
   animate?: boolean;
   iconColor?: TimelineColor;
-  connectorColor?: TimelineColor;
+  connectcolors?: TimelineColor;
   className?: string;
 }

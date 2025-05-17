@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import LayoutWrapper from "@/components/shared/layout-wrapper";
 import NextTopLoader from "nextjs-toploader";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Toaster } from "sonner";
 
 const META_THEME_COLORS = {
   light: "#ffffff",
@@ -124,7 +125,10 @@ export default async function RootLayout({
           >
             <NextTopLoader crawlSpeed={200} easing="ease" />
             <LayoutWrapper>
-              <NuqsAdapter>{children}</NuqsAdapter>
+              <NuqsAdapter>
+                <Toaster />
+                {children}
+              </NuqsAdapter>
             </LayoutWrapper>
           </ActiveThemeProvider>
         </ThemeProvider>

@@ -4,15 +4,13 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
@@ -20,72 +18,22 @@ import { ArrowLeft, BadgeInfo, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-const formSchema = z.object({
-  package_name: z.string().min(1),
-  description: z.string().min(1),
-  price: z.string().min(1),
-  starting_date: z.coerce.date(),
-  ending_date: z.coerce.date(),
-});
-
-interface TestItem {
-  id: string;
-  name: string;
-  price: number;
-  checked: boolean;
-}
+import useGetLaboratoryTest from "../../laboratory-test/hooks/useGetLaboratoryTest";
+import useCreateLaboratoryPackage from "../hooks/useCreateLaboratoryPackage";
+import { PackageItemDto } from "@/types/DTO/LaboratoryPackage.dto";
 
 export default function TestPackageData() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      starting_date: new Date(),
-      ending_date: new Date(),
-    },
-  });
-  const [tests, setTests] = useState<TestItem[]>([
-    {
-      id: "cbc",
-      name: "Complete Blood Count (CBC)",
-      price: 200.0,
-      checked: false,
-    },
-    { id: "lipid", name: "Lipid Panel", price: 450.0, checked: false },
-    { id: "thyroid", name: "Thyroid Panel", price: 150.0, checked: false },
-    { id: "xray", name: "X-ray", price: 80.0, checked: false },
-    { id: "mri", name: "MRI", price: 80.0, checked: false },
-    { id: "ct", name: "CT Scan", price: 80.0, checked: false },
-  ]);
+  const { form, onSubmit } = useCreateLaboratoryPackage();
+  const { labtest } = useGetLaboratoryTest();
   const [total, setTotal] = useState(0);
   const [packagePrice, setPackagePrice] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      console.log(values);
-    } catch (error) {
-      console.error("Form submission error", error);
-    }
-  }
-  const handleCheckboxChange = (id: string) => {
-    const updatedTests = tests.map((test) =>
-      test.id === id ? { ...test, checked: !test.checked } : test
-    );
-    setTests(updatedTests);
-
-    const totalSum = updatedTests
-      .filter((test) => test.checked)
-      .reduce((sum, test) => sum + test.price, 0);
-
-    setTotal(totalSum);
-    setDiscountedAmount(packagePrice - totalSum);
-  };
+  const [selectedTests, setSelectedTests] = useState<number[]>([]);
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 flex flex-col gap-3">
       <div className="col-span-2">
         <div className="w-full justify-end flex items-center">
-          <h1 className="text-xs font-bold italic mb-1">
-            Package ID : 0001-256-6{" "}
-          </h1>
+          <h1 className="text-xs font-bold italic mt-5"></h1>
         </div>
         <div className="bg-background p-2 border-l rounded-lg border-primary shadow-sm">
           <div className="flex flex-col md:flex-row gap-4 md:justify-between">
@@ -109,13 +57,13 @@ export default function TestPackageData() {
           </div>
         </div>
         {/* input fields */}
-        <div className="bg-background p-4 rounded-lg shadow-sm mt-4">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="bg-background p-4 rounded-lg shadow-sm mt-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
-                  name="package_name"
+                  name="packageName"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Package Name</FormLabel>
@@ -129,7 +77,7 @@ export default function TestPackageData() {
 
                 <FormField
                   control={form.control}
-                  name="description"
+                  name="packageDescription"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Description</FormLabel>
@@ -140,22 +88,21 @@ export default function TestPackageData() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
-                  name="price"
+                  name="totalPrice"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Price • (₱)</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
                           {...field}
+                          type="text"
                           onChange={(e) => {
                             const value = parseFloat(e.target.value) || 0;
-                            field.onChange(e); // keep form state updated
-                            setPackagePrice(value);
-                            setDiscountedAmount(value - total); // also update discounted
+                            field.onChange(value); // update react-hook-form
+                            setPackagePrice(value); // update state for calculations
+                            setDiscountedAmount(value - total); // recalculate discounted amount
                           }}
                         />
                       </FormControl>
@@ -163,10 +110,9 @@ export default function TestPackageData() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
-                  name="starting_date"
+                  name="startingDate"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Starting Date</FormLabel>
@@ -191,7 +137,7 @@ export default function TestPackageData() {
 
                 <FormField
                   control={form.control}
-                  name="ending_date"
+                  name="endingDate"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Ending Date</FormLabel>
@@ -214,90 +160,138 @@ export default function TestPackageData() {
                   )}
                 />
               </div>
-            </form>
-          </Form>
-        </div>
-        {/* ends here */}
-        <div className="bg-background mt-4 shadow-sm rounded-lg">
-          <h2 className="font-bold text-lg bg-primary text-white rounded-t-lg pl-2">
-            Select Individual Test to Add to Package
-          </h2>
-          <div className="grid grid-cols-1 p-4 md:p-5">
-            <div className="space-y-2">
-              {tests.map((test) => (
-                <div
-                  key={test.id}
-                  className="flex items-center justify-between py-1"
-                >
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id={`test-${test.id}-1`}
-                      checked={test.checked}
-                      onCheckedChange={() => handleCheckboxChange(test.id)}
-                      className="border border-primary cursor-pointer"
+            </div>
+            {/* ends here */}
+            <div className="bg-background mt-4 shadow-sm rounded-lg">
+              <h2 className="font-bold text-lg bg-primary text-white rounded-t-lg pl-2">
+                Select Individual Test to Add to Package
+              </h2>
+              <div className="grid grid-cols-1 p-4 md:p-5">
+                <div className="space-y-2">
+                  {labtest?.map((test) => (
+                    <FormField
+                      key={test.id}
+                      control={form.control}
+                      name="packages"
+                      render={({ field }) => {
+                        const isChecked = field.value?.some(
+                          (selectedItem: PackageItemDto) =>
+                            selectedItem.itemName === test.testName
+                        );
+
+                        const currentItem: PackageItemDto = {
+                          itemName: test.testName,
+                          itemPrice: Number(test.price),
+                        };
+
+                        return (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                            <FormControl>
+                              <Checkbox
+                                checked={isChecked}
+                                onCheckedChange={(checked) => {
+                                  const updated = checked
+                                    ? [...(field.value || []), currentItem]
+                                    : field.value?.filter(
+                                        (i: PackageItemDto) =>
+                                          i.itemName !== currentItem.itemName
+                                      ) || [];
+                                  field.onChange(updated);
+                                  let updatedSelected;
+                                  if (checked) {
+                                    updatedSelected = [
+                                      ...selectedTests,
+                                      test.id,
+                                    ];
+                                  } else {
+                                    updatedSelected = selectedTests.filter(
+                                      (id) => id !== test.id
+                                    );
+                                  }
+                                  setSelectedTests(updatedSelected);
+
+                                  const totalSelected = labtest
+                                    .filter((test) =>
+                                      updatedSelected.includes(test.id)
+                                    )
+                                    .reduce(
+                                      (sum, test) =>
+                                        sum + parseFloat(test.price),
+                                      0
+                                    );
+
+                                  setTotal(totalSelected);
+                                  setDiscountedAmount(
+                                    packagePrice - totalSelected
+                                  );
+                                }}
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel>{test.testName}</FormLabel>
+                              <FormDescription>₱{test.price}</FormDescription>
+                            </div>
+                          </FormItem>
+                        );
+                      }}
                     />
-                    <label
-                      htmlFor={`test-${test.id}-1`}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {test.name}
-                    </label>
+                  ))}
+                </div>
+                <p className="text-right text-sm mt-5">
+                  Total price of Selected Test: ₱{total.toFixed(2)}
+                </p>
+              </div>
+            </div>
+            <div className="p-2">
+              <div className="flex flex-col md:flex-row gap-4 md:justify-between">
+                {/* left side */}
+                <div className="flex flex-row gap-2 items-center">
+                  <BadgeInfo />
+                  <div className="flex flex-col">
+                    <h2 style={{ fontSize: 10 }} className="italic font-bold">
+                      The discounted amount is caculated by subtracting
+                    </h2>
+                    <h2 style={{ fontSize: 10 }} className="italic font-bold">
+                      the total price of the selected lab tests from the
+                    </h2>
+                    <h2 style={{ fontSize: 10 }} className="italic font-bold">
+                      package&apos;s set price.
+                    </h2>
                   </div>
-                  <span className="text-sm font-medium">
-                    ₱{test.price.toFixed(2)}
-                  </span>
                 </div>
-              ))}
-            </div>
-            <p className="text-right text-sm mt-5">
-              Total price of Selected Test: ₱{total.toFixed(2)}
-            </p>
-          </div>
-        </div>
-        <div className="p-2">
-          <div className="flex flex-col md:flex-row gap-4 md:justify-between">
-            {/* left side */}
-            <div className="flex flex-row gap-2 items-center">
-              <BadgeInfo />
-              <div className="flex flex-col">
-                <h2 style={{ fontSize: 10 }} className="italic font-bold">
-                  The discounted amount is caculated by subtracting
-                </h2>
-                <h2 style={{ fontSize: 10 }} className="italic font-bold">
-                  the total price of the selected lab tests from the
-                </h2>
-                <h2 style={{ fontSize: 10 }} className="italic font-bold">
-                  package&apos;s set price.
-                </h2>
-              </div>
-            </div>
-            {/* right side */}
-            <div>
-              <div className="text-sm text-gray-600">Package Price</div>
-              <div className="flex">
-                <div className="text-2xl font-bold">
-                  ₱ {discountedAmount.toFixed(2)} /
-                </div>
-                <div className="ml-1 text-sm text-gray-600">
-                  <span className="font-medium">₱ {total.toFixed(2)}</span>
-                  <div className="text-xs">Discounted Amount</div>
+                {/* right side */}
+                <div>
+                  <div className="text-sm text-gray-600">Package Price</div>
+                  <div className="flex">
+                    <div className="text-2xl font-bold">
+                      ₱ {discountedAmount.toFixed(2)} /
+                    </div>
+                    <div className="ml-1 text-sm text-gray-600">
+                      <span className="font-medium">₱ {total.toFixed(2)}</span>
+                      <div className="text-xs">Discounted Amount</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <Separator />
-        <div className="flex flex-col md:flex-row justify-between items-center mt-5">
-          <Link href={"/settings"}>
-            <Button className="cursor-pointer" size="lg">
-              <ArrowLeft />
-              Go Back
-            </Button>
-          </Link>
-          <Button className="bg-[#11C7BC] cursor-pointer" size="lg">
-            <Save /> Save Package
-          </Button>
-        </div>
+            <Separator />
+            <div className="flex flex-col md:flex-row justify-between items-center mt-5">
+              <Link href={"/settings"}>
+                <Button className="cursor-pointer" size="lg">
+                  <ArrowLeft />
+                  Go Back
+                </Button>
+              </Link>
+              <Button
+                type="submit"
+                className="bg-[#11C7BC] cursor-pointer"
+                size="lg"
+              >
+                <Save /> Save Package
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );
