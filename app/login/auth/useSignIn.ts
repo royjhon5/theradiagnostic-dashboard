@@ -17,7 +17,7 @@ import { useState } from "react";
 const useSignIn = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [isLoading, setLoadings] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -57,16 +57,16 @@ const useSignIn = () => {
       } else {
         toast.error("Error: Unauthorized User");
       }
-      setLoading(false);
+      setLoadings(false);
     },
     onError: () => {
       toast.error("Error: Unauthorized User");
-      setLoading(false);
+      setLoadings(false);
     },
   });
 
   const onSubmit = ({ username, password }: globalLoginSchema) => {
-    setLoading(true);
+    setLoadings(true);
     mutation.mutate({
       username,
       password,

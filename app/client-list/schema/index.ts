@@ -21,6 +21,7 @@ export const clientSchema = z.object({
   insuranceInfo: z.string(),
   appointmentDate: z.string(),
   appointmentType: z.string(),
+  employersId: z.string(),
 });
 export type globalClientData = z.infer<typeof clientSchema>;
 export const globalClientSchema = z.array(clientSchema);

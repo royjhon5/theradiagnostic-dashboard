@@ -15,14 +15,11 @@ interface LayoutWrapperProps {
 
 export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const userRoleString = Cookies.get("user");
-
   let role: string | null = null;
-
   if (userRoleString) {
     try {
       const user = JSON.parse(userRoleString);
       role = user.role;
-      console.log("User role:", role);
     } catch (error) {
       console.error("Failed to parse user cookie:", error);
     }
@@ -42,6 +39,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
           open={loading}
           onClose={() => setLoading(false)}
           variant="blur"
+          className="z-50"
         >
           <div className="flex flex-row h-full justify-center items-center animate-pulse gap-2">
             <Loader2 className="animate-spin" />

@@ -21,6 +21,8 @@ import Link from "next/link";
 import useGetLaboratoryTest from "../../laboratory-test/hooks/useGetLaboratoryTest";
 import useCreateLaboratoryPackage from "../hooks/useCreateLaboratoryPackage";
 import { PackageItemDto } from "@/types/DTO/LaboratoryPackage.dto";
+import { format } from "date-fns";
+import Cookies from "js-cookie";
 
 export default function TestPackageData() {
   const { form, onSubmit } = useCreateLaboratoryPackage();
@@ -29,6 +31,15 @@ export default function TestPackageData() {
   const [packagePrice, setPackagePrice] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
   const [selectedTests, setSelectedTests] = useState<number[]>([]);
+  const currentDate = new Date();
+  const formattedDate = format(currentDate, "MMMM dd, yyyy - EEEE");
+  const user = Cookies.get("user");
+  const userId = Cookies.get("userid");
+  let Username: string | null = null;
+  if (user) {
+    const parsedUser = JSON.parse(user);
+    Username = parsedUser.username;
+  }
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 flex flex-col gap-3">
       <div className="col-span-2">
@@ -45,13 +56,13 @@ export default function TestPackageData() {
               </Avatar>
               <div className="flex flex-col gap-0">
                 <p style={{ fontSize: 10 }}>Performed by:</p>
-                <p className="text-md font-bold">Nate Diaz</p>
-                <p className="text-sm">Staff ID: 006-2548-63</p>
+                <p className="text-md font-bold">{Username}</p>
+                <p className="text-sm">ID: {userId}</p>
               </div>
             </div>
             {/* right side */}
             <div className="flex flex-col justify-end md:text-right">
-              <p className="text-md font-bold">May 15, 2025 - Friday</p>
+              <p className="text-md font-bold">{formattedDate}</p>
               <p style={{ fontSize: 10 }}>Date of Addition</p>
             </div>
           </div>
@@ -277,7 +288,7 @@ export default function TestPackageData() {
             <Separator />
             <div className="flex flex-col md:flex-row justify-between items-center mt-5">
               <Link href={"/settings"}>
-                <Button className="cursor-pointer" size="lg">
+                <Button type="button" className="cursor-pointer" size="lg">
                   <ArrowLeft />
                   Go Back
                 </Button>

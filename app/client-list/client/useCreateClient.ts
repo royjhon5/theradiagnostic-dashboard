@@ -10,12 +10,13 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useAppLoaderContext } from "@/components/providers/app-loader-provider";
+import { CreateClientDto } from "@/types/DTO/Client.dto";
 
 const useCreateClient = () => {
   const { refetchClient } = useClient();
   const { setLoading } = useAppLoaderContext();
   const router = useRouter();
-  const form = useForm<globalClientData>({
+  const form = useForm<CreateClientDto>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
       firstName: "",
@@ -38,6 +39,7 @@ const useCreateClient = () => {
       insuranceInfo: "",
       appointmentDate: "",
       appointmentType: "",
+      employersId: "",
     },
   });
 
@@ -80,6 +82,7 @@ const useCreateClient = () => {
     insuranceInfo,
     appointmentDate,
     appointmentType,
+    employersId,
   }: globalClientData) => {
     setLoading(true);
     mutate({
@@ -103,6 +106,7 @@ const useCreateClient = () => {
       insuranceInfo,
       appointmentDate,
       appointmentType,
+      employersId,
     });
   };
 

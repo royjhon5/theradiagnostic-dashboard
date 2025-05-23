@@ -28,7 +28,7 @@ export function SiteHeader() {
     exit: { opacity: 0, y: 10, transition: { duration: 0.3 } },
   };
   return (
-    <header className="sticky top-0 z-50 flex h-(--header-height) backdrop-blur-md shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header className="sticky top-0 z-30 flex h-(--header-height) backdrop-blur-lg bg-background shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
         <SidebarTrigger className="-ml-1 cursor-pointer" />
         <div className="ml-auto flex items-center gap-2">

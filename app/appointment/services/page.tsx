@@ -10,8 +10,12 @@ import {
 import { Stepper } from "@/components/ui/stepper";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { steps } from "../client-registration/data";
+import useGetLaboratoryPackage from "@/app/settings/test-package/hooks/useGetLaboratoryPackage";
 
 const Services = () => {
+  const { laboratoryPackage } = useGetLaboratoryPackage();
+  console.log("laboratoryPackage", laboratoryPackage);
   const searchParams = useSearchParams();
   const raw = searchParams.get("clientId");
   let currentId: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -26,41 +30,11 @@ const Services = () => {
   }
   const { clientDetails } = useGetClientById(currentId);
   const router = useRouter();
-  const tricks = [
-    {
-      label: "Basic 5",
-      description:
-        "CBC, Urinary Analysis, Stool Examination, Chest X-Ray, Physical Exam",
-    },
-    {
-      label: "Doctors Consultation",
-      description: "",
-    },
-    {
-      label: "Basic & Special Laboratory Test",
-      description: "",
-    },
-    {
-      label: "X-Ray",
-      description: "",
-    },
-    {
-      label: "Others",
-      description: "",
-    },
-  ];
-  const steps = [
-    { title: "Client Registration", description: "Step 1" },
-    { title: "Service", description: "Step 2" },
-    { title: "Done", description: "Step 3" },
-  ];
-
   const [currentStep, setCurrentStep] = useState(2);
-
   const handleItemClick = (label: string) => {
     if (label === "Basic 5" || label === "Doctors Consultation") {
       router.push(
-        `/appointment/success?priorityNo=${clientDetails?.priorityNo}`
+        `/appointment/payment?priorityNo=${clientDetails?.priorityNo}&&labpackde=${label}&&clientId=${currentId}`
       );
     } else {
       router.push(`/appointment/laboratory-testing?clientId=${currentId}`);
@@ -86,18 +60,23 @@ const Services = () => {
               <div className="flex justify-center items-center grid grid-cols-1 md:grid-cols-1 mt-5">
                 <div className="bg-background rounded-lg p-2">
                   <Listbox>
-                    {tricks.map((trick) => (
+                    {laboratoryPackage.map((item) => (
                       <ListboxItem
-                        key={trick.label}
-                        value={trick.label}
+                        key={item.id}
+                        value={item.packageName}
                         className="cursor-pointer"
-                        onClick={() => handleItemClick(trick.label)}
+                        onClick={() => handleItemClick(item.packageName)}
                       >
                         <div className="flex flex-col">
-                          <div className="font-medium">{trick.label}</div>
-                          <div className="text-muted-foreground text-sm">
-                            {trick.description}
-                          </div>
+                          <div className="font-medium">{item.packageName}</div>
+                          {item.packages.map((pkg, idx) => (
+                            <div
+                              className="text-muted-foreground text-sm flex flex-row"
+                              key={idx}
+                            >
+                              {pkg.itemName}
+                            </div>
+                          ))}
                         </div>
                         <ListboxItemIndicator />
                       </ListboxItem>

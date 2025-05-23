@@ -23,6 +23,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAppLoaderContext } from "./providers/app-loader-provider";
 
 export function NavUser({
   user,
@@ -36,7 +37,9 @@ export function NavUser({
 }) {
   const router = useRouter();
   const { isMobile } = useSidebar();
+  const { setLoading } = useAppLoaderContext();
   const handleLogout = async () => {
+    setLoading(true);
     try {
       const res = await fetch("/api/logout", { method: "POST" });
       if (res.ok) {
@@ -44,6 +47,8 @@ export function NavUser({
       }
     } catch (error) {
       console.error("Logout failed", error);
+    } finally {
+      setLoading(false);
     }
   };
 

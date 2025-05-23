@@ -19,6 +19,7 @@ export type CreateClientDto = {
   insuranceInfo: string;
   appointmentDate: string;
   appointmentType: string;
+  employersId: string;
 };
 
 export type UpdateClientDto = CreateClientDto & {
@@ -70,4 +71,9 @@ export type GetClientDTO = {
   knownAllergies: string;
   insuranceInfo: string;
   priorityNo: string;
+};
+
+export type GetReferralCodeDTO = {
+  id: number;
+  referralCode: string;
 };

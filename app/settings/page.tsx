@@ -14,9 +14,11 @@ import {
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Settings() {
   const router = useRouter();
+  const [loadingCardId, setLoadingCardId] = useState<string | null>(null);
   const settingsCards = [
     {
       id: "laboratory-test",
@@ -46,6 +48,18 @@ export default function Settings() {
         "Add/Remove Users: Options to create new user accounts and remove existing ones.",
         "Role and Permission Settings: Assign or modify user roles and access levels to ensure appropriate permissions.",
         "Password Management: Tools for resetting passwords or enforcing password policies.",
+      ],
+    },
+    {
+      id: "employers",
+      title: "Employers-Settings",
+      icon: <FileText size={36} />,
+      route: "/settings/employers-settings",
+      content: [
+        "Manager Employers Profiles.",
+        "Associate Patients/Employees.",
+        "Data Access and Permissions.",
+        "Reporting and Analytics.",
       ],
     },
     {
@@ -101,9 +115,16 @@ export default function Settings() {
       ],
     },
   ];
-  const handleCardClick = (route: string, disabled = false) => {
-    if (!disabled) {
-      router.push(route);
+  const handleCardClick = (
+    route: string,
+    disabled = false,
+    cardId?: string
+  ) => {
+    if (!disabled && cardId) {
+      setLoadingCardId(cardId);
+      setTimeout(() => {
+        router.push(route);
+      }, 300);
     }
   };
   return (
@@ -124,7 +145,9 @@ export default function Settings() {
                       ? "hover:shadow-md hover:border-sky-200 cursor-pointer"
                       : "opacity-80 cursor-default"
                   }`}
-                  onClick={() => handleCardClick(card.route, card.disabled)}
+                  onClick={() =>
+                    handleCardClick(card.route, card.disabled, card.id)
+                  }
                   tabIndex={card.disabled ? -1 : 0}
                   role="button"
                   aria-disabled={card.disabled}
@@ -133,6 +156,12 @@ export default function Settings() {
                     <Badge className="absolute top-2 right-2 bg-sky-500 text-white">
                       {card.badge}
                     </Badge>
+                  )}
+
+                  {loadingCardId === card.id && (
+                    <div className="absolute inset-0 z-10 bg-white bg-opacity-60 flex items-center justify-center rounded-md">
+                      <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-sky-500" />
+                    </div>
                   )}
                   <CardContent className="pt-6 px-6 pb-6 flex flex-col items-center">
                     <div className="w-12 h-12 flex items-center justify-center text-sky-500 mb-2">

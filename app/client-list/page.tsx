@@ -9,7 +9,6 @@ import { globalClientSchema } from "./schema";
 
 export default function ClientRegistration() {
   const { clients } = useClient();
-  console.log(clients);
   const result = globalClientSchema.parse(clients);
   return (
     <MainProvider>

@@ -160,7 +160,7 @@ export default function ClientRegistration() {
                           <FormItem>
                             <FormLabel>Province</FormLabel>
                             <FormControl>
-                              <Input type="textt" {...field} />
+                              <Input type="text" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
