@@ -1,14 +1,13 @@
 import { getClientById } from "@/app/api/services/client.api";
 import { useQuery } from "@tanstack/react-query";
 
-const useGetClientById = (clientId: string) => {
+const useGetClientById = (clientId: number) => {
   const { data, refetch, isLoading, error } = useQuery({
     queryKey: ["client-details", clientId],
     queryFn: async () => {
       const response = await getClientById(clientId);
       return response;
     },
-    enabled: !!clientId && clientId !== "",
   });
 
   return {
@@ -17,6 +16,7 @@ const useGetClientById = (clientId: string) => {
     error,
     isLoading,
     refetchGetClientDetails: refetch,
+    clientData: data?.response ?? [],
   };
 };
 

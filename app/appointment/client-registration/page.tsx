@@ -14,9 +14,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Stepper } from "@/components/ui/stepper";
-import { Textarea } from "@/components/ui/textarea";
+// import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { appointmentType, gender, seniorcitizen, steps, validID } from "./data";
+import {
+  appointmentType,
+  CivilStatus,
+  clientType,
+  gender,
+  steps,
+  // validID
+} from "./data";
 import useEmployer from "@/app/settings/employers-settings/hooks/useEmployer";
 import {
   Select,
@@ -41,6 +48,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import useGetReferralCode from "../hooks/useGetReferralCode";
 
 export default function ClientRegistration() {
   const { form, onSubmit } = useCreateClient();
@@ -49,8 +57,14 @@ export default function ClientRegistration() {
   const [currentStep, setCurrentStep] = useState(0);
   const { employerdata } = useEmployer();
   const { employer } = useGetEmployersById(selectedEmployerId);
+  const [refferalCode, setReferralCode] = useState<string>("");
   const DisableInputOnSelect =
     selectedType === "Annual Check Up" ? true : false;
+  const { isPending, refetchData, referralData } =
+    useGetReferralCode(refferalCode);
+  const CheckReferralCode = () => {
+    refetchData();
+  };
 
   return (
     <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
@@ -195,14 +209,14 @@ export default function ClientRegistration() {
                                             "currentAddress",
                                             item.currentAddress
                                           );
-                                          form.setValue(
-                                            "province",
-                                            item.province
-                                          );
-                                          form.setValue(
-                                            "barangay",
-                                            item.barangay
-                                          );
+                                          // form.setValue(
+                                          //   "province",
+                                          //   item.province
+                                          // );
+                                          // form.setValue(
+                                          //   "barangay",
+                                          //   item.barangay
+                                          // );
                                         }}
                                       >
                                         <CheckCircle
@@ -230,6 +244,49 @@ export default function ClientRegistration() {
                     {(selectedType === "Walk-In" ||
                       selectedType === "Annual Check Up") && (
                       <>
+                        <div className="mt-5">
+                          <div className="flex flex-col w-full max-w-sm space-y-2">
+                            <div className="flex items-center space-x-2">
+                              <Input
+                                type="text"
+                                placeholder="Referral Code"
+                                value={refferalCode}
+                                onChange={(e) => {
+                                  setReferralCode(e.target.value);
+                                }}
+                                disabled={isPending}
+                              />
+                              <Button
+                                type="button"
+                                onClick={CheckReferralCode}
+                                disabled={
+                                  isPending ||
+                                  referralData === "Valid Referral Code" ||
+                                  referralData === "Invalid Referral Code"
+                                }
+                              >
+                                {isPending ? "Checking..." : "Check Validity"}
+                              </Button>
+                            </div>
+
+                            {referralData === "Invalid Referral Code" && (
+                              <p
+                                className="text-red-500 font-semibold"
+                                style={{ fontSize: "12px" }}
+                              >
+                                Invalid referral code.
+                              </p>
+                            )}
+                            {referralData === "Valid Referral Code" && (
+                              <p
+                                className="text-green-500 font-semibold"
+                                style={{ fontSize: "12px" }}
+                              >
+                                Valid referral code!
+                              </p>
+                            )}
+                          </div>
+                        </div>
                         <div className="py-4">
                           <h2 className="text-blue-500 font-bold">
                             Personal Information
@@ -348,7 +405,7 @@ export default function ClientRegistration() {
                             name="currentAddress"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Current Address</FormLabel>
+                                <FormLabel>Address</FormLabel>
                                 <FormControl>
                                   <Input
                                     type="text"
@@ -361,7 +418,7 @@ export default function ClientRegistration() {
                             )}
                           />
                           {/* Province */}
-                          <FormField
+                          {/* <FormField
                             control={form.control}
                             name="province"
                             render={({ field }) => (
@@ -377,9 +434,9 @@ export default function ClientRegistration() {
                                 <FormMessage />
                               </FormItem>
                             )}
-                          />
+                          /> */}
                           {/* barangay */}
-                          <FormField
+                          {/* <FormField
                             control={form.control}
                             name="barangay"
                             render={({ field }) => (
@@ -395,37 +452,37 @@ export default function ClientRegistration() {
                                 <FormMessage />
                               </FormItem>
                             )}
-                          />
+                          /> */}
                           {/* senior citizen */}
                           <FormField
                             control={form.control}
-                            name="seniorCitizen"
+                            name="clientType"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Senior Citizen</FormLabel>
+                                <FormLabel>Client Type</FormLabel>
                                 <FormControl>
                                   <SelectField
                                     value={field.value}
                                     onChange={field.onChange}
-                                    options={seniorcitizen}
+                                    options={clientType}
                                   />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
-                          {/* valid id */}
+                          {/* Civil Status */}
                           <FormField
                             control={form.control}
-                            name="validId"
+                            name="civilStatus"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Valid ID</FormLabel>
+                                <FormLabel>Civil Status</FormLabel>
                                 <FormControl>
                                   <SelectField
                                     value={field.value}
                                     onChange={field.onChange}
-                                    options={validID}
+                                    options={CivilStatus}
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -433,7 +490,7 @@ export default function ClientRegistration() {
                             )}
                           />
                           {/* Valid ID No */}
-                          <FormField
+                          {/* <FormField
                             control={form.control}
                             name="validIdNo"
                             render={({ field }) => (
@@ -445,14 +502,14 @@ export default function ClientRegistration() {
                                 <FormMessage />
                               </FormItem>
                             )}
-                          />
+                          /> */}
                           {/* Active Phone number */}
                           <FormField
                             control={form.control}
                             name="activePhoneNumber"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Active Phone Number</FormLabel>
+                                <FormLabel>Contact Number</FormLabel>
                                 <FormControl>
                                   <Input type="text" {...field} />
                                 </FormControl>
@@ -461,7 +518,7 @@ export default function ClientRegistration() {
                             )}
                           />
                           {/* Active Email */}
-                          <FormField
+                          {/* <FormField
                             control={form.control}
                             name="activeEmail"
                             render={({ field }) => (
@@ -473,7 +530,7 @@ export default function ClientRegistration() {
                                 <FormMessage />
                               </FormItem>
                             )}
-                          />
+                          /> */}
 
                           {/* Appointment Date */}
                           <FormField
@@ -492,7 +549,7 @@ export default function ClientRegistration() {
                         </div>
                       </>
                     )}
-                    {(selectedType === "Walk-In" ||
+                    {/* {(selectedType === "Walk-In" ||
                       selectedType === "Annual Check Up") && (
                       <>
                         <div className="py-4">
@@ -500,7 +557,7 @@ export default function ClientRegistration() {
                             Medical Information
                           </h2>
                         </div>
-                        {/* Medical History */}
+                     
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                           <FormField
                             control={form.control}
@@ -515,7 +572,7 @@ export default function ClientRegistration() {
                               </FormItem>
                             )}
                           />
-                          {/* Current Medication */}
+                       
                           <FormField
                             control={form.control}
                             name="currentMedication"
@@ -529,7 +586,7 @@ export default function ClientRegistration() {
                               </FormItem>
                             )}
                           />
-                          {/* KnownAllergies */}
+                     
                           <FormField
                             control={form.control}
                             name="knownAllergies"
@@ -549,39 +606,20 @@ export default function ClientRegistration() {
                           />
                         </div>
                       </>
-                    )}
+                    )} */}
                     {(selectedType === "Walk-In" ||
                       selectedType === "Annual Check Up") && (
-                      <div className="grid grid-cols-1 md:grid-cols-1 py-4">
-                        <FormField
-                          control={form.control}
-                          name="insuranceInfo"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Insurance Info</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  placeholder=""
-                                  className="resize-none"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <div className="flex flex-row gap-2 mt-6">
-                          <Button type="submit" size="lg" className="w-40">
-                            Save
-                          </Button>
-                          <Button
-                            type="button"
-                            size="lg"
-                            className="bg-orange-500 w-40"
-                          >
-                            Clear
-                          </Button>
-                        </div>
+                      <div className="flex flex-row gap-2 mt-6">
+                        <Button type="submit" size="lg" className="w-40">
+                          Save
+                        </Button>
+                        <Button
+                          type="button"
+                          size="lg"
+                          className="bg-orange-500 w-40"
+                        >
+                          Clear
+                        </Button>
                       </div>
                     )}
                   </form>

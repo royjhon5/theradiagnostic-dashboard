@@ -16,15 +16,18 @@ export function middleware(request: NextRequest) {
 
   const isLoggedIn = !!(user?.username && user?.role);
 
+  // Handle login page redirect if already logged in
   if (pathname === "/login") {
     if (isLoggedIn) {
       return NextResponse.redirect(
         new URL(
-          user.role === "staff"
+          user.role.toLowerCase() === "staff"
             ? "/appointment"
-            : user.role === "accountant"
+            : user.role.toLowerCase() === "accountant"
               ? "/transactions"
-              : "/dashboard",
+              : user.role.toLowerCase() === "queuing"
+                ? "/queue-screen"
+                : "/dashboard",
           request.url
         )
       );
@@ -32,34 +35,55 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Handle root path redirect
   if (pathname === "/") {
     if (!isLoggedIn)
       return NextResponse.redirect(new URL("/login", request.url));
     return NextResponse.redirect(
       new URL(
-        user.role === "staff"
+        user.role.toLowerCase() === "staff"
           ? "/appointment"
-          : user.role === "accountant"
+          : user.role.toLowerCase() === "accountant"
             ? "/transactions"
-            : "/dashboard",
+            : user.role.toLowerCase() === "queuing"
+              ? "/queue-screen"
+              : "/dashboard",
         request.url
       )
     );
   }
 
-  if (pathname.startsWith("/dashboard") && user?.role === "staff") {
-    return NextResponse.redirect(new URL("/appointment", request.url));
-  }
-
-  if (pathname.startsWith("/dashboard") && user?.role === "accountant") {
-    return NextResponse.redirect(new URL("/transactions", request.url));
-  }
-
+  // Check if user is logged in for all other routes
   if (!isLoggedIn) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  // Role-based path restrictions
+  if (
+    pathname.startsWith("/dashboard") &&
+    user?.role.toLowerCase() === "staff"
+  ) {
+    return NextResponse.redirect(new URL("/appointment", request.url));
+  }
+
+  if (
+    pathname.startsWith("/dashboard") &&
+    user?.role.toLowerCase() === "accountant"
+  ) {
+    return NextResponse.redirect(new URL("/transactions", request.url));
+  }
+
+  // Add this new check for queuing users
+  if (
+    pathname.startsWith("/dashboard") &&
+    user?.role.toLowerCase() === "queuing"
+  ) {
+    return NextResponse.redirect(new URL("/queue-screen", request.url));
+  }
+
+  // Protected routes configuration
   const protectedRoutes: Record<string, string[]> = {
+    "/queue-screen": ["queuing"],
     "/client-list/registration": ["staff", "doctor", "admin"],
     "/client-list": ["staff", "doctor", "admin"],
     "/settings/test-package": ["admin"],
@@ -80,12 +104,25 @@ export function middleware(request: NextRequest) {
     "/activity-history": ["staff", "admin"],
   };
 
+  // Check protected routes
+  let isProtectedRoute = false;
+  let allowedRoles: string[] = [];
+
   for (const route in protectedRoutes) {
     if (pathname === route || pathname.startsWith(`${route}/`)) {
-      if (!protectedRoutes[route].includes(user.role)) {
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
-      }
+      isProtectedRoute = true;
+      allowedRoles = protectedRoutes[route];
       break;
+    }
+  }
+
+  if (isProtectedRoute) {
+    if (!allowedRoles.includes(user.role.toLowerCase())) {
+      console.log(
+        `Access denied for ${user.role} to ${pathname}. Allowed roles:`,
+        allowedRoles
+      );
+      return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
   }
 
@@ -107,5 +144,7 @@ export const config = {
     "/analytics/:path*",
     "/activity-history/:path*",
     "/settings/:path*",
+    "/queue-screen",
+    "/queue-screen/:path*",
   ],
 };

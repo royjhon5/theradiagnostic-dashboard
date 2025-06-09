@@ -12,6 +12,9 @@ export const LabPackageSchema = z.object({
   endingDate: z.string().datetime(),
   packages: z.array(PackageItemSchema),
   totalPrice: z.number(),
+  packageType: z.string(),
+  packageDiscountAmount: z.number(),
+  individualDiscountAmount: z.number(),
 });
 
 export type globalLabPackageData = z.infer<typeof LabPackageSchema>;

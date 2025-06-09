@@ -1,7 +1,9 @@
 export type BaseResponseType<T> = {
   response: T;
+  data: T;
   isSuccess: boolean;
   statusCode: number;
+  message: string;
   pageDetails?: {
     currentPage: number;
     totalPages: number;

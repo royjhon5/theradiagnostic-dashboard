@@ -4,9 +4,10 @@ export const gender = [
   { label: "Prefer Not To Say", value: "Prefer Not To Say" },
 ];
 
-export const seniorcitizen = [
-  { label: "Yes", value: "Yes" },
-  { label: "No", value: "No" },
+export const clientType = [
+  { label: "Regular", value: "Regular" },
+  { label: "Senior Citizen", value: "Senior Citizen" },
+  { label: "PWD", value: "PWD" },
 ];
 
 export const validID = [
@@ -15,6 +16,14 @@ export const validID = [
   { label: "National ID", value: "National ID" },
   { label: "Philsys", value: "Philsys" },
   { label: "Passport", value: "Passport" },
+];
+
+export const CivilStatus = [
+  { label: "Single", value: "Single" },
+  { label: "Married", value: "Married" },
+  { label: "Widowed", value: "Widowed" },
+  { label: "Divorced", value: "Divorced" },
+  { label: "Separated", value: "Separated" },
 ];
 
 export const steps = [

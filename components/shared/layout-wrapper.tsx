@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -9,24 +9,43 @@ import { useAppLoaderContext } from "../providers/app-loader-provider";
 import { Backdrop } from "../backdrop";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
+
 interface LayoutWrapperProps {
   children: ReactNode;
 }
 
+interface UserData {
+  role?: string;
+  // Add other user properties if needed
+}
+
 export default function LayoutWrapper({ children }: LayoutWrapperProps) {
-  const userRoleString = Cookies.get("user");
-  let role: string | null = null;
-  if (userRoleString) {
+  const pathname = usePathname();
+  const { loading, setLoading } = useAppLoaderContext();
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
     try {
-      const user = JSON.parse(userRoleString);
-      role = user.role;
+      const userCookie = Cookies.get("user");
+      if (userCookie) {
+        const user: UserData = JSON.parse(userCookie);
+        setUserRole(user?.role?.toLowerCase() || null);
+      }
     } catch (error) {
       console.error("Failed to parse user cookie:", error);
     }
+  }, []);
+
+  // Determine if sidebar should be hidden
+  const hideSidebar =
+    ["/login", "/queue-screen"].includes(pathname) ||
+    (userRole === "queuing" && pathname !== "/queue-screen");
+
+  // Special case: queuing users should only see queue-screen
+  if (userRole === "queuing" && !pathname.startsWith("/queue-screen")) {
+    window.location.href = "/queue-screen";
+    return null;
   }
-  const pathname = usePathname();
-  const hideSidebar = ["/login"].includes(pathname) || role === "queuing";
-  const { loading, setLoading } = useAppLoaderContext();
 
   if (hideSidebar) {
     return <>{children}</>;
@@ -34,7 +53,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
 
   return (
     <>
-      {loading ? (
+      {loading && (
         <Backdrop
           open={loading}
           onClose={() => setLoading(false)}
@@ -51,8 +70,6 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
             </span>
           </div>
         </Backdrop>
-      ) : (
-        ""
       )}
       <SidebarProvider
         style={

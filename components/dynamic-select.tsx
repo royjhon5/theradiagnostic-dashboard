@@ -34,14 +34,18 @@ export function SelectField({
 }: SelectFieldProps) {
   return (
     <Select value={value} onValueChange={onChange} disabled={disabled}>
-      <SelectTrigger className="w-full">
+      <SelectTrigger className="w-full cursor-pointer">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           {label && <SelectLabel>{label}</SelectLabel>}
           {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              className="cursor-pointer"
+            >
               {option.label}
             </SelectItem>
           ))}

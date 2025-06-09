@@ -27,6 +27,7 @@ import {
   CalendarCheck,
   ListCheck,
   Calendar,
+  ScreenShare,
 } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -104,6 +105,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: "#",
       icon: ChartNoAxesCombined,
       hideForRoles: ["staff"],
+    },
+    {
+      title: "Queue Management",
+      url: "/queue-management",
+      icon: ScreenShare,
     },
   ];
 

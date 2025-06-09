@@ -15,7 +15,6 @@ import useGetLaboratoryPackage from "@/app/settings/test-package/hooks/useGetLab
 
 const Services = () => {
   const { laboratoryPackage } = useGetLaboratoryPackage();
-  console.log("laboratoryPackage", laboratoryPackage);
   const searchParams = useSearchParams();
   const raw = searchParams.get("clientId");
   let currentId: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -23,7 +22,6 @@ const Services = () => {
     try {
       const decoded = decodeURIComponent(raw);
       currentId = JSON.parse(decoded);
-      console.log("test", currentId);
     } catch (error) {
       console.error("Error parsing row data:", error);
     }
@@ -31,15 +29,20 @@ const Services = () => {
   const { clientDetails } = useGetClientById(currentId);
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(2);
-  const handleItemClick = (label: string) => {
-    if (label === "Basic 5" || label === "Doctors Consultation") {
-      router.push(
-        `/appointment/payment?priorityNo=${clientDetails?.priorityNo}&&labpackde=${label}&&clientId=${currentId}`
-      );
-    } else {
-      router.push(`/appointment/laboratory-testing?clientId=${currentId}`);
-    }
+  const handleItemClick = (selectedPackage: (typeof laboratoryPackage)[0]) => {
+    const isSpecial =
+      selectedPackage.packageName === "Basic 5" ||
+      selectedPackage.packageName === "Doctors Consultation";
+
+    const targetPath = isSpecial
+      ? "/appointment/payment"
+      : "/appointment/laboratory-testing";
+
+    router.push(
+      `${targetPath}?clientId=${currentId}&priorityNo=${clientDetails?.[0]?.priorityNo || ""}&packageId=${selectedPackage.id}`
+    );
   };
+
   return (
     <div>
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
@@ -65,18 +68,23 @@ const Services = () => {
                         key={item.id}
                         value={item.packageName}
                         className="cursor-pointer"
-                        onClick={() => handleItemClick(item.packageName)}
+                        onClick={() => handleItemClick(item)}
                       >
-                        <div className="flex flex-col">
-                          <div className="font-medium">{item.packageName}</div>
-                          {item.packages.map((pkg, idx) => (
-                            <div
-                              className="text-muted-foreground text-sm flex flex-row"
-                              key={idx}
-                            >
-                              {pkg.itemName}
+                        <div className="w-full flex flex-row justify-between items-start">
+                          <div>
+                            <div className="font-medium">
+                              {item.packageName}
                             </div>
-                          ))}
+                            {item.packages.map((pkg, idx) => (
+                              <div
+                                className="text-muted-foreground text-sm"
+                                key={idx}
+                              >
+                                {pkg.itemName}
+                              </div>
+                            ))}
+                          </div>
+                          ₱ {item.totalPrice}
                         </div>
                         <ListboxItemIndicator />
                       </ListboxItem>

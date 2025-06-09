@@ -17,6 +17,18 @@ export const getAllLabPackage = async () => {
   return response;
 };
 
+export const getLaboratoryPackageById = async (id: number) => {
+  try {
+    const { data: response } = await httpHelper.get<
+      BaseResponseType<getLaboratoryPackageDto[]>
+    >(`${baseAPI}/${id}`);
+    return response;
+  } catch (error) {
+    console.error("API error:", error);
+    throw error;
+  }
+};
+
 export const createLaboratoryPackage = async (params: CreatePackageDto) => {
   const { data: response } = await httpHelper.post<BaseResponseType<number>>(
     `${baseAPI}`,

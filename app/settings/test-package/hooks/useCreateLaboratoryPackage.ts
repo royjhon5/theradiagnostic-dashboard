@@ -21,6 +21,9 @@ const useCreateLaboratoryPackage = () => {
       endingDate: new Date().toISOString(),
       packages: [],
       totalPrice: 0,
+      packageType: "",
+      packageDiscountAmount: 0,
+      individualDiscountAmount: 0,
     },
   });
 
@@ -47,6 +50,9 @@ const useCreateLaboratoryPackage = () => {
     endingDate,
     packages,
     totalPrice,
+    packageType,
+    packageDiscountAmount,
+    individualDiscountAmount,
   }: globalLabPackageData) => {
     setLoading(true);
     mutate({
@@ -56,6 +62,9 @@ const useCreateLaboratoryPackage = () => {
       endingDate,
       packages,
       totalPrice,
+      packageType,
+      packageDiscountAmount,
+      individualDiscountAmount,
     });
   };
 

@@ -1,57 +1,30 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
-import { Editor } from "@/components/blocks/editor-00/editor";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-const formSchema = z.object({
-  package_name: z.string().min(1),
-  description: z.string().min(1),
-  price: z.string().min(1),
-  systolic: z
-    .string()
-    .min(1, "Systolic value is required")
-    .refine((val) => /^\d+$/.test(val), "Must be a number")
-    .refine(
-      (val) => Number.parseInt(val) > 0 && Number.parseInt(val) < 300,
-      "Must be between 1-299"
-    ),
-  diastolic: z
-    .string()
-    .min(1, "Diastolic value is required")
-    .refine((val) => /^\d+$/.test(val), "Must be a number")
-    .refine(
-      (val) => Number.parseInt(val) > 0 && Number.parseInt(val) < 200,
-      "Must be between 1-199"
-    ),
-});
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import RedioGroupReusable from "@/components/radiogroup-reusable";
+import { useState } from "react";
+import defaultData from "../schema/schema";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 export default function AssessmentData() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { systolic: "", diastolic: "" },
-  });
   const router = useRouter();
   const searchParams = useSearchParams();
   const raw = searchParams.get("data");
+  const [fieldData, setFieldData] = useState(defaultData);
+  console.log(fieldData);
 
   let currentRow: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -59,44 +32,16 @@ export default function AssessmentData() {
     try {
       const decoded = decodeURIComponent(raw);
       currentRow = JSON.parse(decoded);
-      console.log("test", currentRow);
     } catch (error) {
       console.error("Error parsing row data:", error);
     }
   }
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      console.log(values);
-    } catch (error) {
-      console.error("Form submission error", error);
-    }
-  }
-
-  const medhist1 = [
-    { id: "Chronic Conditions", label: "Chronic Conditions" },
-    { id: "Allergies", label: "Allergies" },
-    {
-      id: "Past Surgeries/Procedures",
-      label: "Past Surgeries/Procedures",
-    },
-    { id: "Family Medical History", label: "Family Medical History" },
-  ];
-
-  const medhist2 = [
-    { id: "Smoker", label: "Smoker" },
-    { id: "Alcohol Consumption", label: "Alcohol Consumption" },
-    {
-      id: "Substance Use",
-      label: "Substance Use",
-    },
-    { id: "Physical Activity", label: "Physical Activity" },
-  ];
 
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMMM dd, yyyy - EEEE");
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 flex flex-col gap-3 mt-4">
-      <div className="col-span-2">
+    <div className="grid grid-cols-1 md:grid-cols-5 flex flex-col gap-3 mt-4">
+      <div className="col-span-4">
         <div className="w-full justify-end flex items-center">
           <h1 className="text-xs font-bold italic mb-1">
             {/* Package ID : 0001-256-6{" "} */}
@@ -125,201 +70,644 @@ export default function AssessmentData() {
           </div>
         </div>
         {/* input fields */}
-        <div className="bg-background rounded-lg shadow-sm mt-4">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
-                Vital Signs
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-                <FormField
-                  control={form.control}
-                  name="package_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Temperature • ( °C )</FormLabel>
-                      <FormControl>
-                        <Input type="text" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Heart Rate • ( bpm )</FormLabel>
-                      <FormControl>
-                        <Input type="text" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="flex flex-col">
-                  <FormLabel className="text-sm text-gray-700 mb-1 font-normal">
-                    Blood Pressure <span className="text-gray-500">•</span>{" "}
-                    <span className="text-gray-500">( mmHg )</span>
-                  </FormLabel>
-                  <div className="flex items-center">
-                    <FormField
-                      control={form.control}
-                      name="systolic"
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormControl>
-                            <Input
-                              {...field}
-                              className="w-full border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                              placeholder=""
-                              aria-label="Systolic blood pressure"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+        <div className="bg-background rounded-lg shadow-sm mt-4 p-2">
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue="item-1"
+            defaultChecked
+          >
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="cursor-pointer">
+                MEDICAL HISTORY
+              </AccordionTrigger>
+              <AccordionContent className="pl-2 pr-2">
+                <div className="flex gap-5 font-bold">
+                  <div className="w-50">PAST MEDICAL HISTORY</div>
+                  <div className="w-20 text-center">YES</div>
+                  <div className="w-20 text-center">NO</div>
+                  <div className="flex-1">REMARKS</div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <RedioGroupReusable
+                      label="Heent"
+                      value={fieldData.heent}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          heent: value,
+                        }))
+                      }
+                      inputValue={fieldData.heentRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          heentRemarks: inputValue,
+                        }))
+                      }
                     />
-                    <span className="mx-2 text-gray-500">/</span>
-                    <FormField
-                      control={form.control}
-                      name="diastolic"
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormControl>
-                            <Input
-                              {...field}
-                              className="w-full border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                              placeholder=""
-                              aria-label="Diastolic blood pressure"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+
+                    <RedioGroupReusable
+                      label="Asthma"
+                      value={fieldData.asthma}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          asthma: value,
+                        }))
+                      }
+                      inputValue={fieldData.asthmaRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          asthmaRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Tuberculosis"
+                      value={fieldData.tuberculosis}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          tuberculosis: value,
+                        }))
+                      }
+                      inputValue={fieldData.tuberculosisRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          tuberculosisRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Diabetes Mellitus"
+                      value={fieldData.diabetesMellitus}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          diabetesMellitus: value,
+                        }))
+                      }
+                      inputValue={fieldData.diabetesMellitusRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          diabetesMellitusRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Thyroid Disease"
+                      value={fieldData.thyroidDisease}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          thyroidDisease: value,
+                        }))
+                      }
+                      inputValue={fieldData.thyroidDiseaseRemark || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          thyroidDiseaseRemark: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Hypertension"
+                      value={fieldData.hyperTension}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          hyperTension: value,
+                        }))
+                      }
+                      inputValue={fieldData.hyperTensionRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          hyperTensionRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Heart Disease"
+                      value={fieldData.heartDisease}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          heartDisease: value,
+                        }))
+                      }
+                      inputValue={fieldData.heartDiseaseRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          heartDiseaseRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="GI Disease"
+                      value={fieldData.GIDisease}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          GIDisease: value,
+                        }))
+                      }
+                      inputValue={fieldData.GIDiseaseRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          GIDiseaseRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Hernia"
+                      value={fieldData.Hernia}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          Hernia: value,
+                        }))
+                      }
+                      inputValue={fieldData.HerniaRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          HerniaRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Kidney Disease"
+                      value={fieldData.kidneyDisease}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          kidneyDisease: value,
+                        }))
+                      }
+                      inputValue={fieldData.kidneyDiseaseRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          kidneyDiseaseRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Infectious Disease"
+                      value={fieldData.infectiousDisease}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          infectiousDisease: value,
+                        }))
+                      }
+                      inputValue={fieldData.infectiousDiseaseRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          infectiousDiseaseRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="STD"
+                      value={fieldData.STD}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          STD: value,
+                        }))
+                      }
+                      inputValue={fieldData.STDRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          STDRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Tumor/Cancer"
+                      value={fieldData.tumorCancer}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          tumorCancer: value,
+                        }))
+                      }
+                      inputValue={fieldData.tumorCancerRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          tumorCancerRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Allergies"
+                      value={fieldData.allergies}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          allergies: value,
+                        }))
+                      }
+                      inputValue={fieldData.allergiesRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          allergiesRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Hospitalization"
+                      value={fieldData.hospitalization}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          hospitalization: value,
+                        }))
+                      }
+                      inputValue={fieldData.hospitalizationRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          hospitalizationRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Operation"
+                      value={fieldData.operations}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          operations: value,
+                        }))
+                      }
+                      inputValue={fieldData.operationsRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          operationsRemarks: inputValue,
+                        }))
+                      }
                     />
                   </div>
+                  <div className="p-2">
+                    <div className="flex flex-row gap-5 mb-2">
+                      <Input placeholder="Current Medication:" />
+                      <Input placeholder="Others:" />
+                    </div>
+                    <Separator className="mb-5 mt-5" />
+                    <div className="flex gap-5 font-bold">
+                      <div className="w-50">FAMILY HISTORY</div>
+                      <div className="w-20 text-center">YES</div>
+                      <div className="w-20 text-center">NO</div>
+                      <div className="flex-1">REMARKS</div>
+                    </div>
+
+                    <RedioGroupReusable
+                      label="HPN/Heart Disease"
+                      value={fieldData.HPNHeartDisease}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          HPNHeartDisease: value,
+                        }))
+                      }
+                      inputValue={fieldData.HPNHeartDiseaseRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          HPNHeartDiseaseRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Diabetes Mellitus"
+                      value={fieldData.FamHisDiabetesMellitus}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          FamHisDiabetesMellitus: value,
+                        }))
+                      }
+                      inputValue={fieldData.FamHisDiabetesMellitusRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          FamHisDiabetesMellitusRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Thyroid Disease"
+                      value={fieldData.FamHisthyroidDisease}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          FamHisthyroidDisease: value,
+                        }))
+                      }
+                      inputValue={fieldData.FamHisthyroidDiseaseRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          FamHisthyroidDiseaseRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Asthma"
+                      value={fieldData.FamHisAsthma}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          FamHisAsthma: value,
+                        }))
+                      }
+                      inputValue={fieldData.FamHisAsthmaRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          FamHisAsthmaRemarks: inputValue,
+                        }))
+                      }
+                    />
+
+                    <RedioGroupReusable
+                      label="Cancer"
+                      value={fieldData.FamHisCancer}
+                      onValueChange={(value) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          FamHisCancer: value,
+                        }))
+                      }
+                      inputValue={fieldData.FamHisCancerRemarks || ""}
+                      onInputChange={(inputValue) =>
+                        setFieldData((prev: typeof fieldData) => ({
+                          ...prev,
+                          FamHisCancerRemarks: inputValue,
+                        }))
+                      }
+                    />
+                    <Separator className="mb-2 mt-2" />
+                    <div className="flex gap-5 font-bold">
+                      <div className="w-50">PERSONAL/SOCIAL HISTORY</div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                      <div className="col-span-2">
+                        <Input
+                          placeholder="Smoker:"
+                          value={fieldData.Smoker}
+                          onChange={(e) =>
+                            setFieldData((prev) => ({
+                              ...prev,
+                              Smoker: e.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+                      <Input
+                        placeholder="Stick/day:"
+                        value={fieldData.stickPerDay}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            stickPerDay: Number(e.target.value),
+                          }))
+                        }
+                      />
+                      <Input
+                        placeholder="Years"
+                        value={fieldData.Years}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            Years: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
+                      <div className="col-span-2">
+                        <Input
+                          placeholder="Alcoholic Beverage Drinker:"
+                          value={fieldData.AlcoholicBevDrinker}
+                          onChange={(e) =>
+                            setFieldData((prev) => ({
+                              ...prev,
+                              AlcoholicBevDrinker: e.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+                      <Input
+                        placeholder="Bottles:"
+                        value={fieldData.Bottles}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            Bottles: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="gap-3 mt-2">
+                      <Input
+                        placeholder="Illicit drug use:"
+                        value={fieldData.AlcoholicBevDrinker}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            AlcoholicBevDrinker: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <Separator className="mb-2 mt-2" />
+                    <div className="flex gap-5 font-bold">
+                      <div className="w-50">OB-GYNE HISTORY</div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
+                      <div className="col-span-1">
+                        <Input
+                          placeholder="LMP:"
+                          value={fieldData.LMP}
+                          onChange={(e) =>
+                            setFieldData((prev) => ({
+                              ...prev,
+                              LMP: e.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+                      <Input
+                        placeholder="PMP:"
+                        value={fieldData.PMP}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            PMP: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
+                      <Input
+                        placeholder="Menarche:"
+                        value={fieldData.Menarche}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            Menarche: e.target.value,
+                          }))
+                        }
+                      />
+                      <Input
+                        placeholder="Interval:"
+                        value={fieldData.Interval}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            Interval: e.target.value,
+                          }))
+                        }
+                      />
+                      <Input
+                        placeholder="Duration:"
+                        value={fieldData.Duration}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            Duration: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
+                      <Input
+                        placeholder="OB Score:"
+                        value={fieldData.OBScore}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            OBScore: e.target.value,
+                          }))
+                        }
+                      />
+                      <Input
+                        placeholder="G:"
+                        value={fieldData.G}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            G: e.target.value,
+                          }))
+                        }
+                      />
+                      <Input
+                        placeholder="P:"
+                        value={fieldData.P}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            P: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
+                      <Input
+                        placeholder="NSD:"
+                        value={fieldData.NSD}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            NSD: e.target.value,
+                          }))
+                        }
+                      />
+                      <Input
+                        placeholder="CS:"
+                        value={fieldData.CS}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            CS: e.target.value,
+                          }))
+                        }
+                      />
+                      <Input
+                        placeholder="Complications:"
+                        value={fieldData.Complications}
+                        onChange={(e) =>
+                          setFieldData((prev) => ({
+                            ...prev,
+                            Complications: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
-
-                <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Heart Rate • ( bpm )</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Height • ( cm )</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </form>
-          </Form>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="cursor-pointer">
+                PHYSICAL EXAMINATION
+              </AccordionTrigger>
+              <AccordionContent className="pl-2 pr-2">
+                Yes. It adheres to the WAI-ARIA design pattern.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger className="cursor-pointer">
+                RECOMMENDATION
+              </AccordionTrigger>
+              <AccordionContent className="pl-2 pr-2">
+                Yes. It adheres to the WAI-ARIA design pattern.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger className="cursor-pointer">
+                CLASSIFICATION
+              </AccordionTrigger>
+              <AccordionContent className="pl-2 pr-2">
+                Yes. It adheres to the WAI-ARIA design pattern.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
-
-        <div className="bg-background rounded-lg mt-4 shadow-md">
-          <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
-            Cheif of Complain
-          </h2>
-          <Editor />
-        </div>
-        <div className="bg-background rounded-lg mt-4 shadow-md">
-          <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
-            History Present Illness ( HPI )
-          </h2>
-          <Editor />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          <div className="bg-background rounded-lg mt-4 shadow-md">
-            <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
-              Medical History
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-              {medhist1.map((medhist, index) => (
-                <div
-                  key={`${medhist.id}-${index}`}
-                  className="flex items-center space-x-3"
-                >
-                  <Checkbox
-                    id={`${medhist.id}-${index}`}
-                    className="h-5 w-5 rounded-sm border-gray-300 bg-gray-200"
-                  />
-                  <Label
-                    htmlFor={`${medhist.id}-${index}`}
-                    className="text-base font-medium"
-                  >
-                    {medhist.label}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="bg-background rounded-lg mt-4 shadow-md">
-            <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
-              Medical History
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-              {medhist2.map((medhists, index) => (
-                <div
-                  key={`${medhists.id}-${index}`}
-                  className="flex items-center space-x-3"
-                >
-                  <Checkbox
-                    id={`${medhists.id}-${index}`}
-                    className="h-5 w-5 rounded-sm border-gray-300 bg-gray-200"
-                  />
-                  <Label
-                    htmlFor={`${medhists.id}-${index}`}
-                    className="text-base font-medium"
-                  >
-                    {medhists.label}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-background rounded-lg mt-4 shadow-md">
-          <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
-            Physical Exam Notes
-          </h2>
-          <Editor />
-        </div>
-
-        <div className="bg-background rounded-lg mt-4 shadow-md">
-          <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
-            Assessment
-          </h2>
-          <Editor />
-        </div>
-
-        <div className="bg-background rounded-lg mt-4 shadow-md">
-          <h2 className="font-bold text-sm bg-primary text-white rounded-t-lg pl-2">
-            Recommendation / Perscription
-          </h2>
-          <Editor />
-        </div>
-
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mt-5 gap-2">
           <Link href={"/appointment"}>
             <Button className="cursor-pointer" size="lg">
