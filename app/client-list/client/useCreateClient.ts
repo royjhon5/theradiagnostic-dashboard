@@ -25,23 +25,13 @@ const useCreateClient = () => {
       dateOfBirth: "",
       age: "",
       gender: "",
-      currentAddress: "",
-      // province: "",
-      // barangay: "",
-      // seniorCitizen: "",
-      // validId: "",
-      // validIdNo: "",
-      activePhoneNumber: "",
-      // activeEmail: "",
-      // medicalHistory: "",
-      // currentMedication: "",
-      // knownAllergies: "",
-      // insuranceInfo: "",
+      address: "",
+      contactNumber: "",
       appointmentDate: "",
       appointmentType: "",
       employersId: "",
       civilStatus: "",
-      clientType: "",
+      isPriority: "",
     },
   });
 
@@ -53,7 +43,7 @@ const useCreateClient = () => {
         toast.success("Client Successfully Created.");
         refetchClient();
         form.reset();
-        router.push(`/appointment/services?clientId=${data.response}`);
+        router.push(`/client-registration/services?clientId=${data.response}`);
       }
       setLoading(false);
     },
@@ -70,23 +60,13 @@ const useCreateClient = () => {
     dateOfBirth,
     age,
     gender,
-    currentAddress,
-    // province,
-    // barangay,
-    // seniorCitizen,
-    // validId,
-    // validIdNo,
-    activePhoneNumber,
-    // activeEmail,
-    // medicalHistory,
-    // currentMedication,
-    // knownAllergies,
-    // insuranceInfo,
+    address,
+    contactNumber,
     appointmentDate,
     appointmentType,
     employersId,
     civilStatus,
-    clientType,
+    isPriority,
   }: globalClientData) => {
     setLoading(true);
     mutate({
@@ -96,23 +76,13 @@ const useCreateClient = () => {
       dateOfBirth,
       age,
       gender,
-      currentAddress,
-      // province,
-      // barangay,
-      // seniorCitizen,
-      // validId,
-      // validIdNo,
-      activePhoneNumber,
-      // activeEmail,
-      // medicalHistory,
-      // currentMedication,
-      // knownAllergies,
-      // insuranceInfo,
+      address,
+      contactNumber,
       appointmentDate,
       appointmentType,
       employersId,
       civilStatus,
-      clientType,
+      isPriority,
     });
   };
 

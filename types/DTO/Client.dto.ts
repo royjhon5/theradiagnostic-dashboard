@@ -5,23 +5,13 @@ export type CreateClientDto = {
   dateOfBirth: string;
   age: string;
   gender: string;
-  currentAddress: string;
-  // province: string;
-  // barangay: string;
-  // seniorCitizen: string;
-  // validId: string;
-  // validIdNo: string;
-  activePhoneNumber: string;
-  // activeEmail: string;
-  // medicalHistory: string;
-  // currentMedication: string;
-  // knownAllergies: string;
-  // insuranceInfo: string;
+  address: string;
+  contactNumber: string;
   appointmentDate: string;
   appointmentType: string;
   employersId: string;
   civilStatus: string;
-  clientType: string;
+  isPriority: string;
 };
 
 export type UpdateClientDto = CreateClientDto & {
@@ -86,5 +76,18 @@ export type GetOnQueDTO = {
   id: number;
   priorityNo: string;
   status: string;
-  clientType: string;
+  isPriority: string;
+};
+
+export type GetClientByStatusDTO = {
+  id: number;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  dateOfBirth: string;
+  age: string;
+  gender: string;
+  address: string;
+  contactNumber: string;
+  isPriority: string;
 };

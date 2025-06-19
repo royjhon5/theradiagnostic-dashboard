@@ -5,6 +5,7 @@ import httpHelper from "../HttpAxios";
 import {
   ClientDto,
   CreateClientDto,
+  GetClientByStatusDTO,
   GetClientDTO,
   GetOnQueDTO,
   GetReferralCodeDTO,
@@ -21,6 +22,14 @@ export const getAllClient = async () => {
   return response;
 };
 
+export const getClientByStatus = async () => {
+  const { data: response } = await httpHelper.get<
+    BaseResponseType<GetClientByStatusDTO[]>
+  >(`${baseAPI}/get-client`);
+
+  return response;
+};
+
 export const getOnQue = async () => {
   const { data: response } = await httpHelper.get<
     BaseResponseType<GetOnQueDTO[]>
@@ -33,6 +42,14 @@ export const getNowServing = async () => {
   const { data: response } = await httpHelper.get<
     BaseResponseType<GetOnQueDTO[]>
   >(`${baseAPI}/now-serving`);
+
+  return response;
+};
+
+export const getCountNowServing = async () => {
+  const { data: response } = await httpHelper.get<
+    BaseResponseType<GetOnQueDTO[]>
+  >(`${baseAPI}/count-now-serving`);
 
   return response;
 };

@@ -16,4 +16,6 @@ export type BaseResponseType<T> = {
     message: string;
     statusCode: number;
   };
+  total: number;
+  totalCount: number;
 };

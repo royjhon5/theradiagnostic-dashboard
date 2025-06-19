@@ -12,7 +12,6 @@ interface Props {
 
 export function DeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const { deleteEmployers } = useDeleteEmployer();
-  console.log(currentRow.id);
   const handleDelete = () => {
     onOpenChange(false);
     deleteEmployers(currentRow.id || 0);

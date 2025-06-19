@@ -11,6 +11,7 @@ import {
   LinkIcon,
   Microscope,
   Shield,
+  Signature,
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -70,6 +71,15 @@ export default function Settings() {
       content: [
         "Report Templates: Customize report formats for receipts, financial summaries, and laboratory reports.",
         "Schedule Automatic Reports: Define settings for generating and distributing periodic reports.",
+      ],
+    },
+    {
+      id: "signatory",
+      title: "Signatory",
+      icon: <Signature size={36} />,
+      route: "/settings/signatory",
+      content: [
+        "Manage authorized signatories, add new entries, and view the complete list of existing signatories.",
       ],
     },
     {

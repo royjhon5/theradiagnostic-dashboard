@@ -7,29 +7,37 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AppSocket } from "@/lib/socketClient";
 import { Check, Loader2 } from "lucide-react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { Socket } from "socket.io-client";
 
 export default function QueueUI() {
   const { queData, refetchQue } = useGetQue();
   const { nowservingData, refetchServing } = useGetNowServing();
-  const socket = AppSocket();
+  const socketRef = useRef<Socket | null>(null);
   const handleQueueUpdate = useCallback(() => {
     refetchQue();
     refetchServing();
   }, [refetchQue, refetchServing]);
 
   useEffect(() => {
+    const socket = AppSocket();
+    if (!socket) return;
+
+    socketRef.current = socket;
     socket.on("getQueue", handleQueueUpdate);
+
     return () => {
       socket.off("getQueue", handleQueueUpdate);
+      socket.disconnect();
     };
-  }, [refetchQue, handleQueueUpdate, socket]);
+  }, [handleQueueUpdate]);
 
   const CallRegular = async () => {
     try {
       await NowServingInSyncRegular();
+      refetchServing();
       refetchQue();
-      socket.emit("callQueue");
+      socketRef.current?.emit("callQueue");
     } catch (error) {
       console.log(error);
     }
@@ -42,10 +50,7 @@ export default function QueueUI() {
             <ScrollArea className="h-190 border-b md:border-r p-2">
               <h2 className="text-center text-2xl font-bold">REGULAR</h2>
               {queData
-                .filter(
-                  (item) =>
-                    item.status === "ON QUEUE" && item.clientType === "Regular"
-                )
+                .filter((item) => item.status === "ON QUEUE")
                 .map((item) => (
                   <div
                     key={item.id}
@@ -61,9 +66,7 @@ export default function QueueUI() {
               {queData
                 .filter(
                   (item) =>
-                    (item.status === "ON QUEUE" &&
-                      item.clientType === "Senior Citizen") ||
-                    item.clientType === "PWD"
+                    item.status === "ON QUEUE" && item.isPriority === "Yes"
                 )
                 .map((item) => (
                   <div
@@ -86,7 +89,7 @@ export default function QueueUI() {
       </div>
       <div className="col-span-2">
         <div className="bg-background shadow-md border rounded-md p-2 w-full">
-          <h2 className="text-center text-2xl font-bold">PRIORITY</h2>
+          <h2 className="text-center text-2xl font-bold">NOW SERVING</h2>
           {nowservingData.map((item) => (
             <div
               key={item.id}

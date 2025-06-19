@@ -17,7 +17,6 @@ import newlogo from "../public/logo/logo.png";
 import { OtherMenu } from "./other-menu";
 import {
   BadgeDollarSign,
-  ClipboardMinus,
   LayoutDashboard,
   ChartNoAxesCombined,
   Settings,
@@ -25,10 +24,13 @@ import {
   BriefcaseMedical,
   TestTube,
   CalendarCheck,
-  ListCheck,
   Calendar,
   ScreenShare,
+  FolderKanban,
+  UserPlus,
+  FileSearch,
 } from "lucide-react";
+import useGetCountNowServing from "@/app/queue-screen/hooks/useGetCountNowServing";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = React.useState({
@@ -37,6 +39,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     role: "admin",
     email: "",
   });
+  const { countData } = useGetCountNowServing();
   React.useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -59,16 +62,77 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       hideForRoles: ["staff", "accountant"],
     },
     {
-      title: "Appointments",
-      url: "/appointment",
-      icon: CalendarCheck,
-      hideForRoles: ["accountant"],
+      title: "Client Management",
+      url: "/content",
+      icon: UserPlus,
+      items: [
+        {
+          title: "Registration",
+          url: "/client-registration",
+          hideForRoles: ["accountant"],
+        },
+        {
+          title: "List",
+          url: "/client-list",
+          hideForRoles: ["accountant"],
+        },
+      ],
     },
     {
-      title: "Lab Test Management",
-      url: "/lab-test-management",
-      icon: TestTube,
-      hideForRoles: ["staff", "doctor", "accountant"],
+      title: "Results Management",
+      url: "/results-management",
+      icon: FolderKanban,
+      items: [
+        {
+          title: "Client Receiving",
+          url: "/results-management/client-receiving",
+          hideForRoles: ["staff", "doctor", "accountant"],
+          badgeCount: countData,
+        },
+        {
+          title: "Client Result Entry",
+          url: "/results-management/client-result-entry",
+          hideForRoles: ["staff", "doctor", "accountant"],
+        },
+        {
+          title: "Result Evaluation",
+          url: "#",
+          hideForRoles: ["staff", "doctor", "accountant"],
+          badgeCount: 3,
+        },
+        {
+          title: "Final Result Authorization",
+          url: "#",
+          hideForRoles: ["staff", "doctor", "accountant"],
+        },
+      ],
+    },
+    {
+      title: "Enquiry & Reporting",
+      url: "/content",
+      icon: FileSearch,
+      items: [
+        {
+          title: "Find Patient Result",
+          url: "#",
+          hideForRoles: ["staff", "doctor", "accountant"],
+        },
+        {
+          title: "Daily Order Summary",
+          url: "#",
+          hideForRoles: ["staff", "doctor", "accountant"],
+        },
+        {
+          title: "Daily Result Summary",
+          url: "#",
+          hideForRoles: ["staff", "doctor", "accountant"],
+        },
+        {
+          title: "Repeat Tests Report",
+          url: "#",
+          hideForRoles: ["staff", "doctor", "accountant"],
+        },
+      ],
     },
     {
       title: "Doctors",
@@ -83,16 +147,41 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       hideForRoles: ["staff", "doctor"],
     },
     {
-      title: "Reports",
+      title: "Analytics",
       url: "#",
-      icon: ClipboardMinus,
-      hideForRoles: ["staff", "doctor"],
+      icon: ChartNoAxesCombined,
+      items: [
+        {
+          title: "Overview",
+          url: "#",
+        },
+        {
+          title: "Reports",
+          url: "#",
+        },
+      ],
     },
     {
-      title: "Client List",
-      url: "/client-list",
-      icon: ListCheck,
-      hideForRoles: ["accountant"],
+      title: "Lab Test Management",
+      url: "/content",
+      icon: TestTube,
+      items: [
+        {
+          title: "Individual Test",
+          url: "#",
+          hideForRoles: ["staff", "doctor", "accountant"],
+        },
+        {
+          title: "Laboratory Test Packages",
+          url: "#",
+          hideForRoles: ["staff", "doctor", "accountant"],
+        },
+        {
+          title: "Recent Client Lab Request",
+          url: "#",
+          hideForRoles: ["staff", "doctor", "accountant"],
+        },
+      ],
     },
     {
       title: "Medical Records",
@@ -101,15 +190,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       hideForRoles: ["staff", "accountant"],
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: ChartNoAxesCombined,
-      hideForRoles: ["staff"],
-    },
-    {
       title: "Queue Management",
       url: "/queue-management",
       icon: ScreenShare,
+    },
+    {
+      title: "Calendar",
+      url: "/appointment",
+      icon: CalendarCheck,
+      hideForRoles: ["accountant"],
     },
   ];
 
