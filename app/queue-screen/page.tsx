@@ -18,10 +18,11 @@ import { useCallback } from "react";
 import useGetNowServing from "./hooks/useGetNowServing";
 import { useSpeechSynthesis } from "react-speech-kit";
 import { AppSocket } from "@/lib/socketClient";
+import { Socket } from "socket.io-client";
 export default function Que() {
   const router = useRouter();
   const { queData, refetchQue } = useGetQue();
-  const socket = AppSocket();
+  const socketRef = useRef<Socket | null>(null);
   const { nowservingData, refetchServing, data } = useGetNowServing();
   const { setLoading } = useAppLoaderContext();
   const buttonClick = useRef<HTMLButtonElement>(null);
@@ -60,13 +61,16 @@ export default function Que() {
   }, [callButtonSpeak]);
 
   useEffect(() => {
+    const socket = AppSocket();
+    if (!socket) return;
+    socketRef.current = socket;
     socket.on("getQueue", handleQueueUpdate);
     socket.on("getCalledQueue", handleCalledQueueUpdate);
     return () => {
       socket.off("getQueue", handleQueueUpdate);
       socket.off("getCalledQueue", handleCalledQueueUpdate);
     };
-  }, [handleQueueUpdate, handleCalledQueueUpdate, socket]);
+  }, [handleQueueUpdate, handleCalledQueueUpdate]);
 
   const handleLogout = async () => {
     setLoading(true);

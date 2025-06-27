@@ -17,16 +17,14 @@ export const userScheme = z.object({
       message: "Password must contain at least one special character",
     }),
   firstName: z.string(),
+  middleInitial: z.string(),
   lastName: z.string(),
+  professionalTitle: z.string(),
   roleId: z.string(),
   phoneNumber: z.string(),
   address: z.string(),
-  canPerformUserManagment: z.number(),
-  canPerformClientAppointments: z.number(),
-  canViewReports: z.number(),
-  canAddLaboratoryPackages: z.number(),
-  canPerformLaboratoryRequest: z.number(),
-  additonalNotes: z.string(),
+  licenseNumber: z.string(),
+  signature: z.string(),
 });
 export type globalUserData = z.infer<typeof userScheme>;
 export const globalUserSchema = z.array(userScheme);

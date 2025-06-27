@@ -8,16 +8,14 @@ export type UserSignUpDto = {
   userName: string;
   passwordHash: string;
   firstName: string;
+  middleInitial: string;
   lastName: string;
+  professionalTitle: string;
   roleId: string;
   phoneNumber: string;
   address: string;
-  canPerformUserManagment: number;
-  canPerformClientAppointments: number;
-  canViewReports: number;
-  canAddLaboratoryPackages: number;
-  canPerformLaboratoryRequest: number;
-  additonalNotes: string;
+  licenseNumber: string;
+  signature: string;
 };
 
 export type LoginResponseDto = {
@@ -39,12 +37,8 @@ export type CurrentUserDto = {
   twoFactorEnabled: boolean;
   roles: string[];
   address: string;
-  canPerformUserManagment: number;
-  canPerformClientAppointments: number;
-  canViewReports: number;
-  canAddLaboratoryPackages: number;
-  canPerformLaboratoryRequest: number;
-  additonalNotes: string;
+  licenseNumber: string;
+  signature: string;
 };
 
 export type UserRolesDto = {

@@ -31,6 +31,9 @@ import {
   FileSearch,
 } from "lucide-react";
 import useGetCountNowServing from "@/app/queue-screen/hooks/useGetCountNowServing";
+import useGetClient from "@/app/results-management/client-result-entry/hooks/useGetClient";
+import { AppSocket } from "@/lib/socketClient";
+import { Socket } from "socket.io-client";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = React.useState({
@@ -39,7 +42,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     role: "admin",
     email: "",
   });
-  const { countData } = useGetCountNowServing();
+  const { countData, fetchData } = useGetCountNowServing();
+  const { countResultEnry, refetchData } = useGetClient();
+  const socketRef = React.useRef<Socket | null>(null);
   React.useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -54,6 +59,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     };
     fetchUser();
   }, []);
+
+  React.useEffect(() => {
+    const socket = AppSocket();
+    if (!socket) return;
+    socketRef.current = socket;
+    socket.on("ReceiveClientReceiving", fetchData);
+    socket.on("ReceiveClientResultEntry", refetchData);
+    return () => {
+      socket.off("ReceiveClientReceiving", fetchData);
+      socket.off("ReceiveClientResultEntry", refetchData);
+    };
+  }, [fetchData, refetchData]);
   const fullNavMain = [
     {
       title: "Dashboard",
@@ -93,12 +110,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           title: "Client Result Entry",
           url: "/results-management/client-result-entry",
           hideForRoles: ["staff", "doctor", "accountant"],
+          badgeCount: countResultEnry,
         },
         {
           title: "Result Evaluation",
-          url: "#",
+          url: "/results-management/result-evaluation",
           hideForRoles: ["staff", "doctor", "accountant"],
-          badgeCount: 3,
+          badgeCount: 0,
         },
         {
           title: "Final Result Authorization",

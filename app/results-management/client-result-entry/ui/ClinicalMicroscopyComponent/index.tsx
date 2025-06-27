@@ -9,6 +9,7 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useMainContext } from "../../context/context-provider";
+import Cookies from "js-cookie";
 
 export default function ClinicalMicroscopyComponent() {
   const { currentRow } = useMainContext();
@@ -112,6 +113,7 @@ export default function ClinicalMicroscopyComponent() {
     }
     setLoading(true);
     mutate({
+      userId: Cookies.get("userid") || "",
       clientId: currentRow?.id,
       clinicalmicroscopy: {
         micralResult: MicralResult || "N/A",

@@ -9,6 +9,7 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useMainContext } from "../../context/context-provider";
+import Cookies from "js-cookie";
 
 export default function HematologyComponent() {
   const { currentRow } = useMainContext();
@@ -119,6 +120,7 @@ export default function HematologyComponent() {
     }
     setLoading(true);
     mutate({
+      userId: Cookies.get("userid") || "",
       clientId: currentRow?.id,
       hematology: {
         whiteBloodCellsResults: whiteBloodCellsResult || "N/A",

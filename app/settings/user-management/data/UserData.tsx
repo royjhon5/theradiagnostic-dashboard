@@ -13,25 +13,15 @@ import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Editor } from "@/components/blocks/editor-00/editor";
 import { ArrowLeft, Check, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import Cookies from "js-cookie";
 import { format } from "date-fns";
 import useCreateUser from "../create-user/useCreateUser";
 import { PasswordInput } from "@/components/password-input";
 import { SelectField } from "@/components/dynamic-select";
 import useUserRoles from "../hooks/useUserRoles";
-
-const permissionsData = [
-  { id: "clientManagement", label: "Can Perform Client Management" },
-  { id: "laboratoryRequests", label: "Can Perform Laboratory Requests" },
-  { id: "clientAppointments", label: "Can Perform Client Appointments" },
-  { id: "viewReports", label: "Can View Reports" },
-  { id: "addLaboratoryPackage", label: "Can Add Laboratory Package" },
-];
+import { SignatureMaker } from "@docuseal/signature-maker-react";
 
 export default function UserData() {
   const { form, onSubmit } = useCreateUser();
@@ -76,22 +66,6 @@ export default function UserData() {
     const parsedUser = JSON.parse(user);
     Username = parsedUser.username;
   }
-  const [permissions, setPermissions] = useState(
-    permissionsData.reduce(
-      (acc, permission) => {
-        acc[permission.id] = 0; // use 0 instead of false
-        return acc;
-      },
-      {} as Record<string, number>
-    )
-  );
-
-  const handlePermissionChange = (permissionId: string) => {
-    setPermissions((prev) => ({
-      ...prev,
-      [permissionId]: prev[permissionId] === 1 ? 0 : 1,
-    }));
-  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 flex flex-col gap-3">
@@ -126,97 +100,134 @@ export default function UserData() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="bg-background p-4 rounded-lg shadow-sm mt-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>First Name</FormLabel>
-                      <FormControl>
-                        <Input type="text" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div className="col-span-1 md:col-span-5">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl>
+                          <Input type="text" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-2">
+                  <FormField
+                    control={form.control}
+                    name="middleInitial"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Middle Initial</FormLabel>
+                        <FormControl>
+                          <Input type="text" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-5">
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl>
+                          <Input type="text" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-4">
+                  <FormField
+                    control={form.control}
+                    name="professionalTitle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Professional Title</FormLabel>
+                        <FormControl>
+                          <Input type="text" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-4">
+                  <FormField
+                    control={form.control}
+                    name="licenseNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>License Number</FormLabel>
+                        <FormControl>
+                          <Input type="text" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="text" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-4">
+                  <FormField
+                    control={form.control}
+                    name="roleId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Roles</FormLabel>
+                        <FormControl>
+                          <SelectField
+                            value={field.value}
+                            onChange={field.onChange}
+                            options={selectOptions}
+                            placeholder="Select Role"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-4">
+                  <FormField
+                    control={form.control}
+                    name="userName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Username</FormLabel>
+                        <FormControl>
+                          <Input type="text" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last Name</FormLabel>
-                      <FormControl>
-                        <Input type="text" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="userName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username</FormLabel>
-                      <FormControl>
-                        <Input type="text" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input type="text" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="phoneNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Contact Number</FormLabel>
-                      <FormControl>
-                        <Input type="text" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="roleId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Roles</FormLabel>
-                      <FormControl>
-                        <SelectField
-                          value={field.value}
-                          onChange={field.onChange}
-                          options={selectOptions}
-                          placeholder="Select Role"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div>
+                <div className="col-span-1 md:col-span-4">
                   <FormField
                     control={form.control}
                     name="passwordHash"
@@ -300,49 +311,22 @@ export default function UserData() {
               </div>
             </div>
             <div className="grid grid-cols-1 mt-4 gap-2">
-              <div className="bg-background rounded-lg shadow-sm">
-                <div className="p-4">
-                  <h2 className="font-bold">Access Permission</h2>
-                  <h3 className="text-sm" style={{ fontSize: 10 }}>
-                    Access permission refers to the rights and privileges
-                    granted to users within a system, determining what data and
-                    functionalities they can view, edit, or manage. In
-                    healthcare systems, access permissions are crucial for
-                    maintaining data security and ensuring that sensitive
-                    patient information is only accessible to authorized
-                    personnel based on their roles, such as administrators,
-                    providers, or billing staff.
-                  </h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                  {permissionsData.map((permission, index) => (
-                    <div
-                      key={`${permission.id}-${index}`}
-                      className="flex items-center space-x-3"
-                    >
-                      <Checkbox
-                        id={`${permission.id}-${index}`}
-                        checked={permissions[permission.id] === 1}
-                        onCheckedChange={() =>
-                          handlePermissionChange(permission.id)
-                        }
-                        className="h-5 w-5 rounded-sm border-gray-300 bg-gray-200"
+              <div className="bg-background p-4 rounded-lg shadow-sm">
+                <FormField
+                  control={form.control}
+                  name="signature"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel></FormLabel>
+                      <SignatureMaker
+                        withSubmit={false}
+                        onChange={(signatureData: { base64: string }) => {
+                          field.onChange(signatureData.base64);
+                        }}
                       />
-                      <Label
-                        htmlFor={`${permission.id}-${index}`}
-                        className="text-base font-medium"
-                      >
-                        {permission.label}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="bg-background rounded-lg shadow-sm mt-4">
-                <div className="p-4">
-                  <h2 className="font-bold">Addtional Notes for User</h2>
-                </div>
-                <Editor />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
             <div className="flex flex-col md:flex-row justify-between items-center mt-4">

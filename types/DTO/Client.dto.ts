@@ -18,6 +18,11 @@ export type UpdateClientDto = CreateClientDto & {
   id: number;
 };
 
+export type UpdateStatusDTO = {
+  id: number;
+  status: string;
+};
+
 export type ClientDto = {
   id: number;
   firstName: string;

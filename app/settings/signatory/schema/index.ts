@@ -6,6 +6,7 @@ export const SignatorySchema = z.object({
   signatoryPosition: z.string(),
   signatureImage: z.string(),
   licenseNumber: z.string(),
+  professionalTitle: z.string(),
 });
 
 export type globalSignatoryData = z.infer<typeof SignatorySchema>;

@@ -71,54 +71,75 @@ export default function AddEmployer() {
               </div>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <div className="bg-background p-4 rounded-lg shadow-sm mt-5 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="signatoryName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Full name</FormLabel>
-                          <FormControl>
-                            <Input type="text" {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                  <div className="bg-background p-4 rounded-lg shadow-sm mt-5 grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="colspan-1 md:col-span-3">
+                      <FormField
+                        control={form.control}
+                        name="signatoryName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Full name</FormLabel>
+                            <FormControl>
+                              <Input type="text" {...field} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                    <FormField
-                      control={form.control}
-                      name="licenseNumber"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>License Number</FormLabel>
-                          <FormControl>
-                            <Input type="text" {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                    <div className="colspan-1 md:col-span-3">
+                      <FormField
+                        control={form.control}
+                        name="licenseNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>License Number</FormLabel>
+                            <FormControl>
+                              <Input type="text" {...field} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                    <FormField
-                      control={form.control}
-                      name="signatoryPosition"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Position</FormLabel>
-                          <FormControl>
-                            <SelectField
-                              value={field.value}
-                              onChange={(value) => {
-                                field.onChange(value);
-                              }}
-                              options={Position}
-                              placeholder="Select Position"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                    <div className="colspan-1 md:col-span-3">
+                      <FormField
+                        control={form.control}
+                        name="professionalTitle"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Professional Title</FormLabel>
+                            <FormControl>
+                              <Input type="text" {...field} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                    <div className="col-span-3">
+                    <div className="colspan-1 md:col-span-3">
+                      <FormField
+                        control={form.control}
+                        name="signatoryPosition"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Position</FormLabel>
+                            <FormControl>
+                              <SelectField
+                                value={field.value}
+                                onChange={(value) => {
+                                  field.onChange(value);
+                                }}
+                                options={Position}
+                                placeholder="Select Position"
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="col-span-12">
                       <FormField
                         control={form.control}
                         name="signatureImage"

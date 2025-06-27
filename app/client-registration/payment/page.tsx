@@ -47,6 +47,7 @@ export default function PaymentSection() {
         toast.success("Payment Successfully Processed.");
         router.push(`/client-registration/success?clientId=${clientId}`);
         socketRef.current?.emit("submitClient");
+        socketRef.current?.emit("SendToClientReceiving");
       }
       setLoading(false);
     },

@@ -1,5 +1,6 @@
 import { getCountNowServing } from "@/app/api/services/client.api";
 import { useQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
 
 const useGetCountNowServing = () => {
   const { refetch, data, isPending } = useQuery({
@@ -10,11 +11,15 @@ const useGetCountNowServing = () => {
     },
   });
 
+  const fetchData = useCallback(() => {
+    return refetch();
+  }, [refetch]);
+
   return {
     isPending,
     data,
-    fetechData: refetch,
-    servingData: data?.response ? data.response : [],
+    fetchData,
+    servingData: data?.response ?? [],
     countData: data?.totalCount ?? 0,
   };
 };

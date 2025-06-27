@@ -8,14 +8,16 @@ import { format } from "date-fns";
 import Cookies from "js-cookie";
 import { TabsData } from "../data/data";
 import useGetClient from "../hooks/useGetClient";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMainContext } from "../context/context-provider";
 import { globalClientSchema } from "../schema/schema";
 import { DataTable } from "../data-table-components/data-table";
 import { columns } from "../data-table-components/column-header";
 import useGetIncrementedId from "../hooks/useGetIncrementedId";
+import { AppSocket } from "@/lib/socketClient";
+import { Socket } from "socket.io-client";
 export default function ClientResultEntry() {
-  const { clientDataByStatus } = useGetClient();
+  const { clientDataByStatus, refetchData } = useGetClient();
   const { incrementedIdGet } = useGetIncrementedId();
   const result = globalClientSchema.parse(clientDataByStatus);
   const { currentRow } = useMainContext();
@@ -26,6 +28,7 @@ export default function ClientResultEntry() {
   const [Dob, setDob] = useState("");
   const [age, setAge] = useState("");
   const [labNo, setLabNo] = useState(0);
+  const socketRef = useRef<Socket | null>(null);
   const currentDate = new Date();
   const formattedDate = format(currentDate, "MMMM dd, yyyy - EEEE");
   const user = Cookies.get("user");
@@ -45,7 +48,16 @@ export default function ClientResultEntry() {
       setAge(currentRow.age?.toString() || "");
       setLabNo(incrementedIdGet || 0);
     }
-  }, [currentRow, incrementedIdGet]);
+    const socket = AppSocket();
+    if (!socket) return;
+
+    socketRef.current = socket;
+    socketRef.current.on("ReceiveClientResultEntry", refetchData);
+
+    return () => {
+      socket.off("ReceiveClientResultEntry", refetchData);
+    };
+  }, [currentRow, incrementedIdGet, refetchData]);
 
   return (
     <div className="grid grid-cols-1 gap-3">

@@ -9,6 +9,7 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useMainContext } from "../../context/context-provider";
+import Cookies from "js-cookie";
 
 export default function ChemistryComponent() {
   const { currentRow } = useMainContext();
@@ -88,6 +89,7 @@ export default function ChemistryComponent() {
     }
     setLoading(true);
     mutate({
+      userId: Cookies.get("userid") || "",
       clientId: currentRow?.id,
       chemistry: {
         fastingBloodSugarResult: FastingBloodSugarResult,

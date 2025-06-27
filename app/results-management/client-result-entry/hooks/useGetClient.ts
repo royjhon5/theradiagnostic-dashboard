@@ -1,5 +1,6 @@
 import { getClientByStatus } from "@/app/api/services/client.api";
 import { useQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
 
 const useGetClient = () => {
   const { refetch, data, isPending } = useQuery({
@@ -10,10 +11,15 @@ const useGetClient = () => {
     },
   });
 
+  const refetchData = useCallback(() => {
+    return refetch();
+  }, [refetch]);
+
   return {
-    refetchData: refetch,
+    refetchData,
     isPending,
     clientDataByStatus: data?.response ? data.response : [],
+    countResultEnry: data?.totalCount,
   };
 };
 

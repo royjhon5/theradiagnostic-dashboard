@@ -8,24 +8,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 
 export default function SuccessPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const clientId = searchParams.get("clientId");
-  const packageId = searchParams.get("packageId");
-  const userId = Cookies.get("userid");
   const { clientData } = useGetClientById(Number(clientId));
   const [qrCodeSrc, setQrCodeSrc] = useState<string | null>(null);
 
   const GenerateApe = async () => {
     try {
-      await generateMedicalReportPdf(
-        Number(clientId),
-        String(userId),
-        Number(packageId)
-      );
+      await generateMedicalReportPdf(Number(clientId));
     } catch (error) {
       console.error(error);
     }
@@ -88,13 +81,6 @@ export default function SuccessPage() {
             onClick={GenerateApe}
           >
             GENERATE APE
-          </Button>
-          <Button
-            size="xl"
-            className="cursor-pointer ml-4"
-            onClick={GenerateApe}
-          >
-            REQUEST SLIP
           </Button>
         </div>
       </div>

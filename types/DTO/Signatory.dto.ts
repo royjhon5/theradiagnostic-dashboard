@@ -3,6 +3,7 @@ export type CreateSignatoryDTO = {
   signatoryPosition: string;
   signatureImage: string;
   licenseNumber: string;
+  professionalTitle: string;
 };
 
 export type GetSignatoryDTO = {
@@ -11,6 +12,7 @@ export type GetSignatoryDTO = {
   signatoryPosition: string;
   signatureImage: string;
   licenseNumber: string;
+  professionalTitle: string;
 };
 
 export type UpdateSignatoryDTO = {
@@ -19,4 +21,5 @@ export type UpdateSignatoryDTO = {
   signatoryPosition: string;
   signatureImage: string;
   licenseNumber: string;
+  professionalTitle: string;
 };

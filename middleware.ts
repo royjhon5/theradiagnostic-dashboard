@@ -13,6 +13,7 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
+  console.log("User from cookie:", user);
 
   const isLoggedIn = !!(user?.username && user?.role);
 
@@ -21,11 +22,11 @@ export function middleware(request: NextRequest) {
     if (isLoggedIn) {
       return NextResponse.redirect(
         new URL(
-          user.role.toLowerCase() === "staff"
+          user.role.toLowerCase() === "RECEPTIONIST"
             ? "/appointment"
-            : user.role.toLowerCase() === "accountant"
+            : user.role.toLowerCase() === "RECEPTIONIST"
               ? "/transactions"
-              : user.role.toLowerCase() === "queuing"
+              : user.role.toLowerCase() === "QUEUING"
                 ? "/queue-screen"
                 : "/dashboard",
           request.url
@@ -41,11 +42,11 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     return NextResponse.redirect(
       new URL(
-        user.role.toLowerCase() === "staff"
+        user.role.toLowerCase() === "RECEPTIONIST"
           ? "/appointment"
-          : user.role.toLowerCase() === "accountant"
+          : user.role.toLowerCase() === "RECEPTIONIST"
             ? "/transactions"
-            : user.role.toLowerCase() === "queuing"
+            : user.role.toLowerCase() === "QUEUING"
               ? "/queue-screen"
               : "/dashboard",
         request.url
@@ -61,14 +62,14 @@ export function middleware(request: NextRequest) {
   // Role-based path restrictions
   if (
     pathname.startsWith("/dashboard") &&
-    user?.role.toLowerCase() === "staff"
+    user?.role.toLowerCase() === "RECEPTIONIST"
   ) {
     return NextResponse.redirect(new URL("/appointment", request.url));
   }
 
   if (
     pathname.startsWith("/dashboard") &&
-    user?.role.toLowerCase() === "accountant"
+    user?.role.toLowerCase() === "RECEPTIONIST"
   ) {
     return NextResponse.redirect(new URL("/transactions", request.url));
   }
@@ -76,32 +77,32 @@ export function middleware(request: NextRequest) {
   // Add this new check for queuing users
   if (
     pathname.startsWith("/dashboard") &&
-    user?.role.toLowerCase() === "queuing"
+    user?.role.toLowerCase() === "QUEUING"
   ) {
     return NextResponse.redirect(new URL("/queue-screen", request.url));
   }
 
   // Protected routes configuration
   const protectedRoutes: Record<string, string[]> = {
-    "/queue-screen": ["queuing"],
-    "/client-list/registration": ["staff", "doctor", "admin"],
-    "/client-list": ["staff", "doctor", "admin"],
-    "/settings/test-package": ["admin"],
-    "/settings/laboratory-test": ["admin"],
-    "/settings/user-management": ["admin"],
-    "/settings/report-settings": ["admin"],
-    "/settings": ["admin", "doctor", "accountant", "staff"],
-    "/appointment/create-assessment": ["admin", "doctor", "staff"],
-    "/appointment": ["admin", "doctor", "staff"],
-    "/transactions/process-transaction": ["admin", "accountant"],
-    "/transactions/transaction-details": ["admin", "accountant"],
-    "/transactions": ["admin", "accountant"],
-    "/dashboard": ["admin", "doctor"],
-    "/doctors": ["admin"],
-    "/reports": ["accountant", "admin"],
-    "/medical-records": ["doctor", "admin"],
-    "/analytics": ["doctor", "accountant", "admin"],
-    "/activity-history": ["staff", "admin"],
+    "/queue-screen": ["QUEUING"],
+    "/client-list/registration": ["RECEPTIONIST", "DOCTOR", "ADMIN"],
+    "/client-list": ["RECEPTIONIST", "DOCTOR", "ADMIN"],
+    "/settings/test-package": ["ADMIN"],
+    "/settings/laboratory-test": ["ADMIN"],
+    "/settings/user-management": ["ADMIN"],
+    "/settings/report-settings": ["ADMIN"],
+    "/settings": ["ADMIN", "DOCTOR", "RECEPTIONIST"],
+    "/appointment/create-assessment": ["ADMIN", "DOCTOR", "RECEPTIONIST"],
+    "/appointment": ["ADMIN", "DOCTOR", "RECEPTIONIST"],
+    "/transactions/process-transaction": ["ADMIN", "RECEPTIONIST"],
+    "/transactions/transaction-details": ["ADMIN", "RECEPTIONIST"],
+    "/transactions": ["ADMIN", "RECEPTIONIST"],
+    "/dashboard": ["ADMIN", "DOCTOR"],
+    "/doctors": ["ADMIN"],
+    "/reports": ["RECEPTIONIST", "ADMIN"],
+    "/medical-records": ["DOCTOR", "ADMIN"],
+    "/analytics": ["DOCTOR", "RECEPTIONIST", "ADMIN"],
+    "/activity-history": ["RECEPTIONIST", "ADMIN"],
   };
 
   // Check protected routes
@@ -117,7 +118,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (isProtectedRoute) {
-    if (!allowedRoles.includes(user.role.toLowerCase())) {
+    if (!allowedRoles.includes(user.role)) {
       console.log(
         `Access denied for ${user.role} to ${pathname}. Allowed roles:`,
         allowedRoles

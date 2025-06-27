@@ -19,6 +19,14 @@ socketIO.on("connection", (socket) => {
     socketIO.emit("getCalledQueue");
   });
 
+  socket.on("SendToClientReceiving", () => {
+    socketIO.emit("ReceiveClientReceiving");
+  });
+
+  socket.on("SendToClientResultEntry", () => {
+    socketIO.emit("ReceiveClientResultEntry");
+  });
+
   socket.on("disconnect", () => {
     socket.disconnect();
   });

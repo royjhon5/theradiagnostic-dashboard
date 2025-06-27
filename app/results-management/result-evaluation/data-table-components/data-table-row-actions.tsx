@@ -13,8 +13,6 @@ interface DataTableRowActionsProps {
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const socketRef = useRef<Socket | null>(null);
   const updateStatus = (id: number) => {
-    socketRef.current?.emit("SendToClientResultEntry");
-    socketRef.current?.emit("SendToClientReceiving");
     try {
       const params = {
         id: id,
@@ -22,6 +20,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       };
       ProcessClientResult(params, id).then((response) => {
         if (response.isSuccess) {
+          socketRef.current?.emit("SendToClientResultEntry");
+          socketRef.current?.emit("SendToClientReceiving");
           toast.success("Status updated successfully");
         } else {
           console.error("Failed to update status:", response.message);

@@ -9,6 +9,7 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useMainContext } from "../../context/context-provider";
+import Cookies from "js-cookie";
 
 export default function ImmunologyComponent() {
   const { currentRow } = useMainContext();
@@ -43,6 +44,7 @@ export default function ImmunologyComponent() {
     }
     setLoading(true);
     mutate({
+      userId: Cookies.get("userid") || "",
       clientId: currentRow?.id,
       immunology: {
         tshResult: TSHResult,

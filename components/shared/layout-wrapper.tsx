@@ -39,10 +39,10 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   // Determine if sidebar should be hidden
   const hideSidebar =
     ["/login", "/queue-screen"].includes(pathname) ||
-    (userRole === "queuing" && pathname !== "/queue-screen");
+    (userRole === "QUEUING" && pathname !== "/queue-screen");
 
   // Special case: queuing users should only see queue-screen
-  if (userRole === "queuing" && !pathname.startsWith("/queue-screen")) {
+  if (userRole === "QUEUING" && !pathname.startsWith("/queue-screen")) {
     window.location.href = "/queue-screen";
     return null;
   }

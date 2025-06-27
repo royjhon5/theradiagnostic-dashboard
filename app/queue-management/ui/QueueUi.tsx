@@ -37,6 +37,7 @@ export default function QueueUI() {
       await NowServingInSyncRegular();
       refetchServing();
       refetchQue();
+      socketRef.current?.emit("SendToClientReceiving");
       socketRef.current?.emit("callQueue");
     } catch (error) {
       console.log(error);

@@ -1,19 +1,23 @@
 export type CreateHematologyDTO = {
+  userId: string;
   clientId: number;
   hematology: Hematology;
 };
 
 export type CreateChemistryDTO = {
+  userId: string;
   clientId: number;
   chemistry: Chemistry;
 };
 
 export type CreateClinicalMicroscopyDTO = {
+  userId: string;
   clientId: number;
   clinicalmicroscopy: ClinicalMicroscopy;
 };
 
 export type CreateImmunologyDTO = {
+  userId: string;
   clientId: number;
   immunology: Immunology;
 };

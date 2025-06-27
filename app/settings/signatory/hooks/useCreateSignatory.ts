@@ -19,6 +19,7 @@ const useCreateSignatory = () => {
       signatoryPosition: "",
       signatureImage: "",
       licenseNumber: "",
+      professionalTitle: "",
     },
   });
 
@@ -43,6 +44,7 @@ const useCreateSignatory = () => {
     signatoryPosition,
     signatureImage,
     licenseNumber,
+    professionalTitle,
   }: globalSignatoryData) => {
     setLoading(true);
     mutate({
@@ -50,6 +52,7 @@ const useCreateSignatory = () => {
       signatoryPosition,
       signatureImage,
       licenseNumber,
+      professionalTitle,
     });
   };
 

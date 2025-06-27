@@ -10,6 +10,7 @@ import {
   GetOnQueDTO,
   GetReferralCodeDTO,
   UpdateClientDto,
+  UpdateStatusDTO,
 } from "@/types/DTO/Client.dto";
 
 const baseAPI = "client";
@@ -68,9 +69,29 @@ export const updateClient = async (params: UpdateClientDto) => {
     `${baseAPI}`,
     params
   );
-
   return response;
 };
+
+export const ProcessClientResult = async (
+  params: UpdateStatusDTO,
+  id: number
+) => {
+  const { data: response } = await httpHelper.patch<BaseResponseType<boolean>>(
+    `${baseAPI}/process/${id}`,
+    params
+  );
+  return response;
+};
+
+// export const ProcessClientResult = async (params: UpdateStatusDTO) => {
+//   const { id, ...body } = params;
+//   const { data: response } = await httpHelper.patch<BaseResponseType<boolean>>(
+//     `${baseAPI}/process/${id}`,
+//     body
+//   );
+
+//   return response;
+// };
 
 export const NowServingInSyncRegular = async () => {
   const { data: response } = await httpHelper.post<BaseResponseType<boolean>>(
@@ -118,13 +139,9 @@ export const getReferralCode = async (code: string) => {
   }
 };
 
-export const generateMedicalReportPdf = async (
-  id: number,
-  UserId: string,
-  packageId: number
-) => {
+export const generateMedicalReportPdf = async (id: number) => {
   const response = await httpHelper.get<Blob>(
-    `${baseAPI}/generate-medical-report/${id}?UserId=${UserId}&packageId=${packageId}`,
+    `${baseAPI}/generate-medical-report/${id}`,
     {
       responseType: "blob",
     }
