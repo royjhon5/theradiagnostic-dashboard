@@ -5,9 +5,6 @@ export type PackageItemDto = {
 
 export type CreatePackageDto = {
   packageName: string;
-  packageDescription: string;
-  startingDate: string;
-  endingDate: string;
   packages: PackageItemDto[];
   totalPrice: number;
 };
@@ -15,9 +12,18 @@ export type CreatePackageDto = {
 export type getLaboratoryPackageDto = {
   id: number;
   packageName: string;
-  packageDescription: string;
-  startingDate: string;
-  endingDate: string;
+  packages: PackageItemDto[];
+  totalPrice: number;
+};
+
+export type UpdatePackageItemDto = {
+  itemName: string;
+  itemPrice: number;
+};
+
+export type UpdatePackageDto = {
+  id: number;
+  packageName: string;
   packages: PackageItemDto[];
   totalPrice: number;
 };

@@ -16,9 +16,7 @@ const useCreateLaboratoryTest = () => {
     defaultValues: {
       testName: "",
       testCategory: "",
-      price: "",
-      description: "",
-      additionalNotes: "",
+      price: 0,
     },
   });
 
@@ -38,20 +36,12 @@ const useCreateLaboratoryTest = () => {
     },
   });
 
-  const onSubmit = ({
-    testName,
-    testCategory,
-    price,
-    description,
-    additionalNotes,
-  }: globalLabTestData) => {
+  const onSubmit = ({ testName, testCategory, price }: globalLabTestData) => {
     setLoading(true);
     mutate({
       testName,
       testCategory,
       price,
-      description,
-      additionalNotes,
     });
   };
 

@@ -16,9 +16,6 @@ const useCreateLaboratoryPackage = () => {
     resolver: zodResolver(LabPackageSchema),
     defaultValues: {
       packageName: "",
-      packageDescription: "",
-      startingDate: new Date().toISOString(),
-      endingDate: new Date().toISOString(),
       packages: [],
       totalPrice: 0,
     },
@@ -42,18 +39,12 @@ const useCreateLaboratoryPackage = () => {
 
   const onSubmit = ({
     packageName,
-    packageDescription,
-    startingDate,
-    endingDate,
     packages,
     totalPrice,
   }: globalLabPackageData) => {
     setLoading(true);
     mutate({
       packageName,
-      packageDescription,
-      startingDate,
-      endingDate,
       packages,
       totalPrice,
     });

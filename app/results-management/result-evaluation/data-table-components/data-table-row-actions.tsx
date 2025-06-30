@@ -1,36 +1,15 @@
 import { Row } from "@tanstack/react-table";
+import { globalClientForReviewData } from "../schema/schema";
 import { Button } from "@/components/ui/button";
-import { globalClientData } from "../schema/schema";
-import { ProcessClientResult } from "@/app/api/services/client.api";
-import { toast } from "sonner";
-import { useRef } from "react";
-import { Socket } from "socket.io-client";
+import { useMainContext } from "../context/context-provider";
 
 interface DataTableRowActionsProps {
-  row: Row<globalClientData>;
+  row: Row<globalClientForReviewData>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const socketRef = useRef<Socket | null>(null);
-  const updateStatus = (id: number) => {
-    try {
-      const params = {
-        id: id,
-        status: "FOR RESULT ENTRY",
-      };
-      ProcessClientResult(params, id).then((response) => {
-        if (response.isSuccess) {
-          socketRef.current?.emit("SendToClientResultEntry");
-          socketRef.current?.emit("SendToClientReceiving");
-          toast.success("Status updated successfully");
-        } else {
-          console.error("Failed to update status:", response.message);
-        }
-      });
-    } catch (error) {
-      console.error("Error updating status:", error);
-    }
-  };
+  const { setCurrentRow } = useMainContext();
+
   return (
     <div className="flex flex-row gap-2 justify-end">
       <>
@@ -38,10 +17,21 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           size="sm"
           className="cursor-pointer"
           onClick={() => {
-            updateStatus(row.original.id);
+            const idsToCheck = ["chemId", "hemaId", "clinicId", "immuId"];
+            const availableData = idsToCheck.reduce(
+              (acc, key) => {
+                const value = row.original[key as keyof typeof row.original];
+                if (typeof value === "number" && value !== 0) {
+                  acc[key] = value;
+                }
+                return acc;
+              },
+              {} as Record<string, number>
+            );
+            setCurrentRow(availableData);
           }}
         >
-          Mark as Done
+          View Result
         </Button>
       </>
     </div>

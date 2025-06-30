@@ -6,13 +6,26 @@ export const PackageItemSchema = z.object({
 });
 
 export const LabPackageSchema = z.object({
+  id: z.number().optional(),
   packageName: z.string(),
-  packageDescription: z.string(),
-  startingDate: z.string().datetime(),
-  endingDate: z.string().datetime(),
   packages: z.array(PackageItemSchema),
   totalPrice: z.number(),
 });
 
 export type globalLabPackageData = z.infer<typeof LabPackageSchema>;
 export const globalLabPackageSchema = z.array(LabPackageSchema);
+
+export const UpdatePackageItemSchema = z.object({
+  itemName: z.string(),
+  itemPrice: z.number(),
+});
+
+export const UpdateLabPackageSchema = z.object({
+  id: z.number(),
+  packageName: z.string(),
+  packages: z.array(UpdatePackageItemSchema),
+  totalPrice: z.number(),
+});
+
+export type globalUpdateLabPackageData = z.infer<typeof UpdateLabPackageSchema>;
+export const globalUpdateLabPackageSchema = z.array(UpdateLabPackageSchema);

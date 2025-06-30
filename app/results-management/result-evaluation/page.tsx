@@ -2,15 +2,15 @@
 
 import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumbs";
 import MainProvider from "./context/context-provider";
-import useGetCountNowServing from "@/app/queue-screen/hooks/useGetCountNowServing";
-import { globalClientSchema } from "./schema/schema";
+import { globalClientForReview } from "./schema/schema";
 import { DataTable } from "./data-table-components/data-table";
 import { columns } from "./data-table-components/column-header";
+import useGetClientForReview from "./hooks/useGetClientForReview";
+import IframeComponent from "./ui/IframeComponent";
 
 export default function ClientResultEntryContainer() {
-  const { servingData } = useGetCountNowServing();
-  const result = globalClientSchema.parse(servingData);
-
+  const { clientForReviewData } = useGetClientForReview();
+  const result = globalClientForReview.parse(clientForReviewData);
   return (
     <MainProvider>
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
@@ -21,7 +21,11 @@ export default function ClientResultEntryContainer() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
             <DataTable data={result} columns={columns} />
-            <div className="col-span-2"></div>
+            <div className="col-span-2">
+              <div className="bg-background p-2 rounded-xl shadow-sm h-full">
+                <IframeComponent />
+              </div>
+            </div>
           </div>
         </div>
       </div>

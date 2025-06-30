@@ -3,18 +3,15 @@ import { Button } from "@/components/ui/button";
 import { globalClientData } from "../schema/schema";
 import { ProcessClientResult } from "@/app/api/services/client.api";
 import { toast } from "sonner";
-import { useRef } from "react";
-import { Socket } from "socket.io-client";
+import { AppSocket } from "@/lib/socketClient";
 
 interface DataTableRowActionsProps {
   row: Row<globalClientData>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const socketRef = useRef<Socket | null>(null);
+  const socket = AppSocket();
   const updateStatus = (id: number) => {
-    socketRef.current?.emit("SendToClientResultEntry");
-    socketRef.current?.emit("SendToClientReceiving");
     try {
       const params = {
         id: id,
@@ -22,6 +19,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       };
       ProcessClientResult(params, id).then((response) => {
         if (response.isSuccess) {
+          socket?.emit("SendToClientResultEntry");
+          socket?.emit("SendToClientReceiving");
           toast.success("Status updated successfully");
         } else {
           console.error("Failed to update status:", response.message);
