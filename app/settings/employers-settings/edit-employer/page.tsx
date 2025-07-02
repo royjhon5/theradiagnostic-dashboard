@@ -37,7 +37,6 @@ export default function EditEmployer() {
     if (dataParam) {
       try {
         const parsedData = JSON.parse(decodeURIComponent(dataParam));
-        console.log("parsedData", parsedData);
         form.reset({
           id: parsedData.id ?? 0,
           nameOfEmplyeer: parsedData.nameOfEmplyeer ?? "",

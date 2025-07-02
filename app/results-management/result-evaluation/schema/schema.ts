@@ -14,3 +14,16 @@ export const clientSchema = z.object({
 });
 export type globalClientData = z.infer<typeof clientSchema>;
 export const globalClientSchema = z.array(clientSchema);
+
+export const forReviewSchema = z.object({
+  userId: z.string(),
+  clientId: z.number(),
+  chemId: z.number(),
+  clinicId: z.number(),
+  hemaId: z.number(),
+  immuId: z.number(),
+  fullName: z.string(),
+});
+
+export type globalClientForReviewData = z.infer<typeof forReviewSchema>;
+export const globalClientForReview = z.array(forReviewSchema);

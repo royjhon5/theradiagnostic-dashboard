@@ -3,12 +3,20 @@ import {
   CreateClinicalMicroscopyDTO,
   CreateHematologyDTO,
   CreateImmunologyDTO,
+  GetClientDetailsResultDTO,
   GetIncrementedDTO,
 } from "@/types/DTO/Laboratoryresult.dto";
 import httpHelper from "../HttpAxios";
 import { BaseResponseType } from "@/types/BaseResponse";
 
 const baseAPI = "laboratoryResults";
+
+export const getAllClientResult = async () => {
+  const { data: response } = await httpHelper.get<
+    BaseResponseType<GetClientDetailsResultDTO[]>
+  >(`${baseAPI}/get-client`);
+  return response;
+};
 
 export const getIncrementedId = async () => {
   const { data: response } = await httpHelper.get<GetIncrementedDTO>(

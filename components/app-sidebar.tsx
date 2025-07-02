@@ -18,13 +18,13 @@ import { OtherMenu } from "./other-menu";
 import {
   BadgeDollarSign,
   LayoutDashboard,
-  ChartNoAxesCombined,
+  // ChartNoAxesCombined,
   Settings,
   History,
-  BriefcaseMedical,
-  TestTube,
-  CalendarCheck,
-  Calendar,
+  // BriefcaseMedical,
+  // TestTube,
+  // CalendarCheck,
+  // Calendar,
   ScreenShare,
   FolderKanban,
   UserPlus,
@@ -152,72 +152,72 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
       ],
     },
-    {
-      title: "Doctors",
-      url: "/doctors",
-      icon: BriefcaseMedical,
-      hideForRoles: ["staff", "doctor", "accountant"],
-    },
+    // {
+    //   title: "Doctors",
+    //   url: "/doctors",
+    //   icon: BriefcaseMedical,
+    //   hideForRoles: ["staff", "doctor", "accountant"],
+    // },
     {
       title: "Transactions",
       url: "/transactions",
       icon: BadgeDollarSign,
       hideForRoles: ["staff", "doctor"],
     },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: ChartNoAxesCombined,
-      items: [
-        {
-          title: "Overview",
-          url: "#",
-        },
-        {
-          title: "Reports",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Lab Test Management",
-      url: "/content",
-      icon: TestTube,
-      items: [
-        {
-          title: "Individual Test",
-          url: "#",
-          hideForRoles: ["staff", "doctor", "accountant"],
-        },
-        {
-          title: "Laboratory Test Packages",
-          url: "#",
-          hideForRoles: ["staff", "doctor", "accountant"],
-        },
-        {
-          title: "Recent Client Lab Request",
-          url: "#",
-          hideForRoles: ["staff", "doctor", "accountant"],
-        },
-      ],
-    },
-    {
-      title: "Medical Records",
-      url: "#",
-      icon: Calendar,
-      hideForRoles: ["staff", "accountant"],
-    },
+    // {
+    //   title: "Analytics",
+    //   url: "#",
+    //   icon: ChartNoAxesCombined,
+    //   items: [
+    //     {
+    //       title: "Overview",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Reports",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Lab Test Management",
+    //   url: "/content",
+    //   icon: TestTube,
+    //   items: [
+    //     {
+    //       title: "Individual Test",
+    //       url: "#",
+    //       hideForRoles: ["staff", "doctor", "accountant"],
+    //     },
+    //     {
+    //       title: "Laboratory Test Packages",
+    //       url: "#",
+    //       hideForRoles: ["staff", "doctor", "accountant"],
+    //     },
+    //     {
+    //       title: "Recent Client Lab Request",
+    //       url: "#",
+    //       hideForRoles: ["staff", "doctor", "accountant"],
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Medical Records",
+    //   url: "#",
+    //   icon: Calendar,
+    //   hideForRoles: ["staff", "accountant"],
+    // },
     {
       title: "Queue Management",
       url: "/queue-management",
       icon: ScreenShare,
     },
-    {
-      title: "Calendar",
-      url: "/appointment",
-      icon: CalendarCheck,
-      hideForRoles: ["accountant"],
-    },
+    // {
+    //   title: "Calendar",
+    //   url: "/appointment",
+    //   icon: CalendarCheck,
+    //   hideForRoles: ["accountant"],
+    // },
   ];
 
   const OterMenuMain = [
@@ -260,7 +260,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   priority
                 />
                 <span className="text-lg font-semibold text-blue-500 ml-2">
-                  TheraDiagnostic
+                  TheraDiagnostics
                 </span>
               </a>
             </SidebarMenuButton>

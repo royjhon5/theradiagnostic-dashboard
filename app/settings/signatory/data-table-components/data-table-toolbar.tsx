@@ -34,7 +34,7 @@ export function DataTableToolbar<TData>({
           {table.getColumn("signatoryPosition") && (
             <DataTableFacetedFilter
               column={table.getColumn("signatoryPosition")}
-              title="signatoryPosition"
+              title="Signatory Position"
               options={signatoryPositionData}
             />
           )}
