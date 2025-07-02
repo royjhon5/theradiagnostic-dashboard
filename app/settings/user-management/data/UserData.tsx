@@ -17,7 +17,7 @@ import { ArrowLeft, Check, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { format } from "date-fns";
-import useCreateUser from "../create-user/useCreateUser";
+import useCreateUser from "../hooks/useCreateUser";
 import { PasswordInput } from "@/components/password-input";
 import { SelectField } from "@/components/dynamic-select";
 import useUserRoles from "../hooks/useUserRoles";

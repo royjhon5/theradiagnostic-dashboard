@@ -1,4 +1,5 @@
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { MixerHorizontalIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,9 +9,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { MapPinXInside } from "lucide-react";
-import { IconPlus } from "@tabler/icons-react";
-import Link from "next/link";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -20,7 +18,7 @@ export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
   return (
-    <div className="flex flex-row gap-1">
+    <div>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
@@ -28,7 +26,7 @@ export function DataTableViewOptions<TData>({
             size="sm"
             className="ml-auto hidden h-8 lg:flex"
           >
-            <MapPinXInside className="mr-2 h-4 w-4" />
+            <MixerHorizontalIcon className="mr-2 h-4 w-4" />
             View
           </Button>
         </DropdownMenuTrigger>
@@ -55,13 +53,6 @@ export function DataTableViewOptions<TData>({
             })}
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <Link href="/client-list/registration">
-        <Button variant="outline" size="sm" className="cursor-pointer">
-          <IconPlus />
-          <span className="hidden lg:inline">Register New Client</span>
-        </Button>
-      </Link>
     </div>
   );
 }

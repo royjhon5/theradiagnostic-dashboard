@@ -1,3 +1,9 @@
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  DoubleArrowLeftIcon,
+  DoubleArrowRightIcon,
+} from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,12 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "lucide-react";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -24,8 +24,8 @@ export function DataTablePagination<TData>({
   return (
     <div className="flex items-center justify-between overflow-auto px-2">
       <div className="hidden flex-1 text-sm text-muted-foreground sm:block">
-        {/* {table.getFilteredSelectedRowModel().rows.length} of{' '}
-        {table.getFilteredRowModel().rows.length} row(s) selected. */}
+        {table.getFilteredSelectedRowModel().rows.length} of{" "}
+        {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
       <div className="flex items-center sm:space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
@@ -60,7 +60,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to first page</span>
-            <ArrowLeft className="h-4 w-4" />
+            <DoubleArrowLeftIcon className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
@@ -87,7 +87,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to last page</span>
-            <ArrowRight className="h-4 w-4" />
+            <DoubleArrowRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>

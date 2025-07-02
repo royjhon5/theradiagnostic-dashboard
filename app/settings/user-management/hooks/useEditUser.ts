@@ -1,24 +1,28 @@
 import { useAppLoaderContext } from "@/components/providers/app-loader-provider";
 import { useForm } from "react-hook-form";
-import { globalUserData, userScheme } from "../schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { userSignUp } from "@/app/api/services/user.api";
 import { BaseResponseType } from "@/types/BaseResponse";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+import { updateUser } from "@/app/api/services/user.api";
+import { UserUpdateDto } from "@/types/DTO/UserDTO";
+import { globalUpdateUserData, updateUserSchema } from "../schema";
 
-const useCreateUser = () => {
+const useEditUser = () => {
+  const router = useRouter();
   const { setLoading } = useAppLoaderContext();
-  const form = useForm<globalUserData>({
-    resolver: zodResolver(userScheme),
+  const form = useForm<UserUpdateDto>({
+    resolver: zodResolver(updateUserSchema),
     defaultValues: {
+      id: "",
       email: "",
       firstName: "",
       middleInitial: "",
       lastName: "",
       professionalTitle: "",
       userName: "",
-      passwordHash: "",
       roleId: "",
       address: "",
       phoneNumber: "",
@@ -28,18 +32,19 @@ const useCreateUser = () => {
   });
 
   const { mutate, isPending, isSuccess } = useMutation({
-    mutationFn: userSignUp,
+    mutationFn: updateUser,
     onSuccess: (res) => {
-      const data = res as BaseResponseType<string[]>;
+      const data = res as BaseResponseType<boolean>;
       if (data.isSuccess) {
-        toast.success("New user has been saved. Successfully!");
+        toast.success("User has been updated.");
         form.reset();
+        router.push("/settings/user-management");
       }
       setLoading(false);
     },
-    onError: (res) => {
+    onError: (err: AxiosError) => {
       setLoading(false);
-      toast.error(`${res.message}`);
+      toast.error(`${err.message}`);
     },
   });
 
@@ -50,22 +55,21 @@ const useCreateUser = () => {
     lastName,
     professionalTitle,
     userName,
-    passwordHash,
     roleId,
     address,
     phoneNumber,
     licenseNumber,
     signature,
-  }: globalUserData) => {
+  }: globalUpdateUserData) => {
     setLoading(true);
     mutate({
+      id: form.getValues("id"),
       email,
       firstName,
       middleInitial,
       lastName,
       professionalTitle,
       userName,
-      passwordHash,
       roleId,
       address,
       phoneNumber,
@@ -82,4 +86,4 @@ const useCreateUser = () => {
   };
 };
 
-export default useCreateUser;
+export default useEditUser;

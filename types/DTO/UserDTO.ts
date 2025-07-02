@@ -18,6 +18,21 @@ export type UserSignUpDto = {
   signature: string;
 };
 
+export type UserUpdateDto = {
+  id: string;
+  userName: string;
+  email: string;
+  firstName: string;
+  middleInitial: string;
+  lastName: string;
+  professionalTitle: string;
+  roleId: string;
+  phoneNumber: string;
+  address: string;
+  licenseNumber: string;
+  signature: string;
+};
+
 export type LoginResponseDto = {
   userId: string;
   token: string;
@@ -44,4 +59,18 @@ export type CurrentUserDto = {
 export type UserRolesDto = {
   id: string;
   name: string;
+};
+
+export type GetUserDto = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  professionalTitle: string;
+  roleId: string;
+  roles: string[];
+  phoneNumber: string;
+  address: string;
+  licenseNumber: string;
 };
