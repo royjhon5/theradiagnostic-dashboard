@@ -1,3 +1,5 @@
+'use client'
+
 import { Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Archive, Edit, Eye, Plus } from "lucide-react";
