@@ -22,13 +22,15 @@ export function middleware(request: NextRequest) {
     if (isLoggedIn) {
       return NextResponse.redirect(
         new URL(
-          user.role.toLowerCase() === "RECEPTIONIST"
-            ? "/appointment"
-            : user.role.toLowerCase() === "RECEPTIONIST"
-              ? "/transactions"
-              : user.role.toLowerCase() === "QUEUING"
-                ? "/queue-screen"
-                : "/dashboard",
+          user.role === "RECEPTIONIST"
+            ? "/client-registration"
+            : user.role === "NURSE"
+              ? "/results-management/client-receiving"
+              : user.role === "MEDTECH"
+                ? "/results-management/client-result-entry"
+                : user.role === "QUEUING"
+                  ? "/queue-screen"
+                  : "/dashboard",
           request.url
         )
       );
@@ -42,13 +44,15 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     return NextResponse.redirect(
       new URL(
-        user.role.toLowerCase() === "RECEPTIONIST"
-          ? "/appointment"
-          : user.role.toLowerCase() === "RECEPTIONIST"
-            ? "/transactions"
-            : user.role.toLowerCase() === "QUEUING"
-              ? "/queue-screen"
-              : "/dashboard",
+        user.role === "RECEPTIONIST"
+          ? "/client-registration"
+          : user.role === "NURSE"
+            ? "/results-management/client-receiving"
+            : user.role === "MEDTECH"
+              ? "/results-management/client-result-entry"
+              : user.role === "QUEUING"
+                ? "/queue-screen"
+                : "/dashboard",
         request.url
       )
     );
@@ -60,33 +64,40 @@ export function middleware(request: NextRequest) {
   }
 
   // Role-based path restrictions
-  if (
-    pathname.startsWith("/dashboard") &&
-    user?.role.toLowerCase() === "RECEPTIONIST"
-  ) {
-    return NextResponse.redirect(new URL("/appointment", request.url));
+  if (pathname.startsWith("/dashboard") && user?.role === "RECEPTIONIST") {
+    return NextResponse.redirect(new URL("/client-registration", request.url));
   }
 
-  if (
-    pathname.startsWith("/dashboard") &&
-    user?.role.toLowerCase() === "RECEPTIONIST"
-  ) {
-    return NextResponse.redirect(new URL("/transactions", request.url));
+  if (pathname.startsWith("/dashboard") && user?.role === "RECEPTIONIST") {
+    return NextResponse.redirect(new URL("/client-registration", request.url));
+  }
+
+  if (pathname.startsWith("/dashboard") && user?.role === "MEDTECH") {
+    return NextResponse.redirect(
+      new URL("/results-management/client-result-entry", request.url)
+    );
+  }
+
+  if (pathname.startsWith("/dashboard") && user?.role === "NURSE") {
+    return NextResponse.redirect(
+      new URL("/results-management/client-receiving", request.url)
+    );
   }
 
   // Add this new check for queuing users
-  if (
-    pathname.startsWith("/dashboard") &&
-    user?.role.toLowerCase() === "QUEUING"
-  ) {
+  if (pathname.startsWith("/dashboard") && user?.role === "QUEUING") {
     return NextResponse.redirect(new URL("/queue-screen", request.url));
   }
 
   // Protected routes configuration
   const protectedRoutes: Record<string, string[]> = {
     "/queue-screen": ["QUEUING"],
+    "/queue-management": ["RECEPTIONIST", "ADMIN"],
     "/client-list/registration": ["RECEPTIONIST", "DOCTOR", "ADMIN"],
-    "/client-list": ["RECEPTIONIST", "DOCTOR", "ADMIN"],
+    "/client-list": ["RECEPTIONIST", "DOCTOR", "ADMIN", "MEDTECH", "RADTECH"],
+    "/result-management/client-receiving": ["ADMIN", "MEDTECH", "RADTECH"],
+    "/result-management/client-result-entry": ["ADMIN", "MEDTECH", "RADTECH"],
+    "/result-management/client-evaluation": ["ADMIN", "MEDTECH", "RADTECH"],
     "/settings/test-package": ["ADMIN"],
     "/settings/laboratory-test": ["ADMIN"],
     "/settings/user-management": ["ADMIN"],
@@ -147,5 +158,9 @@ export const config = {
     "/settings/:path*",
     "/queue-screen",
     "/queue-screen/:path*",
+    "/queue-management",
+    "/queue-management/:path*",
+    "/result-management",
+    "/resul-management/:path*",
   ],
 };
