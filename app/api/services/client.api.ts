@@ -31,6 +31,14 @@ export const getClientByStatus = async () => {
   return response;
 };
 
+export const getForEvaluation = async () => {
+  const { data: response } = await httpHelper.get<
+    BaseResponseType<GetClientByStatusDTO[]>
+  >(`${baseAPI}/for-evaluation`);
+
+  return response;
+};
+
 export const getOnQue = async () => {
   const { data: response } = await httpHelper.get<
     BaseResponseType<GetOnQueDTO[]>
@@ -65,9 +73,10 @@ export const createClient = async (params: CreateClientDto) => {
 };
 
 export const updateClient = async (params: UpdateClientDto) => {
+  const { id, ...body } = params;
   const { data: response } = await httpHelper.patch<BaseResponseType<boolean>>(
-    `${baseAPI}`,
-    params
+    `${baseAPI}/${id}`,
+    body
   );
   return response;
 };
@@ -107,11 +116,10 @@ export const NowServingInSyncPrio = async () => {
   return response;
 };
 
-export const deleteClient = async (clientId: number) => {
+export const deleteClient = async (id: number) => {
   const { data: response } = await httpHelper.delete<BaseResponseType<boolean>>(
-    `${baseAPI}?clientId=${clientId}`
+    `${baseAPI}/${id}`
   );
-
   return response;
 };
 
@@ -146,7 +154,6 @@ export const generateMedicalReportPdf = async (id: number) => {
       responseType: "blob",
     }
   );
-
   const pdfBlob = new Blob([response.data], { type: "application/pdf" });
   const url = URL.createObjectURL(pdfBlob);
   window.open(url, "_blank");

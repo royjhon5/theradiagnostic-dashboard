@@ -1,6 +1,5 @@
 "use client";
 
-import useCreateClient from "@/app/client-list/client/useCreateClient";
 import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumbs";
 import { SelectField } from "@/components/dynamic-select";
 import { Button } from "@/components/ui/button";
@@ -47,6 +46,7 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import useGetReferralCode from "../appointment/hooks/useGetReferralCode";
+import useCreateClient from "../client-list/hooks/useCreateClient";
 
 export default function ClientRegistration() {
   const { form, onSubmit } = useCreateClient();

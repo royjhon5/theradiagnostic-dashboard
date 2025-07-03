@@ -1,55 +1,48 @@
-"use client";
-
+import { useAppLoaderContext } from "@/components/providers/app-loader-provider";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { clientSchema, globalClientData } from "../schema";
-import useClient from "./useClient";
 import { useMutation } from "@tanstack/react-query";
-import { createClient } from "@/app/api/services/client.api";
 import { BaseResponseType } from "@/types/BaseResponse";
 import { toast } from "sonner";
-import { useForm } from "react-hook-form";
+import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { useAppLoaderContext } from "@/components/providers/app-loader-provider";
-import { CreateClientDto } from "@/types/DTO/Client.dto";
+import { UpdateClientDto } from "@/types/DTO/Client.dto";
+import { globalUpdateClientData, updateClientSchema } from "../schema";
+import { updateClient } from "@/app/api/services/client.api";
 
-const useCreateClient = () => {
-  const { refetchClient } = useClient();
-  const { setLoading } = useAppLoaderContext();
+const useEditClient = () => {
   const router = useRouter();
-  const form = useForm<CreateClientDto>({
-    resolver: zodResolver(clientSchema),
+  const { setLoading } = useAppLoaderContext();
+  const form = useForm<UpdateClientDto>({
+    resolver: zodResolver(updateClientSchema),
     defaultValues: {
+      id: 0,
       firstName: "",
       middleName: "",
       lastName: "",
       dateOfBirth: "",
       age: "",
       gender: "",
-      address: "",
       contactNumber: "",
-      appointmentDate: "",
-      appointmentType: "",
-      employersId: "",
       civilStatus: "",
       isPriority: "",
     },
   });
 
   const { mutate, isPending, isSuccess } = useMutation({
-    mutationFn: createClient,
+    mutationFn: updateClient,
     onSuccess: (res) => {
-      const data = res as BaseResponseType<number>;
+      const data = res as BaseResponseType<boolean>;
       if (data.isSuccess) {
-        toast.success("Client Successfully Created.");
-        refetchClient();
+        toast.success("Client has been updated.");
         form.reset();
-        router.push(`/client-registration/services?clientId=${data.response}`);
+        router.push("/client-list");
       }
       setLoading(false);
     },
-    onError: (res) => {
+    onError: (err: AxiosError) => {
       setLoading(false);
-      toast.error(`${res.message}`);
+      toast.error(`${err.message}`);
     },
   });
 
@@ -62,14 +55,12 @@ const useCreateClient = () => {
     gender,
     address,
     contactNumber,
-    appointmentDate,
-    appointmentType,
-    employersId,
     civilStatus,
     isPriority,
-  }: globalClientData) => {
+  }: globalUpdateClientData) => {
     setLoading(true);
     mutate({
+      id: form.getValues("id"),
       firstName,
       middleName,
       lastName,
@@ -78,9 +69,6 @@ const useCreateClient = () => {
       gender,
       address,
       contactNumber,
-      appointmentDate,
-      appointmentType,
-      employersId,
       civilStatus,
       isPriority,
     });
@@ -93,4 +81,5 @@ const useCreateClient = () => {
     isSuccess,
   };
 };
-export default useCreateClient;
+
+export default useEditClient;

@@ -1,13 +1,13 @@
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { globalGetClientData } from "../schema";
-import useDeleteClient from "../hooks/useDeleteClient";
+import { globalClientData } from "../schema";
+import useDeleteClient from "../client/useDeleteClient";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  currentRow: globalGetClientData;
+  currentRow: globalClientData;
 }
 
 export function DeleteDialog({ open, onOpenChange, currentRow }: Props) {

@@ -7,7 +7,6 @@ import { steps } from "../data";
 import { Button } from "@/components/ui/button";
 import { SaveAll } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import useGetClientById from "@/app/client-list/client/useGetClientById";
 import { useMutation } from "@tanstack/react-query";
 import { createTransaction } from "@/app/api/services/transaction.api";
 import { BaseResponseType } from "@/types/BaseResponse";
@@ -26,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import useGetCart from "../hooks/useGetCart";
 import { Socket } from "socket.io-client";
+import useGetClientById from "@/app/client-list/hooks/useGetClientById";
 
 export default function PaymentSection() {
   const searchParams = useSearchParams();

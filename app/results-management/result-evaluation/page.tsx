@@ -7,6 +7,8 @@ import { DataTable } from "./data-table-components/data-table";
 import { columns } from "./data-table-components/column-header";
 import useGetClientForReview from "./hooks/useGetClientForReview";
 import IframeComponent from "./ui/IframeComponent";
+import ReleaseButton from "./ui/ReleaseButton";
+import { DialogContainer } from "./data-table-components/dialog-container";
 
 export default function ClientResultEntryContainer() {
   const { clientForReviewData } = useGetClientForReview();
@@ -20,7 +22,10 @@ export default function ClientResultEntryContainer() {
             <DynamicBreadcrumb />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-            <DataTable data={result} columns={columns} />
+            <div className="col-span-1 flex flex-col gap-5">
+              <DataTable data={result} columns={columns} />
+              <ReleaseButton />
+            </div>
             <div className="col-span-2">
               <div className="bg-background p-2 rounded-xl shadow-sm h-full">
                 <IframeComponent />
@@ -29,6 +34,7 @@ export default function ClientResultEntryContainer() {
           </div>
         </div>
       </div>
+      <DialogContainer />
     </MainProvider>
   );
 }

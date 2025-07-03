@@ -29,11 +29,13 @@ import {
   FolderKanban,
   UserPlus,
   FileSearch,
+  Newspaper,
 } from "lucide-react";
 import useGetCountNowServing from "@/app/queue-screen/hooks/useGetCountNowServing";
 import useGetClient from "@/app/results-management/client-result-entry/hooks/useGetClient";
 import { AppSocket } from "@/lib/socketClient";
 import { Socket } from "socket.io-client";
+import useGetForEvaluation from "@/app/results-management/client-result-entry/hooks/useGetForEvaluation";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = React.useState({
@@ -44,6 +46,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   });
   const { countData, fetchData } = useGetCountNowServing();
   const { countResultEnry, refetchData } = useGetClient();
+  const { countEvalation, refetchEvaluatedData } = useGetForEvaluation();
   const socketRef = React.useRef<Socket | null>(null);
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -66,11 +69,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     socketRef.current = socket;
     socket.on("ReceiveClientReceiving", fetchData);
     socket.on("ReceiveClientResultEntry", refetchData);
+    socket.on("ReceiveClientForEvaluation", refetchEvaluatedData);
     return () => {
       socket.off("ReceiveClientReceiving", fetchData);
       socket.off("ReceiveClientResultEntry", refetchData);
+      socket.off("ReceiveClientForEvaluation", refetchEvaluatedData);
     };
-  }, [fetchData, refetchData]);
+  }, [fetchData, refetchData, refetchEvaluatedData]);
   const fullNavMain = [
     {
       title: "Dashboard",
@@ -116,54 +121,49 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           title: "Result Evaluation",
           url: "/results-management/result-evaluation",
           hideForRoles: ["staff", "doctor", "accountant"],
-          badgeCount: 0,
-        },
-        {
-          title: "Final Result Authorization",
-          url: "#",
-          hideForRoles: ["staff", "doctor", "accountant"],
+          badgeCount: countEvalation,
         },
       ],
     },
-    {
-      title: "Enquiry & Reporting",
-      url: "/content",
-      icon: FileSearch,
-      items: [
-        {
-          title: "Find Patient Result",
-          url: "#",
-          hideForRoles: ["staff", "doctor", "accountant"],
-        },
-        {
-          title: "Daily Order Summary",
-          url: "#",
-          hideForRoles: ["staff", "doctor", "accountant"],
-        },
-        {
-          title: "Daily Result Summary",
-          url: "#",
-          hideForRoles: ["staff", "doctor", "accountant"],
-        },
-        {
-          title: "Repeat Tests Report",
-          url: "#",
-          hideForRoles: ["staff", "doctor", "accountant"],
-        },
-      ],
-    },
+    // {
+    //   title: "Enquiry & Reporting",
+    //   url: "/content",
+    //   icon: FileSearch,
+    //   items: [
+    //     {
+    //       title: "Find Patient Result",
+    //       url: "#",
+    //       hideForRoles: ["staff", "doctor", "accountant"],
+    //     },
+    //     {
+    //       title: "Daily Order Summary",
+    //       url: "#",
+    //       hideForRoles: ["staff", "doctor", "accountant"],
+    //     },
+    //     {
+    //       title: "Daily Result Summary",
+    //       url: "#",
+    //       hideForRoles: ["staff", "doctor", "accountant"],
+    //     },
+    //     {
+    //       title: "Repeat Tests Report",
+    //       url: "#",
+    //       hideForRoles: ["staff", "doctor", "accountant"],
+    //     },
+    //   ],
+    // },
     // {
     //   title: "Doctors",
     //   url: "/doctors",
     //   icon: BriefcaseMedical,
     //   hideForRoles: ["staff", "doctor", "accountant"],
     // },
-    {
-      title: "Transactions",
-      url: "/transactions",
-      icon: BadgeDollarSign,
-      hideForRoles: ["staff", "doctor"],
-    },
+    // {
+    //   title: "Transactions",
+    //   url: "/transactions",
+    //   icon: BadgeDollarSign,
+    //   hideForRoles: ["staff", "doctor"],
+    // },
     // {
     //   title: "Analytics",
     //   url: "#",
@@ -211,6 +211,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: "Queue Management",
       url: "/queue-management",
       icon: ScreenShare,
+    },
+    {
+      title: "Result Management",
+      url: "/queue-management",
+      icon: Newspaper,
     },
     // {
     //   title: "Calendar",

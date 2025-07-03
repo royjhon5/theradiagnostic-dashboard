@@ -779,10 +779,19 @@ export default function ClinicalMicroscopyComponent() {
           />
         </div>
 
-        <div className="mt-6 flex justify-center col-span-4">
+        <div className="flex flex-row gap-2 mt-5 col-span-2">
           <Button className="w-full" size="xl" onClick={() => onSubmit()}>
             Process Result
           </Button>
+          {currentRow?.id === 0 && (
+            <Button
+              className="w-full bg-green-500 text-white cursor-pointer"
+              size="xl"
+              onClick={() => onSubmit()}
+            >
+              Mark as Done
+            </Button>
+          )}
         </div>
       </div>
     </div>

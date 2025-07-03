@@ -6,7 +6,14 @@ import { useMainContext } from "../context/context-provider";
 interface DataTableRowActionsProps {
   row: Row<globalClientForReviewData>;
 }
-
+const idsToCheck = [
+  "clientId",
+  "chemId",
+  "hemaId",
+  "clinicId",
+  "immuId",
+  "fullName",
+];
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setCurrentRow } = useMainContext();
 
@@ -17,16 +24,18 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           size="sm"
           className="cursor-pointer"
           onClick={() => {
-            const idsToCheck = ["chemId", "hemaId", "clinicId", "immuId"];
             const availableData = idsToCheck.reduce(
               (acc, key) => {
                 const value = row.original[key as keyof typeof row.original];
-                if (typeof value === "number" && value !== 0) {
+                if (
+                  (typeof value === "number" && value !== 0) ||
+                  typeof value === "string"
+                ) {
                   acc[key] = value;
                 }
                 return acc;
               },
-              {} as Record<string, number>
+              {} as Record<string, string | number>
             );
             setCurrentRow(availableData);
           }}

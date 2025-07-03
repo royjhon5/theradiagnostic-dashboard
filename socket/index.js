@@ -27,6 +27,10 @@ socketIO.on("connection", (socket) => {
     socketIO.emit("ReceiveClientResultEntry");
   });
 
+  socket.on("SendToClientForEvaluation", () => {
+    socketIO.emit("ReceiveClientForEvaluation");
+  });
+
   socket.on("disconnect", () => {
     socket.disconnect();
   });

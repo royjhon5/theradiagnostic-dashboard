@@ -10,9 +10,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useMainContext } from "../../context/context-provider";
 import Cookies from "js-cookie";
+import useMarkAsDone from "../../hooks/useMarkAsDone";
 
 export default function HematologyComponent() {
   const { currentRow } = useMainContext();
+  const { submitData } = useMarkAsDone();
   const [whiteBloodCellsResult, setWhiteBloodCellsResult] = useState("");
   const [whiteBloodCellsUnit, setWhiteBloodCellsUnit] = useState("10^9/L");
   const [whiteBloodCellsRange, setWhiteBloodCellsRange] =
@@ -106,6 +108,7 @@ export default function HematologyComponent() {
         toast.success("Result has been saved.");
       }
       setLoading(false);
+      ClearData();
     },
     onError: (err: AxiosError) => {
       setLoading(false);
@@ -188,6 +191,30 @@ export default function HematologyComponent() {
         absoluteBandCountRange: absobandRange,
       },
     });
+  };
+
+  const ClearData = () => {
+    setWhiteBloodCellsResult("");
+    setRedBloodCellsResult("");
+    setHemoglobinResult("");
+    setHematocritResult("");
+    setCorpusVolumeResult("");
+    setCorpusHbResult("");
+    setCorpusHbConcResult("");
+    setRBCResult("");
+    setPlateletResult("");
+    setSegmentersResult("");
+    setLymphocytesResult("");
+    setMonocytesResult("");
+    setEosinophilsResult("");
+    setBasophilsResult("");
+    setBandResult("");
+    setAbsoSegResult("");
+    setAbsoLymphocyteResult("");
+    setAbsoMonocyteResult("");
+    setAbsoEosinophilResult("");
+    setAbsoBasophilResult("");
+    setabsoBandResult("");
   };
 
   return (
@@ -882,10 +909,18 @@ export default function HematologyComponent() {
         </div>
         {/* Absolute Band Count */}
 
-        <div className="mt-6 flex justify-center col-span-4">
+        <div className="flex flex-row gap-2 mt-5 col-span-2">
           <Button className="w-full" size="xl" onClick={() => onSubmit()}>
             Process Result
           </Button>
+          <Button
+            className="w-full bg-green-500 text-white cursor-pointer"
+            size="xl"
+            onClick={() => submitData(currentRow?.id)}
+          >
+            Mark as Done
+          </Button>
+          s
         </div>
       </div>
     </div>

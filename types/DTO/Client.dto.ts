@@ -14,8 +14,18 @@ export type CreateClientDto = {
   isPriority: string;
 };
 
-export type UpdateClientDto = CreateClientDto & {
+export type UpdateClientDto = {
   id: number;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  dateOfBirth: string;
+  age: string;
+  gender: string;
+  address: string;
+  contactNumber: string;
+  civilStatus: string;
+  isPriority: string;
 };
 
 export type UpdateStatusDTO = {

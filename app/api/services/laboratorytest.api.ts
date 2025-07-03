@@ -32,7 +32,6 @@ export const updateLabTest = async (params: updateLabTestDTO) => {
     `${baseAPI}/${id}`,
     body
   );
-
   return response;
 };
 

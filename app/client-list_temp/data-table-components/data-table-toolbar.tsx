@@ -2,6 +2,8 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -11,25 +13,26 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+  const router = useRouter();
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 flex-col-reverse items-start gap-y-1 sm:flex-row sm:items-center sm:space-x-2">
         <Input
-          placeholder="Search Client"
+          placeholder="Filter Users..."
           value={
-            (table.getColumn("fullName")?.getFilterValue() as string) ?? ""
+            (table.getColumn("firstName")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("fullName")?.setFilterValue(event.target.value)
+            table.getColumn("firstName")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px] bg-background"
         />
         {/* <div className="flex gap-x-2">
-          {table.getColumn("firstName") && (
+          {table.getColumn("signatoryPosition") && (
             <DataTableFacetedFilter
-              column={table.getColumn("firstName")}
-              title="Industry"
-              options={industries}
+              column={table.getColumn("signatoryPosition")}
+              title="Signatory Position"
+              options={signatoryPositionData}
             />
           )}
         </div> */}
@@ -44,6 +47,15 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
+      <Button
+        variant="outline"
+        size="sm"
+        className="cursor-pointer"
+        onClick={() => router.push("/settings/user-management/add-user")}
+      >
+        <Plus />
+        <span className="hidden lg:inline">Add New Users</span>
+      </Button>
     </div>
   );
 }

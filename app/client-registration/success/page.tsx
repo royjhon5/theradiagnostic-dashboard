@@ -1,7 +1,7 @@
 "use client";
 
 import { generateMedicalReportPdf } from "@/app/api/services/client.api";
-import useGetClientById from "@/app/client-list/client/useGetClientById";
+import useGetClientById from "@/app/client-list/hooks/useGetClientById";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";

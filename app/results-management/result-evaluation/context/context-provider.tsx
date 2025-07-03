@@ -7,9 +7,9 @@ type DialogType = "add" | "edit" | "delete" | "confirm";
 interface ContextType {
   open: DialogType | null;
   setOpen: (str: DialogType | null) => void;
-  currentRow: globalClientForReviewData | null;
+  currentRow: Partial<globalClientForReviewData> | null;
   setCurrentRow: React.Dispatch<
-    React.SetStateAction<globalClientForReviewData | null>
+    React.SetStateAction<Partial<globalClientForReviewData> | null>
   >;
 }
 
@@ -22,7 +22,7 @@ interface Props {
 export default function MainProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<DialogType>(null);
   const [currentRow, setCurrentRow] =
-    useState<globalClientForReviewData | null>(null);
+    useState<Partial<globalClientForReviewData> | null>(null);
 
   return (
     <MainContext.Provider
