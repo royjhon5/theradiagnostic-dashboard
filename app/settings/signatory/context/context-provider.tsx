@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import useDialogState from "@/hooks/use-dialog-state";
-import { globalSignatoryData } from "../schema";
+import { globalGetSignatoryData } from "../schema";
 
 type DialogType = "add" | "edit" | "delete" | "confirm";
 
 interface ContextType {
   open: DialogType | null;
   setOpen: (str: DialogType | null) => void;
-  currentRow: globalSignatoryData | null;
+  currentRow: globalGetSignatoryData | null;
   setCurrentRow: React.Dispatch<
-    React.SetStateAction<globalSignatoryData | null>
+    React.SetStateAction<globalGetSignatoryData | null>
   >;
 }
 
@@ -21,7 +21,7 @@ interface Props {
 
 export default function MainProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<DialogType>(null);
-  const [currentRow, setCurrentRow] = useState<globalSignatoryData | null>(
+  const [currentRow, setCurrentRow] = useState<globalGetSignatoryData | null>(
     null
   );
 

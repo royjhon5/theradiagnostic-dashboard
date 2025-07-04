@@ -2,7 +2,7 @@
 
 import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumbs";
 import useGetSignatory from "./hooks/useGetSignatory";
-import { globalSignatorySchema } from "./schema";
+import { globalGetSignatorySchema } from "./schema";
 import MainProvider from "./context/context-provider";
 import { DataTable } from "./data-table-components/data-table";
 import { columns } from "./data-table-components/column-header";
@@ -10,7 +10,7 @@ import { DialogContainer } from "./data-table-components/dialog-container";
 
 export default function Signatory() {
   const { signatoryData } = useGetSignatory();
-  const result = globalSignatorySchema.parse(signatoryData);
+  const result = globalGetSignatorySchema.parse(signatoryData);
   return (
     <MainProvider>
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">

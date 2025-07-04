@@ -1,9 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { globalSignatoryData } from "../schema";
+import { globalGetSignatoryData } from "../schema";
 
-export const columns: ColumnDef<globalSignatoryData>[] = [
+export const columns: ColumnDef<globalGetSignatoryData>[] = [
   // {
   //   id: "select",
   //   header: ({ table }) => (

@@ -2,11 +2,11 @@ import { Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Archive, Edit } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { globalSignatoryData } from "../schema";
+import { globalGetSignatoryData } from "../schema";
 import { useMainContext } from "../context/context-provider";
 
 interface DataTableRowActionsProps {
-  row: Row<globalSignatoryData>;
+  row: Row<globalGetSignatoryData>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {

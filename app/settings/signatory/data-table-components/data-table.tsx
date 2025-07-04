@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/table";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { globalSignatoryData } from "../schema";
+import { globalGetSignatoryData } from "../schema";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,8 +34,8 @@ declare module "@tanstack/react-table" {
 }
 
 interface DataTableProps {
-  columns: ColumnDef<globalSignatoryData>[];
-  data: globalSignatoryData[];
+  columns: ColumnDef<globalGetSignatoryData>[];
+  data: globalGetSignatoryData[];
 }
 
 export function DataTable({ columns, data }: DataTableProps) {
