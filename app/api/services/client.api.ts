@@ -39,6 +39,14 @@ export const getForEvaluation = async () => {
   return response;
 };
 
+export const getForReleased = async () => {
+  const { data: response } = await httpHelper.get<
+    BaseResponseType<GetClientByStatusDTO[]>
+  >(`${baseAPI}/for-released`);
+
+  return response;
+};
+
 export const getOnQue = async () => {
   const { data: response } = await httpHelper.get<
     BaseResponseType<GetOnQueDTO[]>

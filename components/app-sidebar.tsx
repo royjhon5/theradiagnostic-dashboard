@@ -213,8 +213,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: ScreenShare,
     },
     {
-      title: "Result Management",
-      url: "/queue-management",
+      title: "Released Results",
+      url: "/released-results",
       icon: Newspaper,
     },
     // {

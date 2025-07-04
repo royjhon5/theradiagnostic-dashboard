@@ -18,6 +18,13 @@ export const getAllClientResult = async () => {
   return response;
 };
 
+export const getAllReleased = async () => {
+  const { data: response } = await httpHelper.get<
+    BaseResponseType<GetClientDetailsResultDTO[]>
+  >(`${baseAPI}/get-released`);
+  return response;
+};
+
 export const getIncrementedId = async () => {
   const { data: response } = await httpHelper.get<GetIncrementedDTO>(
     `${baseAPI}/incremented-id`
