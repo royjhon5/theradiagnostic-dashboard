@@ -1,9 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { globalGetClientData } from "../schema";
+
 import dayjs from "dayjs";
 import { Badge } from "@/components/ui/badge";
+import { globalGetClientData } from "@/app/client-list/schema";
 export const columns: ColumnDef<globalGetClientData>[] = [
   // {
   //   id: "select",

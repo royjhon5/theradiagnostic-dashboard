@@ -7,6 +7,8 @@ export type CreateClientDto = {
   gender: string;
   address: string;
   contactNumber: string;
+  emailAddress: string;
+  isFag: string;
   appointmentDate: string;
   appointmentType: string;
   employersId: string;

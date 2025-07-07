@@ -64,14 +64,11 @@ export default function Settings() {
       ],
     },
     {
-      id: "reports",
-      title: "Report Settings",
+      id: "discounts",
+      title: "Discount Settings",
       icon: <FileText size={36} />,
-      route: "/settings/report-settings",
-      content: [
-        "Report Templates: Customize report formats for receipts, financial summaries, and laboratory reports.",
-        "Schedule Automatic Reports: Define settings for generating and distributing periodic reports.",
-      ],
+      route: "/settings/discount",
+      content: ["Discount Templates: Customize discount settings"],
     },
     {
       id: "signatory",
