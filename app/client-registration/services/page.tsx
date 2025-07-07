@@ -23,6 +23,8 @@ import useGetCart from "../hooks/useGetCart";
 import { Separator } from "@/components/ui/separator";
 import { Trash2 } from "lucide-react";
 import useRemoveCart from "../hooks/useRemoveCart";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
 
 const Services = () => {
   const { labtest } = useGetLaboratoryTest();
@@ -30,7 +32,7 @@ const Services = () => {
   const { removeCart } = useRemoveCart();
   const { setLoading } = useAppLoaderContext();
   const queryClient = useQueryClient();
-
+  const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
   const raw = searchParams.get("clientId");
   let currentId: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -87,9 +89,15 @@ const Services = () => {
   );
 
   const filteredServices = useMemo(() => {
-    if (filterType === "all") return combinedServices;
-    return combinedServices.filter((item) => item.type === filterType);
-  }, [combinedServices, filterType]);
+    const lowerSearch = searchQuery.toLowerCase();
+    return combinedServices.filter((item) => {
+      const matchesType = filterType === "all" || item.type === filterType;
+      const matchesSearch =
+        item.name.toLowerCase().includes(lowerSearch) ||
+        item.description.toLowerCase().includes(lowerSearch);
+      return matchesType && matchesSearch;
+    });
+  }, [combinedServices, filterType, searchQuery]);
 
   const ProceedToPayment = () => {
     setLoading(true);
@@ -144,43 +152,52 @@ const Services = () => {
 
             {/* FILTERED SERVICES */}
             <div className="bg-background rounded-lg p-2 shadow-md">
-              <Listbox className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {filteredServices.map((item) => (
-                  <ListboxItem
-                    key={`${item.type}-${item.id}`}
-                    value={item.name}
-                    className="cursor-pointer"
-                    onClick={() => {
-                      if (!currentId) {
-                        toast.error("Client ID not found.");
-                        return;
-                      }
+              <Input
+                type="text"
+                placeholder="Search services..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="mb-5 w-[50%]"
+              />
+              <ScrollArea className="w-full h-72">
+                <Listbox className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {filteredServices.map((item) => (
+                    <ListboxItem
+                      key={`${item.type}-${item.id}`}
+                      value={item.name}
+                      className="cursor-pointer"
+                      onClick={() => {
+                        if (!currentId) {
+                          toast.error("Client ID not found.");
+                          return;
+                        }
 
-                      const payload = {
-                        clientId: currentId,
-                        packageId:
-                          item.type === "laboratoryPackage" ? item.id : 0,
-                        labTestId: item.type === "labTest" ? item.id : 0,
-                        totalAmount: Number(item.price),
-                      };
+                        const payload = {
+                          clientId: currentId,
+                          packageId:
+                            item.type === "laboratoryPackage" ? item.id : 0,
+                          labTestId: item.type === "labTest" ? item.id : 0,
+                          totalAmount: Number(item.price),
+                        };
 
-                      setLoading(true);
-                      mutate(payload);
-                    }}
-                  >
-                    <div className="w-full flex flex-row justify-between items-start">
-                      <div>
-                        <div className="font-medium">{item.name}</div>
-                        <div className="text-muted-foreground text-sm">
-                          {item.description}
+                        setLoading(true);
+                        mutate(payload);
+                      }}
+                    >
+                      <div className="w-full flex flex-row justify-between items-start">
+                        <div>
+                          <div className="font-medium">{item.name}</div>
+                          <div className="text-muted-foreground text-sm">
+                            {item.description}
+                          </div>
                         </div>
+                        ₱ {item.price}
                       </div>
-                      ₱ {item.price}
-                    </div>
-                    <ListboxItemIndicator />
-                  </ListboxItem>
-                ))}
-              </Listbox>
+                      <ListboxItemIndicator />
+                    </ListboxItem>
+                  ))}
+                </Listbox>
+              </ScrollArea>
             </div>
           </div>
           {cartdata.length > 0 && (

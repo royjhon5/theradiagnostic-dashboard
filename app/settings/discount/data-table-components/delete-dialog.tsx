@@ -1,20 +1,20 @@
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { globalGetSignatoryData } from "../schema";
-import useDeleteSignatory from "../hooks/useDeleteSignatory";
+import useDeleteDiscount from "../hooks/useDeleteDiscount";
+import { globalGetDiscountData } from "../schema";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  currentRow: globalGetSignatoryData;
+  currentRow: globalGetDiscountData;
 }
 
 export function DeleteDialog({ open, onOpenChange, currentRow }: Props) {
-  const { deleteSignatory } = useDeleteSignatory();
+  const { deleteDiscount } = useDeleteDiscount();
   const handleDelete = () => {
     onOpenChange(false);
-    deleteSignatory(currentRow.id || 0);
+    deleteDiscount(currentRow.id || 0);
   };
 
   return (
@@ -35,11 +35,13 @@ export function DeleteDialog({ open, onOpenChange, currentRow }: Props) {
         <div className="space-y-4">
           <p className="mb-2">
             Are you sure you want to delete{" "}
-            <span className="font-bold">{currentRow.signatoryName}</span>?
+            <span className="font-bold">{currentRow.discountDescription}</span>?
             <br />
             This action will permanently remove{" "}
-            <span className="font-bold">{currentRow.signatoryName}</span> from
-            the system. This cannot be undone.
+            <span className="font-bold">
+              {currentRow.discountDescription}
+            </span>{" "}
+            from the system. This cannot be undone.
           </p>
           <Alert variant="destructive">
             <AlertTitle>Warning!</AlertTitle>

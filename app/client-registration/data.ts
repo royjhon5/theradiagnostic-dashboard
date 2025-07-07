@@ -4,6 +4,11 @@ export const gender = [
   { label: "Prefer Not To Say", value: "Prefer Not To Say" },
 ];
 
+export const isflag = [
+  { label: "For Pickup", value: "For Pickup" },
+  { label: "To Email", value: "To Email" },
+];
+
 export const clientType = [
   { label: "Yes", value: "Yes" },
   { label: "No", value: "No" },

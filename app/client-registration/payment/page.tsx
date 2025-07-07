@@ -26,9 +26,13 @@ import { Input } from "@/components/ui/input";
 import useGetCart from "../hooks/useGetCart";
 import { Socket } from "socket.io-client";
 import useGetClientById from "@/app/client-list/hooks/useGetClientById";
+import useGetDiscount from "@/app/settings/discount/hooks/useGetDiscount";
+import useApplyDiscount from "@/app/settings/discount/hooks/useApplyDiscount";
 
 export default function PaymentSection() {
   const searchParams = useSearchParams();
+  const { submitDiscount, isPending } = useApplyDiscount();
+  const { discountData } = useGetDiscount();
   const router = useRouter();
   const { setLoading } = useAppLoaderContext();
   const clientId = searchParams.get("clientId");
@@ -36,6 +40,9 @@ export default function PaymentSection() {
   const { clientData } = useGetClientById(Number(clientId));
   const [paymentTypes, setPaymentTypes] = useState<string>("");
   const [paymentReference, setPaymentReference] = useState<string>("");
+  const [selectedDiscountId, setSelectedDiscountId] = useState<number | null>(
+    null
+  );
   const [AmountPaid, setAmounPaid] = useState("");
   const { cartdata, totalAmount } = useGetCart(Number(clientId));
   const socketRef = useRef<Socket | null>(null);
@@ -68,6 +75,10 @@ export default function PaymentSection() {
   }) => {
     if (!clientId) {
       toast.error("Missing client or package ID.");
+      return;
+    }
+    if (Number(AmountPaid) < totalAmount) {
+      toast.error("Insufficient payment amount.");
       return;
     }
     setLoading(true);
@@ -106,26 +117,22 @@ export default function PaymentSection() {
                   </div>
                   {clientData.map((item) => (
                     <div key={item.id} className="grid grid-cols-2 gap-8 mb-4">
-                      <div>
-                        <div>
-                          <div className="grid w-full max-w-sm items-center gap-1.5">
-                            <Label htmlFor="email">Select Payment Type</Label>
-                            <Select
-                              onValueChange={(value) => setPaymentTypes(value)}
-                            >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select Payment Type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectItem value="cash">Cash</SelectItem>
-                                  <SelectItem value="card">Card</SelectItem>
-                                  <SelectItem value="gcash">G-Cash</SelectItem>
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
+                      <div className="grid w-full max-w-sm items-center gap-1.5">
+                        <Label htmlFor="email">Select Payment Type</Label>
+                        <Select
+                          onValueChange={(value) => setPaymentTypes(value)}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Payment Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem value="cash">Cash</SelectItem>
+                              <SelectItem value="card">Card</SelectItem>
+                              <SelectItem value="gcash">G-Cash</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div>
                         {(paymentTypes === "card" ||
@@ -155,7 +162,52 @@ export default function PaymentSection() {
                             }}
                             placeholder="Enter amount"
                           />
+                          {Number(AmountPaid) >= totalAmount && (
+                            <div className="mt-5 text-2xl text-green-600 font-semibold">
+                              Change: ₱{" "}
+                              {(Number(AmountPaid) - totalAmount).toFixed(2)}
+                            </div>
+                          )}
                         </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="discount">Select Discount</Label>
+                        <Select
+                          onValueChange={(value) => {
+                            setSelectedDiscountId(Number(value));
+                          }}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Discount" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {discountData?.map((discount) => (
+                                <SelectItem
+                                  key={discount.id}
+                                  value={discount.id.toString()}
+                                >
+                                  {discount.discountDescription} (
+                                  {discount.discountAmount * 100}%)
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        {selectedDiscountId && (
+                          <Button
+                            onClick={() => {
+                              submitDiscount(
+                                Number(clientId),
+                                selectedDiscountId
+                              );
+                            }}
+                            disabled={isPending}
+                          >
+                            {isPending ? "Applying..." : "Apply Discount"}
+                          </Button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -186,14 +238,14 @@ export default function PaymentSection() {
                             <td className="py-3 px-4 text-right">
                               ₱{" "}
                               {item.labTestId !== 0
-                                ? item.price.toFixed(2)
-                                : item.totalPrice.toFixed(2)}
+                                ? item.totalAmount.toFixed(2)
+                                : item.totalAmount.toFixed(2)}
                             </td>
                             <td className="py-3 px-4 text-right">
                               ₱{" "}
                               {item.labTestId !== 0
-                                ? item.price.toFixed(2)
-                                : item.totalPrice.toFixed(2)}
+                                ? item.totalAmount.toFixed(2)
+                                : item.totalAmount.toFixed(2)}
                             </td>
                           </tr>
                         </tbody>

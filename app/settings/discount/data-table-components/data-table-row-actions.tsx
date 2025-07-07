@@ -3,11 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Archive, Edit } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMainContext } from "../context/context-provider";
-import { globalGetClientData } from "../schema";
-import { generateMedicalReportPdf } from "@/app/api/services/client.api";
+import { globalGetDiscountData } from "../schema";
 
 interface DataTableRowActionsProps {
-  row: Row<globalGetClientData>;
+  row: Row<globalGetDiscountData>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
@@ -18,19 +17,10 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       <>
         <Button
           size="sm"
-          className="cursor-pointer"
-          onClick={() => {
-            generateMedicalReportPdf(Number(row.original.id));
-          }}
-        >
-          Generate APE
-        </Button>
-        <Button
-          size="sm"
           className="cursor-pointer bg-green-500"
           onClick={() => {
             const encoded = encodeURIComponent(JSON.stringify(row.original));
-            router.push(`/client-list/edit-client?data=${encoded}`);
+            router.push(`/settings/discount/edit-discount?data=${encoded}`);
           }}
         >
           <Edit /> Edit
