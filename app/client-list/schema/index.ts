@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const clientSchema = z.object({
-  id: z.number().optional(),
+  id: z.number(),
   firstName: z.string(),
   middleName: z.string(),
   lastName: z.string(),
@@ -52,6 +52,11 @@ export const updateClientSchema = z.object({
   gender: z.string(),
   address: z.string(),
   contactNumber: z.string(),
+  emailAddress: z.string(),
+  isFag: z.string(),
+  appointmentDate: z.string(),
+  appointmentType: z.string(),
+  employersId: z.string(),
   civilStatus: z.string(),
   isPriority: z.string(),
 });

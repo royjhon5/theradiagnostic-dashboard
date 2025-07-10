@@ -14,7 +14,7 @@ import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, BadgeInfo, Save } from "lucide-react";
+import { ArrowLeft, Save } from "lucide-react";
 import Cookies from "js-cookie";
 import { format } from "date-fns";
 import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumbs";
@@ -25,14 +25,13 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PackageItemDto } from "@/types/DTO/LaboratoryPackage.dto";
 import useGetLaboratoryTest from "../../laboratory-test/hooks/useGetLaboratoryTest";
+import { ScrollArea } from "@/components/ui/scroll-area";
 export default function AddLabTest() {
   const searchParams = useSearchParams();
   const { form, onSubmit } = useEditPackage();
   const { labtest } = useGetLaboratoryTest();
-  const [total, setTotal] = useState(0);
   const [packagePrice, setPackagePrice] = useState(0);
-  const [discountedAmount, setDiscountedAmount] = useState(0);
-  const [selectedTests, setSelectedTests] = useState<number[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const user = Cookies.get("user");
   const userId = Cookies.get("userid");
   const currentDate = new Date();
@@ -43,18 +42,22 @@ export default function AddLabTest() {
     Username = parsedUser.username;
   }
 
+  const filteredTests = labtest?.filter((test) =>
+    test.testName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   useEffect(() => {
     const dataParam = searchParams.get("data");
     if (dataParam) {
       try {
         const parsedData = JSON.parse(decodeURIComponent(dataParam));
-        console.log(parsedData.packages);
         form.reset({
           id: parsedData.id ?? 0,
           packageName: parsedData.packageName ?? "",
           packages: parsedData.packages ?? [],
           totalPrice: parsedData.totalPrice ?? "",
         });
+        setPackagePrice(Number(parsedData.totalPrice ?? 0)); // ← ADD THIS
       } catch (err) {
         console.error("Invalid data param:", err);
       }
@@ -110,20 +113,19 @@ export default function AddLabTest() {
                         </FormItem>
                       )}
                     />
-                    <FormItem>
-                      <FormLabel>Price • (₱)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          onChange={(e) => {
-                            const value = parseFloat(e.target.value) || 0;
-                            setPackagePrice(value);
-                            setDiscountedAmount(value - total);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                    <FormField
+                      control={form.control}
+                      name="totalPrice"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Price • (₱)</FormLabel>
+                          <FormControl>
+                            <Input type="text" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
                 {/* ends here */}
@@ -131,122 +133,79 @@ export default function AddLabTest() {
                   <h2 className="font-bold text-lg bg-primary text-white rounded-t-lg pl-2">
                     Select Individual Test to Add to Package
                   </h2>
+                  <div className="p-3">
+                    <Input
+                      type="text"
+                      placeholder="Search test name..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-[50%]"
+                    />
+                  </div>
                   <div className="grid grid-cols-1 p-4 md:p-5">
-                    <div className="space-y-2">
-                      {labtest?.map((test) => (
-                        <FormField
-                          key={test.id}
-                          control={form.control}
-                          name="packages"
-                          render={({ field }) => {
-                            const isChecked = field.value?.some(
-                              (selectedItem: PackageItemDto) =>
-                                selectedItem.itemName === test.testName
-                            );
+                    <ScrollArea className="h-90">
+                      <div className="space-y-2 ">
+                        {filteredTests?.map((test) => (
+                          <FormField
+                            key={test.id}
+                            control={form.control}
+                            name="packages"
+                            render={({ field }) => {
+                              const isChecked = field.value?.some(
+                                (selectedItem: PackageItemDto) =>
+                                  selectedItem.itemName === test.testName
+                              );
 
-                            const currentItem: PackageItemDto = {
-                              itemName: test.testName,
-                              itemPrice: Number(test.price),
-                            };
+                              const currentItem: PackageItemDto = {
+                                itemName: test.testName,
+                                itemPrice: Number(test.price),
+                              };
 
-                            return (
-                              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                                <FormControl>
-                                  <Checkbox
-                                    checked={isChecked}
-                                    onCheckedChange={(checked) => {
-                                      const updated = checked
-                                        ? [...(field.value || []), currentItem]
-                                        : field.value?.filter(
-                                            (i: PackageItemDto) =>
-                                              i.itemName !==
-                                              currentItem.itemName
-                                          ) || [];
-                                      field.onChange(updated);
-                                      let updatedSelected;
-                                      if (checked) {
-                                        updatedSelected = [
-                                          ...selectedTests,
-                                          test.id,
-                                        ];
-                                      } else {
-                                        updatedSelected = selectedTests.filter(
-                                          (id) => id !== test.id
-                                        );
-                                      }
-                                      setSelectedTests(updatedSelected);
-
-                                      const totalSelected = labtest
-                                        .filter((test) =>
-                                          updatedSelected.includes(test.id)
-                                        )
-                                        .reduce(
-                                          (sum, test) => sum + test.price,
-                                          0
-                                        );
-
-                                      setTotal(totalSelected);
-                                      setDiscountedAmount(
-                                        packagePrice - totalSelected
-                                      );
-                                    }}
-                                  />
-                                </FormControl>
-                                <div className="space-y-1 leading-none">
-                                  <FormLabel>{test.testName}</FormLabel>
-                                  <FormDescription>
-                                    ₱{test.price}
-                                  </FormDescription>
-                                </div>
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-right text-sm mt-5">
-                      Total price of Selected Test: ₱{total.toFixed(2)}
-                    </p>
+                              return (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={isChecked}
+                                      onCheckedChange={(checked) => {
+                                        const updated = checked
+                                          ? [
+                                              ...(field.value || []),
+                                              currentItem,
+                                            ]
+                                          : field.value?.filter(
+                                              (i: PackageItemDto) =>
+                                                i.itemName !==
+                                                currentItem.itemName
+                                            ) || [];
+                                        field.onChange(updated);
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <div className="space-y-1 leading-none">
+                                    <FormLabel>{test.testName}</FormLabel>
+                                    <FormDescription>
+                                      ₱{test.price}
+                                    </FormDescription>
+                                  </div>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </ScrollArea>
                   </div>
                 </div>
                 <div className="p-2">
                   <div className="flex flex-col md:flex-row gap-4 md:justify-between">
                     {/* left side */}
-                    <div className="flex flex-row gap-2 items-center">
-                      <BadgeInfo />
-                      <div className="flex flex-col">
-                        <h2
-                          style={{ fontSize: 10 }}
-                          className="italic font-bold"
-                        >
-                          The discounted amount is caculated by subtracting
-                        </h2>
-                        <h2
-                          style={{ fontSize: 10 }}
-                          className="italic font-bold"
-                        >
-                          the total price of the selected lab tests from the
-                        </h2>
-                        <h2
-                          style={{ fontSize: 10 }}
-                          className="italic font-bold"
-                        >
-                          package&apos;s set price.
-                        </h2>
-                      </div>
-                    </div>
+                    <div className="flex flex-row gap-2 items-center"></div>
                     {/* right side */}
                     <div>
                       <div className="text-sm text-gray-600">Package Price</div>
                       <div className="flex">
                         <div className="text-2xl font-bold">
-                          ₱ {discountedAmount.toFixed(2)} /
-                        </div>
-                        <div className="ml-1 text-sm text-gray-600">
-                          <span className="font-medium">
-                            ₱ {total.toFixed(2)}
-                          </span>
-                          <div className="text-xs">Discounted Amount</div>
+                          ₱ {packagePrice.toFixed(2)}
                         </div>
                       </div>
                     </div>

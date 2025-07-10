@@ -8,7 +8,7 @@ export function SearchButton() {
     <div className="flex gap-2">
       <Button
         type="button"
-        className="space-x-1"
+        className="space-x-1 cursor-pointer"
         onClick={() => setOpen("add")}
       >
         <span>Search Previous Clients</span> <Search size={18} />
