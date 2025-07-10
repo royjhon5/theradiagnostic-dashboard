@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import useDialogState from "@/hooks/use-dialog-state";
-import { globalClientData } from "../schema";
+import { globalGetClientData } from "../schema";
 
 type DialogType = "add" | "edit" | "delete" | "confirm" | "open";
 
 interface ContextType {
   open: DialogType | null;
   setOpen: (str: DialogType | null) => void;
-  currentRow: globalClientData | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<globalClientData | null>>;
+  currentRow: globalGetClientData | null;
+  setCurrentRow: React.Dispatch<
+    React.SetStateAction<globalGetClientData | null>
+  >;
 }
 
 const MainContext = React.createContext<ContextType | null>(null);
@@ -19,7 +21,9 @@ interface Props {
 
 export default function MainProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<DialogType>(null);
-  const [currentRow, setCurrentRow] = useState<globalClientData | null>(null);
+  const [currentRow, setCurrentRow] = useState<globalGetClientData | null>(
+    null
+  );
 
   return (
     <MainContext.Provider

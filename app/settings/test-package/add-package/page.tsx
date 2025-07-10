@@ -14,7 +14,7 @@ import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, BadgeInfo, Save } from "lucide-react";
+import { ArrowLeft, Save } from "lucide-react";
 import Cookies from "js-cookie";
 import { format } from "date-fns";
 import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumbs";
@@ -27,14 +27,13 @@ import {
   PackageItemDto,
 } from "@/types/DTO/LaboratoryPackage.dto";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 export default function AddLabTest() {
   const { form, onSubmit } = useCreateLaboratoryPackage();
   const { labtest } = useGetLaboratoryTest();
-  const [total, setTotal] = useState(0);
   const [packagePrice, setPackagePrice] = useState(0);
-  const [discountedAmount, setDiscountedAmount] = useState(0);
-  const [selectedTests, setSelectedTests] = useState<number[]>([]);
   const currentDate = new Date();
+  const [searchTerm, setSearchTerm] = useState("");
   const formattedDate = format(currentDate, "MMMM dd, yyyy - EEEE");
   const user = Cookies.get("user");
   const userId = Cookies.get("userid");
@@ -43,11 +42,14 @@ export default function AddLabTest() {
     const parsedUser = JSON.parse(user);
     Username = parsedUser.username;
   }
+  const filteredTests = labtest?.filter((test) =>
+    test.testName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleSubmit = (data: CreatePackageDto) => {
     onSubmit({
       ...data,
-      totalPrice: discountedAmount,
+      totalPrice: packagePrice,
     });
   };
   return (
@@ -107,7 +109,6 @@ export default function AddLabTest() {
                           onChange={(e) => {
                             const value = parseFloat(e.target.value) || 0;
                             setPackagePrice(value);
-                            setDiscountedAmount(value - total);
                           }}
                         />
                       </FormControl>
@@ -120,9 +121,18 @@ export default function AddLabTest() {
                   <h2 className="font-bold text-lg bg-primary text-white rounded-t-lg pl-2">
                     Select Individual Test to Add to Package
                   </h2>
-                  <div className="grid grid-cols-1 p-4 md:p-5">
-                    <div className="space-y-2">
-                      {labtest?.map((test) => (
+                  <div className="p-3">
+                    <Input
+                      type="text"
+                      placeholder="Search test name..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-[50%]"
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 p-4 md:p-5">
+                    <ScrollArea className="space-y-2 h-90">
+                      {filteredTests?.map((test) => (
                         <FormField
                           key={test.id}
                           control={form.control}
@@ -152,32 +162,6 @@ export default function AddLabTest() {
                                               currentItem.itemName
                                           ) || [];
                                       field.onChange(updated);
-                                      let updatedSelected;
-                                      if (checked) {
-                                        updatedSelected = [
-                                          ...selectedTests,
-                                          test.id,
-                                        ];
-                                      } else {
-                                        updatedSelected = selectedTests.filter(
-                                          (id) => id !== test.id
-                                        );
-                                      }
-                                      setSelectedTests(updatedSelected);
-
-                                      const totalSelected = labtest
-                                        .filter((test) =>
-                                          updatedSelected.includes(test.id)
-                                        )
-                                        .reduce(
-                                          (sum, test) => sum + test.price,
-                                          0
-                                        );
-
-                                      setTotal(totalSelected);
-                                      setDiscountedAmount(
-                                        packagePrice - totalSelected
-                                      );
                                     }}
                                   />
                                 </FormControl>
@@ -192,50 +176,19 @@ export default function AddLabTest() {
                           }}
                         />
                       ))}
-                    </div>
-                    <p className="text-right text-sm mt-5">
-                      Total price of Selected Test: ₱{total.toFixed(2)}
-                    </p>
+                    </ScrollArea>
                   </div>
                 </div>
                 <div className="p-2">
                   <div className="flex flex-col md:flex-row gap-4 md:justify-between">
                     {/* left side */}
-                    <div className="flex flex-row gap-2 items-center">
-                      <BadgeInfo />
-                      <div className="flex flex-col">
-                        <h2
-                          style={{ fontSize: 10 }}
-                          className="italic font-bold"
-                        >
-                          The discounted amount is caculated by subtracting
-                        </h2>
-                        <h2
-                          style={{ fontSize: 10 }}
-                          className="italic font-bold"
-                        >
-                          the total price of the selected lab tests from the
-                        </h2>
-                        <h2
-                          style={{ fontSize: 10 }}
-                          className="italic font-bold"
-                        >
-                          package&apos;s set price.
-                        </h2>
-                      </div>
-                    </div>
+                    <div className="flex flex-row gap-2 items-center"></div>
                     {/* right side */}
                     <div>
                       <div className="text-sm text-gray-600">Package Price</div>
                       <div className="flex">
                         <div className="text-2xl font-bold">
-                          ₱ {discountedAmount.toFixed(2)} /
-                        </div>
-                        <div className="ml-1 text-sm text-gray-600">
-                          <span className="font-medium">
-                            ₱ {total.toFixed(2)}
-                          </span>
-                          <div className="text-xs">Discounted Amount</div>
+                          ₱ {packagePrice.toFixed(2)}
                         </div>
                       </div>
                     </div>

@@ -1,9 +1,13 @@
+import useClient from "@/app/client-list/hooks/useClient";
+import { globalGetClientSchema } from "@/app/client-list/schema";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { DataTable } from "./data-table";
+import { columns } from "./column-header";
 
 interface Props {
   open: boolean;
@@ -11,6 +15,8 @@ interface Props {
 }
 
 export function ActionDialog({ open, onOpenChange }: Props) {
+  const { clients } = useClient();
+  const result = globalGetClientSchema.parse(clients);
   return (
     <Dialog
       open={open}
@@ -22,7 +28,9 @@ export function ActionDialog({ open, onOpenChange }: Props) {
         <DialogHeader className="text-left">
           <DialogTitle>Search Previous Clients</DialogTitle>
         </DialogHeader>
-        <div className="w-full"></div>
+        <div className="w-full">
+          <DataTable data={result} columns={columns} />
+        </div>
       </DialogContent>
     </Dialog>
   );

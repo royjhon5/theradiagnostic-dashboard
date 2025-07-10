@@ -9,7 +9,6 @@ import {
   GetClientDTO,
   GetOnQueDTO,
   GetReferralCodeDTO,
-  UpdateClientDto,
   UpdateStatusDTO,
 } from "@/types/DTO/Client.dto";
 
@@ -80,7 +79,7 @@ export const createClient = async (params: CreateClientDto) => {
   return response;
 };
 
-export const updateClient = async (params: UpdateClientDto) => {
+export const updateClient = async (params: CreateClientDto) => {
   const { id, ...body } = params;
   const { data: response } = await httpHelper.patch<BaseResponseType<boolean>>(
     `${baseAPI}/${id}`,

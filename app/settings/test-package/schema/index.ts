@@ -24,7 +24,7 @@ export const UpdateLabPackageSchema = z.object({
   id: z.number(),
   packageName: z.string(),
   packages: z.array(UpdatePackageItemSchema),
-  totalPrice: z.number(),
+  totalPrice: z.coerce.number(),
 });
 
 export type globalUpdateLabPackageData = z.infer<typeof UpdateLabPackageSchema>;

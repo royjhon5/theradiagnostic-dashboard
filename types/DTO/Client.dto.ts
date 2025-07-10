@@ -1,4 +1,5 @@
 export type CreateClientDto = {
+  id: number;
   firstName: string;
   middleName: string;
   lastName: string;
@@ -11,23 +12,12 @@ export type CreateClientDto = {
   isFag: string;
   appointmentDate: string;
   appointmentType: string;
-  employersId: string;
   civilStatus: string;
   isPriority: string;
 };
 
-export type UpdateClientDto = {
+export type UpdateClientDto = CreateClientDto & {
   id: number;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  dateOfBirth: string;
-  age: string;
-  gender: string;
-  address: string;
-  contactNumber: string;
-  civilStatus: string;
-  isPriority: string;
 };
 
 export type UpdateStatusDTO = {
