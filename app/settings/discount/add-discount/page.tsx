@@ -70,7 +70,7 @@ export default function AddLabTest() {
                       name="discountDescription"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Test Name</FormLabel>
+                          <FormLabel>Discount Description</FormLabel>
                           <FormControl>
                             <Input type="text" {...field} />
                           </FormControl>
@@ -84,7 +84,7 @@ export default function AddLabTest() {
                       name="discountAmount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Test Category</FormLabel>
+                          <FormLabel>Discount Amount</FormLabel>
                           <FormControl>
                             <Input type="text" {...field} />
                           </FormControl>
