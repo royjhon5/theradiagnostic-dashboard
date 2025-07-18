@@ -16,11 +16,14 @@ import { columns } from "../data-table-components/column-header";
 import useGetIncrementedId from "../hooks/useGetIncrementedId";
 import { AppSocket } from "@/lib/socketClient";
 import { Socket } from "socket.io-client";
+import { Button } from "@/components/ui/button";
+import useMarkAsDone from "../hooks/useMarkAsDone";
 export default function ClientResultEntry() {
   const { clientDataByStatus, refetchData } = useGetClient();
   const { incrementedIdGet } = useGetIncrementedId();
   const result = globalClientSchema.parse(clientDataByStatus);
   const { currentRow } = useMainContext();
+  const { submitData } = useMarkAsDone();
   const [clientId, setClientId] = useState(0);
   const [source, setSource] = useState("");
   const [clientName, setClientName] = useState("");
@@ -177,6 +180,17 @@ export default function ClientResultEntry() {
                     setAge(e.target.value);
                   }}
                 />
+              </div>
+              <div className="col-span-4 flex justify-end">
+                {currentRow && (
+                  <Button
+                    className="bg-green-500 text-white cursor-pointer"
+                    size="lg"
+                    onClick={() => submitData(currentRow?.id)}
+                  >
+                    Mark as Done
+                  </Button>
+                )}
               </div>
             </div>
           </div>

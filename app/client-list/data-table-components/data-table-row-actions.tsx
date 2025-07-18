@@ -4,7 +4,10 @@ import { Archive, Edit } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMainContext } from "../context/context-provider";
 import { globalGetClientData } from "../schema";
-import { generateMedicalReportPdf } from "@/app/api/services/client.api";
+import {
+  generateMedicalReportPdf,
+  reprintOr,
+} from "@/app/api/services/client.api";
 
 interface DataTableRowActionsProps {
   row: Row<globalGetClientData>;
@@ -16,6 +19,15 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   return (
     <div className="flex flex-row gap-2 justify-end">
       <>
+        <Button
+          size="sm"
+          className="cursor-pointer bg-yellow-500"
+          onClick={() => {
+            reprintOr(Number(row.original.id));
+          }}
+        >
+          Reprint OR
+        </Button>
         <Button
           size="sm"
           className="cursor-pointer"

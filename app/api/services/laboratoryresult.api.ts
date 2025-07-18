@@ -3,6 +3,8 @@ import {
   CreateClinicalMicroscopyDTO,
   CreateHematologyDTO,
   CreateImmunologyDTO,
+  CreateSerologyDTO,
+  CreateSerologyHIVDTO,
   GetClientDetailsResultDTO,
   GetIncrementedDTO,
 } from "@/types/DTO/Laboratoryresult.dto";
@@ -63,6 +65,22 @@ export const createLaboratoryImmunology = async (
 export const createClinicalmicroscopy = async (
   params: CreateClinicalMicroscopyDTO
 ) => {
+  const { data: response } = await httpHelper.post<BaseResponseType<number>>(
+    `${baseAPI}`,
+    params
+  );
+  return response;
+};
+
+export const createSerology = async (params: CreateSerologyDTO) => {
+  const { data: response } = await httpHelper.post<BaseResponseType<number>>(
+    `${baseAPI}`,
+    params
+  );
+  return response;
+};
+
+export const createSerologyHIV = async (params: CreateSerologyHIVDTO) => {
   const { data: response } = await httpHelper.post<BaseResponseType<number>>(
     `${baseAPI}`,
     params

@@ -10,11 +10,17 @@ const useGetCart = (id: number) => {
     },
   });
 
+  const cartItems = data?.response ?? [];
+  const testNameMergeOnly = cartItems.flatMap(
+    (item) => item.testNameMerge || []
+  );
+
   return {
     isPending,
     refetchData: refetch,
     cartdata: data?.response ? data.response : [],
     totalAmount: data?.total ?? 0,
+    testNameMergeOnly,
   };
 };
 

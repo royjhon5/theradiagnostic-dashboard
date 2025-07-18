@@ -33,7 +33,7 @@ export default function IframeComponent() {
   const currentKey = availableEndpoints[pageIndex];
   const currentEndpoint = endpointMap[currentKey];
   const clientId = currentRow.clientId;
-  const iframeUrl = `http://192.168.1.26:80/laboratoryResults/${currentEndpoint}/${clientId}#toolbar=0`;
+  const iframeUrl = `https://localhost:7188/laboratoryResults/${currentEndpoint}/${clientId}#toolbar=0`;
   return (
     <div className="p-2">
       <div className="flex justify-between items-center mb-2">

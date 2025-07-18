@@ -18,9 +18,14 @@ export interface GetCartDTO {
   packageDescription: string;
   packages: Package[];
   totalPrice: number;
+  testNameMerge: testNameMerge;
 }
 
 export interface Package {
   itemName: string;
   itemPrice: number;
+}
+
+export interface testNameMerge {
+  testName: string;
 }

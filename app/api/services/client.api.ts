@@ -165,3 +165,10 @@ export const generateMedicalReportPdf = async (id: number) => {
   const url = URL.createObjectURL(pdfBlob);
   window.open(url, "_blank");
 };
+
+export const reprintOr = async (id: number) => {
+  const response = await httpHelper.get<Blob>(`${baseAPI}/reprint-or/${id}`, {
+    responseType: "blob",
+  });
+  return response;
+};

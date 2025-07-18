@@ -22,22 +22,52 @@ export type CreateImmunologyDTO = {
   immunology: Immunology;
 };
 
+export type CreateSerologyDTO = {
+  userId: string;
+  clientId: number;
+  serology: Serology;
+};
+
+export type CreateSerologyHIVDTO = {
+  userId: string;
+  clientId: number;
+  serologyHiv: SerologyHIV;
+};
+
 export type Chemistry = {
   fastingBloodSugarResult: string;
   fastingBloodSugarUnit: string;
   fastingBloodSugarRange: string;
-  twoHPPBloodSugarResult: string;
-  twoHPPBloodSugarUnit: string;
-  twoHPPBloodSugarRange: string;
+  randomBloodSugarResult: string;
+  randomBloodSugarUnit: string;
+  randomBloodSugarRange: string;
   creatinineResult: string;
   creatinineUnit: string;
   creatinineRange: string;
-  eGFRCKDEPIResult: string;
-  eGFRCKDEPIUnit: string;
-  eGFRCKDEPIRange: string;
+  bloodUreaResult: string;
+  bloodUreaUnit: string;
+  bloodUreaRange: string;
+  uricAcidResult: string;
+  uricAcidUnit: string;
+  uricAcidRange: string;
   sgptaltResult: string;
   sgptaltUnit: string;
   sgptaltRange: string;
+  sgotastResult: string;
+  sgotastUnit: string;
+  sgotastRange: string;
+  alkalinePhosphataseResult: string;
+  alkalinePhosphataseUnit: string;
+  alkalinePhosphataseRange: string;
+  totalCalciumResult: string;
+  totalCalciumUnit: string;
+  totalCalciumRange: string;
+  hbA1CResult: string;
+  hbA1CUnit: string;
+  hbA1Range: string;
+  amylaseResult: string;
+  amylaseUnit: string;
+  amylaseRange: string;
   cholesterolResult: string;
   cholesterolUnit: string;
   cholesterolRange: string;
@@ -56,6 +86,72 @@ export type Chemistry = {
   cholhdlRatioResult: string;
   cholhdlRatioUnit: string;
   cholhdlRatioRange: string;
+  sodiumResult: string;
+  sodiumUnit: string;
+  sodiumRange: string;
+  potassiumResult: string;
+  potassiumUnit: string;
+  potassiumRange: string;
+  chlorideResult: string;
+  chlorideUnit: string;
+  chlorideRange: string;
+  ionizedCalciumResult: string;
+  ionizedCalciumUnit: string;
+  ionizedCalciumRange: string;
+  totalBilirubinResult: string;
+  totalBilirubinUnit: string;
+  totalBilirubinRange: string;
+  directBilirubinResult: string;
+  directBilirubinUnit: string;
+  directBilirubinRange: string;
+  indirectBilirubinResult: string;
+  indirectBilirubinUnit: string;
+  indirectBilirubinRange: string;
+  totalProteinResult: string;
+  totalProteinUnit: string;
+  totalProteinRange: string;
+  albuminResult: string;
+  albuminUnit: string;
+  albuminRange: string;
+  globulinResult: string;
+  globulinUnit: string;
+  globulinRange: string;
+  agRationResult: string;
+  agRationUnit: string;
+  agrAtionRange: string;
+  oralGlucoseChallengeTestResult: string;
+  oralGlucoseChallengeTestUnit: string;
+  oralGlucoseChallengeTestRange: string;
+  fbS50Result: string;
+  fbS50Unit: string;
+  fbS50Range: string;
+  firstHour50Result: string;
+  firstHour50Unit: string;
+  firstHour50Range: string;
+  fbS75Result: string;
+  fbS75Unit: string;
+  fbS75Range: string;
+  firstHour75Result: string;
+  firstHour75Unit: string;
+  firstHour75Range: string;
+  secondHour75Result: string;
+  secondHour75Unit: string;
+  secondHour75Range: string;
+  fbS100Result: string;
+  fbS100Unit: string;
+  fbS100Range: string;
+  firstHour100Result: string;
+  firstHour100Unit: string;
+  firstHour100Range: string;
+  secondHour100Result: string;
+  secondHour100Unit: string;
+  secondHour100Range: string;
+  thirdHour100Result: string;
+  thirdHour100Unit: string;
+  thirdHour100Range: string;
+  twoHoursPostPrandialGlucoseResult: string;
+  twoHoursPostPrandialGlucoseUnit: string;
+  twoHoursPostPrandialGlucoseRange: string;
 };
 
 export type ClinicalMicroscopy = {
@@ -116,6 +212,24 @@ export type ClinicalMicroscopy = {
   hyalineCastResult: string;
   hyalineCastUnit: string;
   hyalineCastRange: string;
+  fecalysisColorResult: string;
+  fecalysisColorUnit: string;
+  fecalysisConsistencyResult: string;
+  fecalysisConsistencyUnit: string;
+  fecalysisBloodResult: string;
+  fecalysisBloodUnit: string;
+  fecalysisMucusResult: string;
+  fecalysisMucusUnit: string;
+  fecalysisParasite: string;
+  fecalysisFatGlobulesResult: string;
+  fecalysisWBCResult: string;
+  fecalysisWBCUnit: string;
+  fecalysisRBCResult: string;
+  fecalysisRBCUnit: string;
+  urineHCGResult: string;
+  urineHCGUnit: string;
+  occultBloodResult: string;
+  occultBloodUnit: string;
 };
 
 export type Hematology = {
@@ -182,6 +296,15 @@ export type Hematology = {
   absoluteBandCountResult: string;
   absoluteBandCountUnit: string;
   absoluteBandCountRange: string;
+  clottingTimeResult: string;
+  clottingTimeRange: string;
+  bleedingTimeResult: string;
+  bleedingTimeRange: string;
+  esrResult: string;
+  esrUnit: string;
+  esrRange: string;
+  bloodTypeResult: string;
+  posNegBloodType: string;
 };
 
 export type Immunology = {
@@ -191,6 +314,24 @@ export type Immunology = {
   ftFourResult: string;
   ftFourUnit: string;
   ftFourRange: string;
+  ccpIgGResult: string;
+  ccpIgGUnit: string;
+  ccpIgGRange: string;
+  psaResult: string;
+  psaUnit: string;
+  psaRange: string;
+  ftThreeResult: string;
+  ftThreeUnit: string;
+  ftThreeRange: string;
+  tThreeResult: string;
+  tThreeUnit: string;
+  tThreeRange: string;
+  tFourResult: string;
+  tFourUnit: string;
+  tFourRange: string;
+  proBNPResult: string;
+  proBNPUnit: string;
+  proBNPRange: string;
 };
 
 export type GetIncrementedDTO = {
@@ -205,4 +346,48 @@ export type GetClientDetailsResultDTO = {
   hemaId: number;
   immuId: number;
   fullName: string;
+};
+
+export type Serology = {
+  antiHCVScreeningResult: string;
+  antiHCVScreeningRemarks: string;
+  antiHCVScreeningMethod: string;
+  antiHavIgGScreeningResult: string;
+  antiHavIgGScreeningRemarks: string;
+  antiHavIgGScreeningMethod: string;
+  vdrlSyphilisResult: string;
+  vdrlSyphilisRemarks: string;
+  vdrlSyphilisMethod: string;
+  hBsAgScreeningResult: string;
+  hBsAgScreeningRemarks: string;
+  hBsAgScreeningMethod: string;
+  antiHavIgMScreeningResult: string;
+  antiHavIgMScreeningRemarks: string;
+  antiHavIgMScreeningMethod: string;
+  nsOneResult: string;
+  nsOneMethod: string;
+  igGResult: string;
+  igGMethod: string;
+  igMResult: string;
+  igMMethod: string;
+  serumHCGResult: string;
+  salmonellaIgGResult: string;
+  salmonellaIgGUnit: string;
+  salmonellaIgMResult: string;
+  salmonellaIgMMethod: string;
+  antiHBSResult: string;
+  antiHBSMethod: string;
+  serumPlasmaHCGResult: string;
+  serumPlasmaHCGMethod: string;
+};
+
+export type SerologyHIV = {
+  hivRapidDiagnosticTestResult: string;
+  hivRapidDiagnosticTestMethod: string;
+  kitUsed: string;
+  kitExpiry: string;
+  kitLotNumber: string;
+  diluentLotNumber: string;
+  kitReferenceNumber: string;
+  remarks: string;
 };
