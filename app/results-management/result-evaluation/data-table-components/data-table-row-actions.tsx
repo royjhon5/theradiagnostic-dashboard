@@ -12,6 +12,8 @@ const idsToCheck = [
   "hemaId",
   "clinicId",
   "immuId",
+  "serologyHIVId",
+  "serologyId",
   "fullName",
 ];
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {

@@ -159,7 +159,7 @@ const Services = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="mb-5 w-[50%]"
               />
-              <ScrollArea className="w-full h-72">
+              <ScrollArea className="w-full h-[580px]">
                 <Listbox className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {filteredServices.map((item) => (
                     <ListboxItem

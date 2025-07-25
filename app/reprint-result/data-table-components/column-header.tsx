@@ -1,21 +1,15 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { globalClientData } from "../schema/schema";
+import { globalClientForReviewData } from "../schema/schema";
 
-export const columns: ColumnDef<globalClientData>[] = [
+export const columns: ColumnDef<globalClientForReviewData>[] = [
   {
-    accessorKey: "firstName",
+    accessorKey: "fullName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Client Name" />
     ),
-    cell: ({ row }) => (
-      <div className="flex flex-row gap-1">
-        <div>{row.original.lastName}</div>
-        <div>{row.original.firstName},</div>
-        <div>{row.original.middleName}</div>
-      </div>
-    ),
+    cell: ({ row }) => <div>{row.getValue("fullName")}</div>,
     enableSorting: false,
     enableHiding: false,
   },

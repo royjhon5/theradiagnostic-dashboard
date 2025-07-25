@@ -99,6 +99,13 @@ export const ProcessClientResult = async (
   return response;
 };
 
+export const ReleaseClientResult = async (id: number) => {
+  const { data: response } = await httpHelper.patch<BaseResponseType<boolean>>(
+    `${baseAPI}/release/${id}`
+  );
+  return response;
+};
+
 // export const ProcessClientResult = async (params: UpdateStatusDTO) => {
 //   const { id, ...body } = params;
 //   const { data: response } = await httpHelper.patch<BaseResponseType<boolean>>(

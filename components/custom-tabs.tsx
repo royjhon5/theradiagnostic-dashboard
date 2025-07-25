@@ -5,6 +5,7 @@ type TabItem = {
   label: string;
   value: string;
   content: React.ReactNode;
+  disabled?: boolean; // <- added
 };
 
 interface CustomTabsProps {
@@ -22,7 +23,11 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
     <Tabs defaultValue={defaultValue} className={className}>
       <TabsList>
         {tabItems.map((tab) => (
-          <TabsTrigger key={tab.value} value={tab.value}>
+          <TabsTrigger
+            key={tab.value}
+            value={tab.value}
+            disabled={tab.disabled}
+          >
             {tab.label}
           </TabsTrigger>
         ))}

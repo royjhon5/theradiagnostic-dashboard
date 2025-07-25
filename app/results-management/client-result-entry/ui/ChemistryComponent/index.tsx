@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { BaseResponseType } from "@/types/BaseResponse";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useMainContext } from "../../context/context-provider";
 import Cookies from "js-cookie";
@@ -17,133 +17,146 @@ export default function ChemistryComponent() {
   const { testNameMergeOnly } = useGetCart(
     currentRow ? Number(currentRow.id) : 0
   );
+
+  useEffect(() => {
+    if (!currentRow) return;
+
+    if (currentRow.gender === "Male") {
+      setCreatinineRange("0.9 ~ 1.5");
+      setUricAcidRange("3.4 ~ 7.0");
+      setSGPTALRange("9.0 ~ 34.0");
+      setASTSGOTRange("10.0 ~ 34.0");
+    } else if (currentRow.gender === "Female") {
+      setCreatinineRange("0.7 ~ 1.3");
+      setUricAcidRange("2.4 ~ 5.7");
+      setSGPTALRange("9.0 ~ 36.0");
+      setASTSGOTRange("10.0 ~ 31.0");
+    } else {
+      setCreatinineRange("");
+    }
+  }, [currentRow]);
+
   const [FastingBloodSugarResult, setFastingBloodSugarResult] = useState("");
-  const [FastingBloodSugarUnit, setFastingBloodSugarUnit] =
-    useState("70 ~ 100");
+  const [FastingBloodSugarUnit, setFastingBloodSugarUnit] = useState("mg/dL");
   const [FastingBloodSugarRange, setFastingBloodSugarRange] =
-    useState("6.68 mmol/L");
+    useState("70.0 ~ 99.0");
 
   const [RandomBloodSugarResult, setRandomBloodSugarResult] = useState("");
-  const [RandomBloodSugarUnit, setRandomBloodSugarUnit] = useState("70 ~ 100");
-  const [RandomBloodSugarRange, setRandomBloodSugarRange] =
-    useState("6.68 mmol/L");
+  const [RandomBloodSugarUnit, setRandomBloodSugarUnit] = useState("mg/dL");
+  const [RandomBloodSugarRange, setRandomBloodSugarRange] = useState("< 200");
+
+  const [CreatinineResult, setCreatinineResult] = useState("");
+  const [CreatinineUnit, setCreatinineUnit] = useState("mg/dL");
+  const [CreatinineRange, setCreatinineRange] = useState("");
 
   const [bloodUreaNitrogenResult, setBloodUreaNitrogenResult] = useState("");
-  const [bloodUreaNitrogenUnit, setBloodUreaNitrogenUnit] = useState("");
-  const [bloodUreaNitrogenRange, setBloodUreaNitrogenRange] = useState("");
+  const [bloodUreaNitrogenUnit, setBloodUreaNitrogenUnit] = useState("mg/dL");
+  const [bloodUreaNitrogenRange, setBloodUreaNitrogenRange] =
+    useState("4.7 ~ 23.0");
+
+  const [uricAcidResult, setUricAcidResult] = useState("");
+  const [uricAcidUnit, setUricAcidUnit] = useState("mg/dL");
+  const [uricAcidRange, setUricAcidRange] = useState("");
+
+  const [SGPTALResult, setSGPTALResult] = useState("");
+  const [SGPTALUnit, setSGPTALUnit] = useState("U/L");
+  const [SGPTALRange, setSGPTALRange] = useState("");
+
+  const [ASTSGOTResult, setASTSGOTResult] = useState("");
+  const [ASTSGOTUnit, setASTSGOTUnit] = useState("U/L");
+  const [ASTSGOTRange, setASTSGOTRange] = useState("");
+
+  const [AlkalineResult, setAlkalineResult] = useState("");
+  const [AlkalineUnit, setAlkalineUnit] = useState("U/L");
+  const [AlkalineRange, setAlkalineRange] = useState("35.0 ~ 110.0");
+
+  const [totalCalciumResult, setTotalCalciumResult] = useState("");
+  const [totalCalciumUnit, setTotalCalciumUnit] = useState("mg/dL");
+  const [totalCalciumRange, setTotalCalciumRange] = useState("8.4 ~ 10.2");
+
+  const [Hba1cResult, setHba1cResult] = useState("");
+  const [Hba1cUnit, setHba1cUnit] = useState("%");
+  const [Hba1cRange, setHba1cRange] = useState("4.5 ~ 6.0");
+
+  const [CholesterolResult, setCholesterolResult] = useState("");
+  const [CholesterolUnit, setCholesterolUnit] = useState("mg/dL");
+  const [CholesterolRange, setCholesterolRange] = useState("< 240");
+
+  const [TriglyceridesResult, setTriglyceridesResult] = useState("");
+  const [TriglyceridesUnit, setTriglyceridesUnit] = useState("mg/dL");
+  const [TriglyceridesRange, setTriglyceridesRange] = useState("< 200");
+
+  const [HdlResult, setHdlResult] = useState("");
+  const [HdlUnit, setHdlUnit] = useState("mg/dL");
+  const [HdlRange, setHdlRange] = useState("30 ~ 85");
+
+  const [LdlResult, setLdlResult] = useState("");
+  const [LdlUnit, setLdlUnit] = useState("mg/dL");
+  const [LdlRange, setLdlRange] = useState("< 150");
+
+  const [VldlResult, setVldlResult] = useState("");
+  const [VldlUnit, setVldlUnit] = useState("mg/dL");
+  const [VldlRange, setVldlRange] = useState("0.05 ~ 1.00");
+
+  const [sodiumResult, setSodiumResult] = useState("");
+  const [sodiumUnit, setSodiumUnit] = useState("mmol/L");
+  const [sodiumRange, setSodiumRange] = useState("137.0 ~ 145.0");
+
+  const [potassiumResult, setPotassiumResult] = useState("");
+  const [potassiumUnit, setPotassiumUnit] = useState("mmol/L");
+  const [potassiumRange, setPotassiumRange] = useState("3.5 ~ 5.1");
+
+  const [chlorideResult, setChlorideResult] = useState("");
+  const [chlorideUnit, setChlorideUnit] = useState("mmol/L");
+  const [chlorideRange, setChlorideRange] = useState("96.0 ~ 106.0");
+
+  const [ionizedCalciumResult, setIonizedCalciumResult] = useState("");
+  const [ionizedCalciumUnit, setIonizedCalciumUnit] = useState("mmol/L");
+  const [ionizedCalciumRange, setIonizedCalciumRange] = useState("1.05 ~ 1.30");
+
+  const [totalBilirubinResult, setTotalBilirubinResult] = useState("");
+  const [totalBilirubinUnit, setTotalBilirubinUnit] = useState("mg/dL");
+  const [totalBilirubinRange, setTotalBilirubinRange] = useState("0.2 ~ 1.3");
+
+  const [directBilirubinResult, setDirectBilirubinResult] = useState("");
+  const [directBilirubinUnit, setDirectBilirubinUnit] = useState("mg/dL");
+  const [directBilirubinRange, setDirectBilirubinRange] = useState("0 ~ 0.3");
+
+  const [indirectBilirubinResult, setIndirectBilirubinResult] = useState("");
+  const [indirectBilirubinUnit, setIndirectBilirubinUnit] = useState("mg/dL");
+  const [indirectBilirubinRange, setIndirectBilirubinRange] =
+    useState("0.0 ~ 0.3");
+
+  const [totalProteinResult, setTotalProteinResult] = useState("");
+  const [totalProteinUnit, setTotalProteinUnit] = useState("g/dL");
+  const [totalProteinRange, setTotalProteinRange] = useState("6.3 ~ 8.2");
+
+  const [albuminResult, setAlbuminResult] = useState("");
+  const [albuminUnit, setAlbuminUnit] = useState("g/dL");
+  const [albuminRange, setAlbuminRange] = useState("3.3 ~ 5.1");
+
+  const [globulinResult, setGlobulinResult] = useState("");
+  const [globulinUnit, setGlobulinUnit] = useState("g/dL");
+  const [globulinRange, setGlobulinRange] = useState("2.0 ~ 3.3");
 
   const [
     twoHoursPostPrandialGlucoseResult,
     setTwoHoursPostPrandialGlucoseResult,
   ] = useState("");
   const [twoHoursPostPrandialGlucoseUnit, setTwoHoursPostPrandialGlucoseUnit] =
-    useState("");
+    useState("mg/dL");
   const [
     twoHoursPostPrandialGlucoseRange,
     setTwoHoursPostPrandialGlucoseRange,
   ] = useState("");
 
   const [amylaseResult, setAmylaseResult] = useState("");
-  const [amylaseUnit, setAmylaseUnit] = useState("");
-  const [amylaseRange, setAmylaseRange] = useState("");
-
-  const [uricAcidResult, setUricAcidResult] = useState("");
-  const [uricAcidUnit, setUricAcidUnit] = useState("");
-  const [uricAcidRange, setUricAcidRange] = useState("");
-
-  const [ASTSGOTResult, setASTSGOTResult] = useState("");
-  const [ASTSGOTUnit, setASTSGOTUnit] = useState("");
-  const [ASTSGOTRange, setASTSGOTRange] = useState("");
-
-  const [AlkalineResult, setAlkalineResult] = useState("");
-  const [AlkalineUnit, setAlkalineUnit] = useState("");
-  const [AlkalineRange, setAlkalineRange] = useState("");
-
-  const [totalCalciumResult, setTotalCalciumResult] = useState("");
-  const [totalCalciumUnit, setTotalCalciumUnit] = useState("");
-  const [totalCalciumRange, setTotalCalciumRange] = useState("");
-
-  const [Hba1cResult, setHba1cResult] = useState("");
-  const [Hba1cUnit, setHba1cUnit] = useState("");
-  const [Hba1cRange, setHba1cRange] = useState("");
-
-  const [CreatinineResult, setCreatinineResult] = useState("");
-  const [CreatinineUnit, setCreatinineUnit] = useState("0.60 ~ 1.20");
-  const [CreatinineRange, setCreatinineRange] = useState(
-    "83.98 umol/L   53.04~106.08"
-  );
-
-  const [SGPTALResult, setSGPTALResult] = useState("");
-  const [SGPTALUnit, setSGPTALUnit] = useState("< 34");
-  const [SGPTALRange, setSGPTALRange] = useState("18.00 U/L    < 34");
-
-  const [CholesterolResult, setCholesterolResult] = useState("");
-  const [CholesterolUnit, setCholesterolUnit] = useState("< 200");
-  const [CholesterolRange, setCholesterolRange] = useState(
-    "4.43 mmol/L    < 5.14"
-  );
-
-  const [TriglyceridesResult, setTriglyceridesResult] = useState("");
-  const [TriglyceridesUnit, setTriglyceridesUnit] = useState("10 ~ 150");
-  const [TriglyceridesRange, setTriglyceridesRange] = useState(
-    "1.33 mmol/L   <5.14"
-  );
-
-  const [HdlResult, setHdlResult] = useState("");
-  const [HdlUnit, setHdlUnit] = useState("F: > 65");
-  const [HdlRange, setHdlRange] = useState("1.13 mmol/L F: > 1.69");
-
-  const [LdlResult, setLdlResult] = useState("");
-  const [LdlUnit, setLdlUnit] = useState("< 130");
-  const [LdlRange, setLdlRange] = useState("2.74 mmol/L <3/.38");
-
-  const [VldlResult, setVldlResult] = useState("");
-  const [VldlUnit, setVldlUnit] = useState("2.00 ~ 38.00");
-  const [VldlRange, setVldlRange] = useState("0.61 mmol/L   0.05 ~ 1.00");
+  const [amylaseUnit, setAmylaseUnit] = useState("U/L");
+  const [amylaseRange, setAmylaseRange] = useState("30 ~ 110");
 
   const [CholHdlResult, setCholHdlResult] = useState("");
   const [CholHdlUnit, setCholHdlUnit] = useState("< 3.08");
   const [CholHdlRange, setCholHdlRange] = useState("< 3.08");
-
-  const [sodiumResult, setSodiumResult] = useState("");
-  const [sodiumUnit, setSodiumUnit] = useState("");
-  const [sodiumRange, setSodiumRange] = useState("");
-
-  const [potassiumResult, setPotassiumResult] = useState("");
-  const [potassiumUnit, setPotassiumUnit] = useState("");
-  const [potassiumRange, setPotassiumRange] = useState("");
-
-  const [chlorideResult, setChlorideResult] = useState("");
-  const [chlorideUnit, setChlorideUnit] = useState("");
-  const [chlorideRange, setChlorideRange] = useState("");
-
-  const [ionizedCalciumResult, setIonizedCalciumResult] = useState("");
-  const [ionizedCalciumUnit, setIonizedCalciumUnit] = useState("");
-  const [ionizedCalciumRange, setIonizedCalciumRange] = useState("");
-
-  const [totalBilirubinResult, setTotalBilirubinResult] = useState("");
-  const [totalBilirubinUnit, setTotalBilirubinUnit] = useState("");
-  const [totalBilirubinRange, setTotalBilirubinRange] = useState("");
-
-  const [directBilirubinResult, setDirectBilirubinResult] = useState("");
-  const [directBilirubinUnit, setDirectBilirubinUnit] = useState("");
-  const [directBilirubinRange, setDirectBilirubinRange] = useState("");
-
-  const [indirectBilirubinResult, setIndirectBilirubinResult] = useState("");
-  const [indirectBilirubinUnit, setIndirectBilirubinUnit] = useState("");
-  const [indirectBilirubinRange, setIndirectBilirubinRange] = useState("");
-
-  const [totalProteinResult, setTotalProteinResult] = useState("");
-  const [totalProteinUnit, setTotalProteinUnit] = useState("");
-  const [totalProteinRange, setTotalProteinRange] = useState("");
-
-  const [albuminResult, setAlbuminResult] = useState("");
-  const [albuminUnit, setAlbuminUnit] = useState("");
-  const [albuminRange, setAlbuminRange] = useState("");
-
-  const [globulinResult, setGlobulinResult] = useState("");
-  const [globulinUnit, setGlobulinUnit] = useState("");
-  const [globulinRange, setGlobulinRange] = useState("");
 
   const [agRatioResult, setAgRatioResult] = useState("");
   const [agRatioUnit, setAgRatioUnit] = useState("");
@@ -153,36 +166,37 @@ export default function ChemistryComponent() {
   const [oralGlucoseChallengeTestResult, setOralGlucoseChallengeTestResult] =
     useState("");
   const [oralGlucoseChallengeTestUnit, setOralGlucoseChallengeTestUnit] =
-    useState("");
+    useState("mg/dL");
   const [oralGlucoseChallengeTestRange, setOralGlucoseChallengeTestRange] =
-    useState("");
+    useState("70.0 ~ 99.0");
 
   // 50g OGTT
   const [fiftyGramsOGTTFBSResult, setFiftyGramsOGTTFBSResult] = useState("");
-  const [fiftyGramsOGTTFBSUnit, setFiftyGramsOGTTFBSUnit] = useState("");
-  const [fiftyGramsOGTTFBSRange, setFiftyGramsOGTTFBSRange] = useState("");
+  const [fiftyGramsOGTTFBSUnit, setFiftyGramsOGTTFBSUnit] = useState("mg/dL");
+  const [fiftyGramsOGTTFBSRange, setFiftyGramsOGTTFBSRange] =
+    useState("70.0 ~ 99.0");
 
   const [fiftyGramsOGTT1stHourResult, setFiftyGramsOGTT1stHourResult] =
     useState("");
   const [fiftyGramsOGTT1stHourUnit, setFiftyGramsOGTT1stHourUnit] =
-    useState("");
+    useState("mg/dL");
   const [fiftyGramsOGTT1stHourRange, setFiftyGramsOGTT1stHourRange] =
-    useState("");
+    useState("70.0 ~ 99.0");
 
   // 75g OGTT
   const [seventyFiveGramsOGTTFBSResult, setSeventyFiveGramsOGTTFBSResult] =
     useState("");
   const [seventyFiveGramsOGTTFBSUnit, setSeventyFiveGramsOGTTFBSUnit] =
-    useState("");
+    useState("mg/dL");
   const [seventyFiveGramsOGTTFBSRange, setSeventyFiveGramsOGTTFBSRange] =
-    useState("");
+    useState("70.0 ~ 99.0");
 
   const [
     seventyFiveGramsOGTT1stHourResult,
     setSeventyFiveGramsOGTT1stHourResult,
   ] = useState("");
   const [seventyFiveGramsOGTT1stHourUnit, setSeventyFiveGramsOGTT1stHourUnit] =
-    useState("");
+    useState("mg/dL");
   const [
     seventyFiveGramsOGTT1stHourRange,
     setSeventyFiveGramsOGTT1stHourRange,
@@ -193,7 +207,7 @@ export default function ChemistryComponent() {
     setSeventyFiveGramsOGTT2ndHourResult,
   ] = useState("");
   const [seventyFiveGramsOGTT2ndHourUnit, setSeventyFiveGramsOGTT2ndHourUnit] =
-    useState("");
+    useState("mg/dL");
   const [
     seventyFiveGramsOGTT2ndHourRange,
     setSeventyFiveGramsOGTT2ndHourRange,
@@ -201,9 +215,9 @@ export default function ChemistryComponent() {
 
   // 100g OGTT
   const [oneHundredGramsOGTTFBSResult, setOneHundredGramsOGTTFBSResult] =
-    useState("");
+    useState("70.0 ~ 99.0");
   const [oneHundredGramsOGTTFBSUnit, setOneHundredGramsOGTTFBSUnit] =
-    useState("");
+    useState("mg/dL");
   const [oneHundredGramsOGTTFBSRange, setOneHundredGramsOGTTFBSRange] =
     useState("");
 
@@ -212,7 +226,7 @@ export default function ChemistryComponent() {
     setOneHundredGramsOGTT1stHourResult,
   ] = useState("");
   const [oneHundredGramsOGTT1stHourUnit, setOneHundredGramsOGTT1stHourUnit] =
-    useState("");
+    useState("mg/dL");
   const [oneHundredGramsOGTT1stHourRange, setOneHundredGramsOGTT1stHourRange] =
     useState("");
 
@@ -221,7 +235,7 @@ export default function ChemistryComponent() {
     setOneHundredGramsOGTT2ndHourResult,
   ] = useState("");
   const [oneHundredGramsOGTT2ndHourUnit, setOneHundredGramsOGTT2ndHourUnit] =
-    useState("");
+    useState("mg/dL");
   const [oneHundredGramsOGTT2ndHourRange, setOneHundredGramsOGTT2ndHourRange] =
     useState("");
 
@@ -230,9 +244,41 @@ export default function ChemistryComponent() {
     setOneHundredGramsOGTT3rdHourResult,
   ] = useState("");
   const [oneHundredGramsOGTT3rdHourUnit, setOneHundredGramsOGTT3rdHourUnit] =
-    useState("");
+    useState("mg/dL");
   const [oneHundredGramsOGTT3rdHourRange, setOneHundredGramsOGTT3rdHourRange] =
     useState("");
+
+  useEffect(() => {
+    const chol = parseFloat(CholesterolResult);
+    const hdl = parseFloat(HdlResult);
+
+    if (!isNaN(chol) && !isNaN(hdl) && hdl !== 0) {
+      const result = (chol / hdl).toFixed(2);
+      setCholHdlResult(result);
+    } else {
+      setCholHdlResult("");
+    }
+  }, [CholesterolResult, HdlResult]);
+
+  useEffect(() => {
+    const totalProtein = parseFloat(totalProteinResult);
+    const albumin = parseFloat(albuminResult);
+
+    if (!isNaN(totalProtein) && !isNaN(albumin)) {
+      const globulin = totalProtein - albumin;
+      setGlobulinResult(globulin.toFixed(2));
+
+      if (globulin !== 0) {
+        const agRatio = albumin / globulin;
+        setAgRatioResult(agRatio.toFixed(2));
+      } else {
+        setAgRatioResult("");
+      }
+    } else {
+      setGlobulinResult("");
+      setAgRatioResult("");
+    }
+  }, [totalProteinResult, albuminResult]);
 
   const { setLoading } = useAppLoaderContext();
   const { mutate } = useMutation({
@@ -613,9 +659,9 @@ export default function ChemistryComponent() {
       ),
     },
     {
-      name: "BLOOD URIC ACID (BUA)",
+      name: "Blood Uric Acid (BUA)",
       value: "item-7",
-      title: "BLOOD URIC ACID (BUA)",
+      title: "Blood Uric Acid (BUA)",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-4">
           <h2 className="text-sm text-right mt-2 w-[70%]">Uric Acid</h2>
@@ -650,10 +696,10 @@ export default function ChemistryComponent() {
       ),
     },
     {
-      name: "(SGPT/ALT)Serum Glutamic Pyruvate Transaminase/ Alanine Aminotransferase",
+      name: "Serum Glutamic PyruvateTransaminase/Alanine Aminotransferase (SGPT /ALT)",
       value: "item-8",
       title:
-        "(SGPT/ALT)Serum Glutamic Pyruvate Transaminase/ Alanine Aminotransferase",
+        "Serum Glutamic PyruvateTransaminase/Alanine Aminotransferase (SGPT /ALT)",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-4">
           <h2 className="text-sm text-right mt-2 w-[70%]">ALT/SGPT</h2>
@@ -688,10 +734,10 @@ export default function ChemistryComponent() {
       ),
     },
     {
-      name: "(SGOT/AST)Serum Glutamic-Oxaloacetic Transaminase/ Aspartate Aminotransferase",
+      name: "Serum Glutamic-Oxaloacetic Transaminase/Aspartate Aminotransferase(SGOT/AST",
       value: "item-9",
       title:
-        "(SGOT/AST)Serum Glutamic-Oxaloacetic Transaminase/ Aspartate Aminotransferase",
+        "Serum Glutamic-Oxaloacetic Transaminase/Aspartate Aminotransferase(SGOT/AST",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-4">
           <h2 className="text-sm text-right mt-2 w-[70%]">AST/SGOT</h2>
@@ -1455,7 +1501,7 @@ export default function ChemistryComponent() {
       ),
     },
     {
-      name: "Oral Glucose Tolerance Test (75) OGTT75",
+      name: "Oral Glucose Tolerance Test (75) OGTT",
       value: "item-19",
       title: "Oral Glucose Tolerance Test (75) OGTT75",
       content: (
@@ -1548,9 +1594,9 @@ export default function ChemistryComponent() {
       ),
     },
     {
-      name: "Oral Glucose Tolerance Test (75) OGTT75",
+      name: "Oral Glucose Tolerance Test (75) OGTT",
       value: "item-20",
-      title: "Oral Glucose Tolerance Test (75) OGTT75",
+      title: "Oral Glucose Tolerance Test (75) OGTT",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
           <h2 className="text-sm text-right mt-2 w-[70%]">FBS</h2>

@@ -130,7 +130,7 @@ export default function SerologyComponent() {
 
   const accordionData = [
     {
-      name: "HBSAg Kit (HEPB)",
+      name: "HBSAg Kit",
       value: "item-1",
       title: "HBSAg (HEPB)",
       content: (
@@ -166,7 +166,7 @@ export default function SerologyComponent() {
       ),
     },
     {
-      name: "Anti-Hepatitis C Virus (AHCV) (HEP C kit)",
+      name: "Hep C Kit",
       value: "item-2",
       title: "ANTI-HCV",
       content: (
@@ -204,7 +204,7 @@ export default function SerologyComponent() {
       ),
     },
     {
-      name: "Anti-Hepatitis A Virus (A-HAV)",
+      name: "HAV Kit",
       value: "item-3",
       title: "ANTI-HAV IgG",
       content: (
@@ -242,7 +242,7 @@ export default function SerologyComponent() {
       ),
     },
     {
-      name: "SYPHILIS/VDRL",
+      name: "Syphilis Kit",
       value: "item-4",
       title: "SYPHILIS (VDRL)",
       content: (
@@ -278,7 +278,7 @@ export default function SerologyComponent() {
       ),
     },
     {
-      name: "Anti-Hepatitis A Virus (A-HAV)",
+      name: "HAV Kit",
       value: "item-5",
       title: "ANTI-HAV IgM",
       content: (
@@ -316,7 +316,7 @@ export default function SerologyComponent() {
       ),
     },
     {
-      name: "Dengue Duo Kit (NS1,IGG,IGM)",
+      name: "Dengue Duo Kit",
       value: "item-6",
       title: "DENGUE DUO",
       content: (

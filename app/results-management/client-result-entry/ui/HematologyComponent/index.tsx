@@ -5,18 +5,42 @@ import { Input } from "@/components/ui/input";
 import { BaseResponseType } from "@/types/BaseResponse";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useMainContext } from "../../context/context-provider";
 import Cookies from "js-cookie";
 import { ReusableAccordion } from "@/components/custom-accordion";
 import useGetCart from "@/app/client-registration/hooks/useGetCart";
+import { CreatableCombobox } from "@/components/creatable-combobox";
+import { bloodTypeOption, bloodtypeOptionTwo } from "../../data/data";
+import {
+  getHGBRange,
+  getHGTRange,
+  getLYMRange,
+  getMCHCRange,
+  getMCHRange,
+  getMONRange,
+  getMVCRange,
+  getPLTRange,
+  getRBCRange,
+  getRDWRange,
+  getSEGRange,
+  getWBCRange,
+} from "../../utils/referenceRanges";
 
 export default function HematologyComponent() {
   const { currentRow } = useMainContext();
   const { testNameMergeOnly } = useGetCart(
     currentRow ? Number(currentRow.id) : 0
   );
+
+  useEffect(() => {
+    if (currentRow?.gender === "Male") {
+      setEsrRange("0 ~ 15");
+    } else {
+      setEsrRange("0 ~ 20");
+    }
+  }, [currentRow]);
   const [whiteBloodCellsResult, setWhiteBloodCellsResult] = useState("");
   const [whiteBloodCellsUnit, setWhiteBloodCellsUnit] = useState("10^9/L");
   const [whiteBloodCellsRange, setWhiteBloodCellsRange] =
@@ -77,20 +101,82 @@ export default function HematologyComponent() {
   const [bandUnit, setBandUnit] = useState("%");
   const [bandRange, setBandRange] = useState("0.0~5.0");
 
+  const [metamyelocytesResult, setMetamyelocytesResult] = useState("");
+  const [metamyelocytesUnit, setMetamyelocytesUnit] = useState("%");
+  const [metamyelocytesRange, setMetamyelocytesRange] = useState("0 ~ 1");
+
+  const [myelocytesResult, setMyelocytesResult] = useState("");
+  const [myelocytesUnit, setMyelocytesUnit] = useState("%");
+  const [myelocytesRange, setMyelocytesRange] = useState("0 ~ 1");
+
+  const [promyelocytesResult, setPromyelocytesResult] = useState("");
+  const [promyelocytesUnit, setPromyelocytesUnit] = useState("%");
+  const [promyelocytesRange, setPromyelocytesRange] = useState("0 ~ 1");
+
+  const [blastCellsResult, setBlastCellsResult] = useState("");
+  const [blastCellsUnit, setBlastCellsUnit] = useState("%");
+  const [blastCellsRange, setBlastCellsRange] = useState("0");
+
   const [clottingTimeResult, setClottingTimeResult] = useState("");
-  const [clottingTimeRange, setClottingTimeRange] = useState("");
+  const [clottingTimeRange, setClottingTimeRange] = useState("3 to 6 minutes");
 
   const [bleedingTimeResult, setBleedingTimeResult] = useState("");
-  const [bleedingTimeRange, setBleedingTimeRange] = useState("");
+  const [bleedingTimeRange, setBleedingTimeRange] = useState("1 to 3 minutes");
 
   const [esrResult, setEsrResult] = useState("");
-  const [esrUnit, setEsrUnit] = useState("");
+  const [esrUnit, setEsrUnit] = useState("mm/hr");
   const [esrRange, setEsrRange] = useState("");
 
   const [bloodTypeResult, setBloodTypeResult] = useState("");
   const [bloodTypeUnit, setBloodTypeUnit] = useState("");
-  const [bloodTypeRange, setBloodTypeRange] = useState("");
+  useEffect(() => {
+    if (currentRow?.dateOfBirth && currentRow?.gender) {
+      const genderStr = currentRow.gender.toUpperCase();
+      if (genderStr === "MALE" || genderStr === "FEMALE") {
+        const dob = currentRow.dateOfBirth;
 
+        setWhiteBloodCellsRange(getWBCRange(dob, genderStr));
+        setRedBloodCellsRange(getRBCRange(dob, genderStr));
+        setHemoglobinRange(getHGBRange(dob, genderStr));
+        setHematocritRange(getHGTRange(dob, genderStr));
+        setCorpusVolumeRange(getMVCRange(dob, genderStr));
+        setCorpusHbRange(getMCHRange(dob, genderStr));
+        setCorpusHbConcRange(getMCHCRange(dob, genderStr));
+        setRBCRange(getRDWRange(dob, genderStr));
+        setPlateletRange(getPLTRange(dob, genderStr));
+        setSegmentersRange(getSEGRange(dob, genderStr));
+        setLymphocytesRange(getLYMRange(dob, genderStr));
+        setMonocytesRange(getMONRange(dob, genderStr));
+      }
+    }
+  }, [currentRow]);
+  const [totalPercentage, setTotalPercentage] = useState(0);
+  useEffect(() => {
+    const total =
+      parseFloat(segmentersResult || "0") +
+      parseFloat(lymphocytesResult || "0") +
+      parseFloat(monocytesResult || "0") +
+      parseFloat(EosinophilsResult || "0") +
+      parseFloat(basophilsResult || "0") +
+      parseFloat(bandResult || "0") +
+      parseFloat(metamyelocytesResult || "0") +
+      parseFloat(myelocytesResult || "0") +
+      parseFloat(promyelocytesResult || "0") +
+      parseFloat(blastCellsResult || "0");
+
+    setTotalPercentage(total);
+  }, [
+    segmentersResult,
+    lymphocytesResult,
+    monocytesResult,
+    EosinophilsResult,
+    basophilsResult,
+    bandResult,
+    metamyelocytesResult,
+    myelocytesResult,
+    promyelocytesResult,
+    blastCellsResult,
+  ]);
   const { setLoading } = useAppLoaderContext();
   const { mutate } = useMutation({
     mutationFn: createLaboratoryHemotology,
@@ -111,6 +197,10 @@ export default function HematologyComponent() {
   const onSubmit = () => {
     if (!currentRow?.id) {
       toast.error("Missing client or package ID.");
+      return;
+    }
+    if (totalPercentage !== 100) {
+      toast.error("Total percentage of differential count must equal 100.");
       return;
     }
     setLoading(true);
@@ -163,6 +253,18 @@ export default function HematologyComponent() {
         bandsResult: bandResult,
         bandsUnit: bandUnit,
         bandsRange: bandRange,
+        metamyelocytesResult: metamyelocytesResult,
+        metamyelocytesUnit: metamyelocytesUnit,
+        metamyelocytesRange: metamyelocytesRange,
+        myelocytesResult: myelocytesResult,
+        myelocytesUnit: myelocytesUnit,
+        myelocytesRange: myelocytesRange,
+        promyelocytesResult: promyelocytesResult,
+        promyelocytesUnit: promyelocytesUnit,
+        promyelocytesRange: promyelocytesRange,
+        blastCellsResult: blastCellsResult,
+        blastCellsUnit: blastCellsUnit,
+        blastCellsRange: blastCellsRange,
         absoluteSegNeutroCountResult: "",
         absoluteSegNeutroCountUnit: "",
         absoluteSegNeutroCountRange: "",
@@ -331,15 +433,13 @@ export default function HematologyComponent() {
               }}
             />
           </div>
-        </div>
-      ),
-    },
-    {
-      name: "Complete Blood Count (CBC)",
-      value: "item-2",
-      title: "RED CELLS INDICES",
-      content: (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+
+          <div className="col-span-4">
+            <h2 className="text-sm mt-5 mb-5 w-[70%] font-bold text-lg">
+              RED CELLS INDICES
+            </h2>
+          </div>
+
           <h2 className="text-sm text-right mt-2 w-[70%]">
             Mean Corpuscular Volume
           </h2>
@@ -492,15 +592,13 @@ export default function HematologyComponent() {
               }}
             />
           </div>
-        </div>
-      ),
-    },
-    {
-      name: "Complete Blood Count (CBC)",
-      value: "item-3",
-      title: "DIFFERENTIAL COUNT",
-      content: (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+
+          <div className="col-span-4">
+            <h2 className="text-sm mt-5 mb-5 w-[70%] font-bold text-lg">
+              DIFFERENTIAL COUNT
+            </h2>
+          </div>
+
           <h2 className="text-sm text-right mt-2 w-[70%]">Nuetrophils</h2>
           <div className="flex justify-center items-center mt-2">
             <Input
@@ -674,13 +772,136 @@ export default function HematologyComponent() {
               }}
             />
           </div>
+
+          <h2 className="text-sm text-right mt-2 w-[70%]">Metamyelocytes</h2>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={metamyelocytesResult}
+              onChange={(e) => {
+                setMetamyelocytesResult(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={metamyelocytesUnit}
+              onChange={(e) => {
+                setMetamyelocytesUnit(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={metamyelocytesRange}
+              onChange={(e) => {
+                setMetamyelocytesRange(e.target.value);
+              }}
+            />
+          </div>
+
+          <h2 className="text-sm text-right mt-2 w-[70%]">Myelocytes</h2>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={myelocytesResult}
+              onChange={(e) => {
+                setMyelocytesResult(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={myelocytesUnit}
+              onChange={(e) => {
+                setMyelocytesUnit(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={myelocytesRange}
+              onChange={(e) => {
+                setMyelocytesRange(e.target.value);
+              }}
+            />
+          </div>
+
+          <h2 className="text-sm text-right mt-2 w-[70%]">Promyelocytes</h2>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={promyelocytesResult}
+              onChange={(e) => {
+                setPromyelocytesResult(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={promyelocytesUnit}
+              onChange={(e) => {
+                setPromyelocytesUnit(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={promyelocytesRange}
+              onChange={(e) => {
+                setPromyelocytesRange(e.target.value);
+              }}
+            />
+          </div>
+
+          <h2 className="text-sm text-right mt-2 w-[70%]">Blast Cells</h2>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={blastCellsResult}
+              onChange={(e) => {
+                setBlastCellsResult(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={blastCellsUnit}
+              onChange={(e) => {
+                setBlastCellsUnit(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex justify-center items-center mt-2">
+            <Input
+              className="w-[80%]"
+              value={blastCellsRange}
+              onChange={(e) => {
+                setBlastCellsRange(e.target.value);
+              }}
+            />
+          </div>
+
+          <h2 className="text-sm text-right mt-2 w-[70%]">Total</h2>
+          <div className="flex justify-center items-center mt-2">
+            <Input className="w-[80%]" value={totalPercentage} disabled />
+          </div>
+          <div className="flex justify-center items-center mt-2"></div>
+          <div className="flex justify-center items-center mt-2"></div>
         </div>
       ),
     },
     {
-      name: "Clotting-Bleeding Time (CTBT)",
+      name: "Bleeding-Clotting Time (CTBT)",
       value: "item-4",
-      title: "Clotting-Bleeding Time (CTBT)",
+      title: "Bleeding-Clotting Time (CTBT)",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
           <h2 className="text-sm text-right mt-2 w-[70%]">Clotting Time</h2>
@@ -728,7 +949,7 @@ export default function HematologyComponent() {
       ),
     },
     {
-      name: "ERYTHROCYTE SEDIMENTATION RATE (ESR)",
+      name: "Erythrocyte Sedimentation Rate (ESR)",
       value: "item-5",
       title: "ERYTHROCYTE SEDIMENTATION RATE (ESR)",
       content: (
@@ -765,39 +986,29 @@ export default function HematologyComponent() {
       ),
     },
     {
-      name: "BLOOD TYPING (BT, ABO)",
+      name: "Blood Typing",
       value: "item-6",
-      title: "BLOOD TYPING (BT, ABO)",
+      title: "Blood Typing",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
           <h2 className="text-sm text-right mt-2 w-[70%]">Blood Type</h2>
           <div className="flex justify-center items-center mt-2">
-            <Input
-              className="w-[80%]"
+            <CreatableCombobox
+              options={bloodTypeOption}
               value={bloodTypeResult}
-              onChange={(e) => {
-                setBloodTypeResult(e.target.value);
-              }}
+              onChange={setBloodTypeResult}
+              placeholder=""
             />
           </div>
           <div className="flex justify-center items-center mt-2">
-            <Input
-              className="w-[80%]"
+            <CreatableCombobox
+              options={bloodtypeOptionTwo}
               value={bloodTypeUnit}
-              onChange={(e) => {
-                setBloodTypeUnit(e.target.value);
-              }}
+              onChange={setBloodTypeUnit}
+              placeholder=""
             />
           </div>
-          <div className="flex justify-center items-center mt-2">
-            <Input
-              className="w-[80%]"
-              value={bloodTypeRange}
-              onChange={(e) => {
-                setBloodTypeRange(e.target.value);
-              }}
-            />
-          </div>
+          <div className="flex justify-center items-center mt-2"></div>
         </div>
       ),
     },

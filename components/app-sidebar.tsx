@@ -16,7 +16,6 @@ import Image from "next/image";
 import newlogo from "../public/logo/logo.png";
 import { OtherMenu } from "./other-menu";
 import {
-  BadgeDollarSign,
   LayoutDashboard,
   // ChartNoAxesCombined,
   Settings,
@@ -25,11 +24,10 @@ import {
   // TestTube,
   // CalendarCheck,
   // Calendar,
-  ScreenShare,
   FolderKanban,
   UserPlus,
-  FileSearch,
   Newspaper,
+  Printer,
 } from "lucide-react";
 import useGetCountNowServing from "@/app/queue-screen/hooks/useGetCountNowServing";
 import useGetClient from "@/app/results-management/client-result-entry/hooks/useGetClient";
@@ -207,15 +205,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     //   icon: Calendar,
     //   hideForRoles: ["staff", "accountant"],
     // },
-    {
-      title: "Queue Management",
-      url: "/queue-management",
-      icon: ScreenShare,
-    },
+    // {
+    //   title: "Queue Management",
+    //   url: "/queue-management",
+    //   icon: ScreenShare,
+    // },
     {
       title: "Released Results",
       url: "/released-results",
       icon: Newspaper,
+    },
+    {
+      title: "Reprint Results",
+      url: "/reprint-result",
+      icon: Printer,
     },
     // {
     //   title: "Calendar",

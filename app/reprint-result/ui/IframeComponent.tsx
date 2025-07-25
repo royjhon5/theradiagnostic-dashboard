@@ -13,12 +13,12 @@ type ResultKey =
   | "serologyHIVId";
 
 const endpointMap: Record<ResultKey, string> = {
-  hemaId: "generate-hematology-result",
-  immuId: "generate-immunology-result",
-  clinicId: "generate-clinicalmicroscopy-result",
-  chemId: "generate-chemistry-result",
-  serologyId: "generate-serology-result",
-  serologyHIVId: "generate-serologyHIV-result",
+  hemaId: "generate-hematology-reprint",
+  immuId: "generate-immunology-reprint",
+  clinicId: "generate-clinicalmicroscopy-reprint",
+  chemId: "generate-chemistry-reprint",
+  serologyId: "generate-serology-reprint",
+  serologyHIVId: "generate-serologyHIV-reprint",
 };
 
 const resultKeys: ResultKey[] = [
