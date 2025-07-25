@@ -278,6 +278,18 @@ export type Hematology = {
   bandsResult: string;
   bandsUnit: string;
   bandsRange: string;
+  metamyelocytesResult: string;
+  metamyelocytesUnit: string;
+  metamyelocytesRange: string;
+  myelocytesResult: string;
+  myelocytesUnit: string;
+  myelocytesRange: string;
+  promyelocytesResult: string;
+  promyelocytesUnit: string;
+  promyelocytesRange: string;
+  blastCellsResult: string;
+  blastCellsUnit: string;
+  blastCellsRange: string;
   absoluteSegNeutroCountResult: string;
   absoluteSegNeutroCountUnit: string;
   absoluteSegNeutroCountRange: string;
@@ -345,6 +357,8 @@ export type GetClientDetailsResultDTO = {
   clinicId: number;
   hemaId: number;
   immuId: number;
+  serologyHIVId: number;
+  serologyId: number;
   fullName: string;
 };
 

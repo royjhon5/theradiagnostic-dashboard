@@ -171,6 +171,18 @@ export const reactiveAndNonOption = [
   { label: "NON REACTIVE", value: "NON REACTIVE" },
 ];
 
+export const bloodTypeOption = [
+  { label: "A", value: "A" },
+  { label: "B", value: "B" },
+  { label: "0", value: "0" },
+  { label: "AB", value: "AB" },
+];
+
+export const bloodtypeOptionTwo = [
+  { label: "POSITIVE", value: "POSITIVE" },
+  { label: "NEGATIVE", value: "NON NEGATIVE" },
+];
+
 export const serologyMethod = [
   { label: "Immunochromatohraphy", value: "Immunochromatohraphy" },
 ];

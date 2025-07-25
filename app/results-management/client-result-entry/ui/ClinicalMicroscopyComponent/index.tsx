@@ -34,7 +34,7 @@ import useGetCart from "@/app/client-registration/hooks/useGetCart";
 export default function ClinicalMicroscopyComponent() {
   const { currentRow } = useMainContext();
   const { testNameMergeOnly } = useGetCart(
-    currentRow ? Number(currentRow.id) : 0 // or use undefined/null depending on your hook logic
+    currentRow ? Number(currentRow.id) : 0
   );
   const [MicralResult, setMicralResult] = useState("");
   const [MicralUnit, setMicralUnit] = useState("mg/L");
@@ -42,19 +42,19 @@ export default function ClinicalMicroscopyComponent() {
 
   const [ColorResult, setColorResult] = useState("");
   const [ColorUnit, setColorUnit] = useState("");
-  const [ColorRange, setColorRange] = useState("");
+  const [ColorRange] = useState("");
 
   const [TransparencyResult, setTransparencyResult] = useState("");
   const [TransparencyUnit, setTransparencyUnit] = useState("");
-  const [TransparencyRange, setTransparencyRange] = useState("");
+  const [TransparencyRange] = useState("");
 
   const [SpGravityResult, setSpGravityResult] = useState("");
   const [SpGravityUnit, setSpGravityUnit] = useState("");
-  const [SpGravityRange, setSpGravityRange] = useState("1.003 ~ 1.035");
+  const [SpGravityRange, setSpGravityRange] = useState("1.005 ~ 1.025");
 
   const [PhResult, setPhResult] = useState("");
   const [PhUnit, setPhUnit] = useState("");
-  const [PhRange, setPhRange] = useState("5.0 ~ 8.0");
+  const [PhRange, setPhRange] = useState("5.0 ~ 7.0");
 
   const [ProteinResult, setProteinResult] = useState("");
   const [ProteinUnit, setProteinUnit] = useState("");
@@ -168,61 +168,61 @@ export default function ClinicalMicroscopyComponent() {
       userId: Cookies.get("userid") || "",
       clientId: currentRow?.id,
       clinicalmicroscopy: {
-        micralResult: MicralResult || "N/A",
+        micralResult: MicralResult,
         micralUnit: MicralUnit,
         micralRange: MicralRange,
-        urineColorResult: ColorResult || "N/A",
+        urineColorResult: ColorResult,
         urineColorUnit: ColorUnit,
         urineColorRange: ColorRange,
-        urineTransparencyResult: TransparencyResult || "N/A",
+        urineTransparencyResult: TransparencyResult,
         urineTransparencyUnit: TransparencyUnit,
         urineTransparencyRange: TransparencyRange,
-        spGravityResult: SpGravityResult || "N/A",
+        spGravityResult: SpGravityResult,
         spGravityUnit: SpGravityUnit,
         spGravityRange: SpGravityRange,
-        pHResult: PhResult || "N/A",
+        pHResult: PhResult,
         pHUnit: PhUnit,
         pHRange: PhRange,
-        proteinResult: ProteinResult || "N/A",
+        proteinResult: ProteinResult,
         proteinUnit: ProteinUnit,
         proteinRange: ProteinRange,
-        glucoseResult: GluccoseResult || "N/A",
+        glucoseResult: GluccoseResult,
         glucoseUnit: GluccoseUnit,
         glucoseRange: GluccuseRange,
-        bilirubinResult: BilirubinResult || "N/A",
+        bilirubinResult: BilirubinResult,
         bilirubinUnit: BilirubinUnit,
         bilirubinRange: BiliburinRange,
-        bloodResult: BloodResult || "N/A",
+        bloodResult: BloodResult,
         bloodUnit: BloodUnit,
         bloodRange: BloodRange,
-        leucocytesResult: LeucocytesResult || "N/A",
+        leucocytesResult: LeucocytesResult,
         leucocytesUnit: LeucocytesUnit,
         lucocytesRange: LeucocytesRange,
-        nitriteResult: NitriteResult || "N/A",
+        nitriteResult: NitriteResult,
         nitriteUnit: NitriteUnit,
         nitriteRange: NitritRange,
-        urobilinogenResult: UrobilinogenResult || "N/A",
+        urobilinogenResult: UrobilinogenResult,
         urobilinogenUnit: UrobilinogenUnit,
         urobilinogenRange: UrobilinogenRange,
-        ketoneResult: KetoneResult || "N/A",
+        ketoneResult: KetoneResult,
         ketoneUnit: KetoneUnit,
         ketoneRange: KetoneRange,
-        rbcResult: RBCResult || "N/A",
+        rbcResult: RBCResult,
         rbcUnit: RBCUnit,
         rbcRange: RBCRange,
-        wbcResult: WBCResult || "N/A",
+        wbcResult: WBCResult,
         wbcUnit: WBCUnit,
         wbcRange: WBCRange,
-        epithelialResult: EpithelialResult || "N/A",
+        epithelialResult: EpithelialResult,
         epithelialUnit: EpithelialUnit,
         epithelialRange: EpithelialRange,
-        bacteriaResult: BacteriaResult || "N/A",
+        bacteriaResult: BacteriaResult,
         bacteriaUnit: BacteriaUnit,
         bacteriaRange: BacteriaRange,
-        mucusThreadResult: MucusThreadResult || "N/A",
+        mucusThreadResult: MucusThreadResult,
         mucusThreadUnit: MucusThreadUnit,
         mucusThreadRange: MucusThreadRange,
-        hyalineCastResult: HyalineCastResult || "N/A",
+        hyalineCastResult: HyalineCastResult,
         hyalineCastUnit: HyalineCastUnit,
         hyalineCastRange: HyalineCastRange,
         fecalysisColorResult: fecalColorResult,
@@ -249,7 +249,7 @@ export default function ClinicalMicroscopyComponent() {
 
   const accordionData = [
     {
-      name: "MICRAL TEST",
+      name: "Micral Test",
       value: "item-1",
       title: "MICRAL TEST",
       content: (
@@ -286,7 +286,7 @@ export default function ClinicalMicroscopyComponent() {
       ),
     },
     {
-      name: "Urine Analysis (UA)",
+      name: "Urinalysis (UA)",
       value: "item-2",
       title: "Urine Analysis (UA)",
       content: (
@@ -312,15 +312,7 @@ export default function ClinicalMicroscopyComponent() {
               }}
             />
           </div>
-          <div className="flex justify-center items-center mt-2">
-            <Input
-              className="w-[80%]"
-              value={ColorRange}
-              onChange={(e) => {
-                setColorRange(e.target.value);
-              }}
-            />
-          </div>
+          <div className="flex justify-center items-center mt-2"></div>
           <h2 className="text-sm text-right mt-2 w-[70%]">Transparency</h2>
           <div className="flex justify-center items-center mt-2">
             <CreatableCombobox
@@ -339,15 +331,7 @@ export default function ClinicalMicroscopyComponent() {
               }}
             />
           </div>
-          <div className="flex justify-center items-center mt-2">
-            <Input
-              className="w-[80%]"
-              value={TransparencyRange}
-              onChange={(e) => {
-                setTransparencyRange(e.target.value);
-              }}
-            />
-          </div>
+          <div className="flex justify-center items-center mt-2"></div>
           <div className="col-span-4">
             <h2 className="font-bold text-sm">CHEMICAL EXAMINATION</h2>
           </div>
@@ -424,12 +408,11 @@ export default function ClinicalMicroscopyComponent() {
             />
           </div>
           <div className="flex justify-center items-center mt-2">
-            <Input
-              className="w-[80%]"
+            <CreatableCombobox
+              options={nitriteOption}
               value={GluccuseRange}
-              onChange={(e) => {
-                setGluccuseRange(e.target.value);
-              }}
+              onChange={setGluccuseRange}
+              placeholder=""
             />
           </div>
           <h2 className="text-sm text-right mt-2 w-[70%]">Protein</h2>
@@ -451,12 +434,11 @@ export default function ClinicalMicroscopyComponent() {
             />
           </div>
           <div className="flex justify-center items-center mt-2">
-            <Input
-              className="w-[80%]"
+            <CreatableCombobox
+              options={nitriteOption}
               value={ProteinRange}
-              onChange={(e) => {
-                setProteinRange(e.target.value);
-              }}
+              onChange={setProteinRange}
+              placeholder=""
             />
           </div>
           <h2 className="text-sm text-right mt-2 w-[70%]">Urobilinogen</h2>
@@ -942,7 +924,7 @@ export default function ClinicalMicroscopyComponent() {
             />
           </div>
           <div className="flex justify-center items-center"></div>
-          <h2 className="text-sm text-right mt-2 w-[70%]">Parasites</h2>
+          <h2 className="text-sm text-right mt-2 w-[70%]">Ova & Parasites</h2>
           <div className="flex justify-center items-center mt-2">
             <Input
               className="w-[80%]"
@@ -965,7 +947,7 @@ export default function ClinicalMicroscopyComponent() {
       ),
     },
     {
-      name: "FECAL OCCULT BLOOD TEST (FOBT)",
+      name: "Fecal Occult Blood Test (FOBT)",
       value: "item-4",
       title: "FECAL OCCULT BLOOD TEST (FOBT)",
       content: (
@@ -993,7 +975,7 @@ export default function ClinicalMicroscopyComponent() {
       ),
     },
     {
-      name: "PREGNANCY TEST (URINE) PT",
+      name: "Pregnancy Test (URINE) PT",
       value: "item-5",
       title: "PREGNANCY TEST (URINE) PT",
       content: (

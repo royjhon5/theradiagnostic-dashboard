@@ -9,7 +9,13 @@ export const columns: ColumnDef<globalClientData>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Client Name" />
     ),
-    cell: ({ row }) => <div>{row.getValue("firstName")}</div>,
+    cell: ({ row }) => (
+      <div className="flex flex-row gap-1">
+        <div>{row.original.lastName}</div>
+        <div>{row.original.firstName},</div>
+        <div>{row.original.middleName}</div>
+      </div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },

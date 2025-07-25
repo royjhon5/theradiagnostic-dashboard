@@ -37,9 +37,11 @@ export default function ClientResultEntry() {
   const user = Cookies.get("user");
   const userId = Cookies.get("userid");
   let Username: string | null = null;
+  let UserRole: string | null = null;
   if (user) {
     const parsedUser = JSON.parse(user);
     Username = parsedUser.username;
+    UserRole = parsedUser.role;
   }
 
   useEffect(() => {
@@ -61,6 +63,13 @@ export default function ClientResultEntry() {
       socket.off("ReceiveClientResultEntry", refetchData);
     };
   }, [currentRow, incrementedIdGet, refetchData]);
+
+  const modifiedTabs = TabsData.map((tab) => {
+    if (tab.value === "serologyhiv" && UserRole !== "ADMIN") {
+      return { ...tab, disabled: true }; // Disable if not admin
+    }
+    return tab;
+  });
 
   return (
     <div className="grid grid-cols-1 gap-3">
@@ -197,7 +206,7 @@ export default function ClientResultEntry() {
           <div className="bg-background p-2 rounded-lg shadow-sm">
             <CustomTabs
               defaultValue="hematology"
-              tabItems={TabsData}
+              tabItems={modifiedTabs}
               className="w-full"
             />
           </div>

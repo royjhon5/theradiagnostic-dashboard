@@ -22,6 +22,8 @@ export const forReviewSchema = z.object({
   clinicId: z.number(),
   hemaId: z.number(),
   immuId: z.number(),
+  serologyHIVId: z.number(),
+  serologyId: z.number(),
   fullName: z.string(),
 });
 

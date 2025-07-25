@@ -4,4 +4,5 @@ export type CreateTransactionDTO = {
   paymentType: string;
   paymentReference: string;
   totalAmount: number;
+  remarks: string;
 };

@@ -10,10 +10,10 @@ const useGetCart = (id: number) => {
     },
   });
 
-  const cartItems = data?.response ?? [];
-  const testNameMergeOnly = cartItems.flatMap(
-    (item) => item.testNameMerge || []
-  );
+    const cartItems = data?.response ?? [];
+    const testNameMergeOnly = cartItems.flatMap(
+      (item) => item.testNameMerge || []
+    );
 
   return {
     isPending,

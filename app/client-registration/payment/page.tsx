@@ -43,6 +43,7 @@ export default function PaymentSection() {
   const [selectedDiscountId, setSelectedDiscountId] = useState<number | null>(
     null
   );
+  const [Remarks, setRemarks] = useState<string>("");
   const [AmountPaid, setAmounPaid] = useState("");
   const { cartdata, totalAmount } = useGetCart(Number(clientId));
   const socketRef = useRef<Socket | null>(null);
@@ -55,6 +56,7 @@ export default function PaymentSection() {
         router.push(`/client-registration/success?clientId=${clientId}`);
         socketRef.current?.emit("submitClient");
         socketRef.current?.emit("SendToClientReceiving");
+        socketRef.current?.emit("callQueue");
       }
       setLoading(false);
     },
@@ -88,6 +90,7 @@ export default function PaymentSection() {
       paymentType: paymentType,
       paymentReference: paymentReference.trim() || "N/A",
       totalAmount: totalAmount,
+      remarks: Remarks || "No remarks",
     });
   };
 
@@ -168,6 +171,16 @@ export default function PaymentSection() {
                               {(Number(AmountPaid) - totalAmount).toFixed(2)}
                             </div>
                           )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Remarks</Label>
+                          <Input
+                            value={Remarks}
+                            onChange={(e) => {
+                              setRemarks(e.target.value);
+                            }}
+                            placeholder="Enter Remarks (optional)"
+                          />
                         </div>
                       </div>
 

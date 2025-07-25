@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BaseResponseType } from "@/types/BaseResponse";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import { ReleaseClientResult } from "@/app/api/services/client.api";
+import { ProcessClientResult } from "@/app/api/services/client.api";
 import { AppSocket } from "@/lib/socketClient";
 
 const useForAuthorization = () => {
@@ -11,8 +11,8 @@ const useForAuthorization = () => {
   const { setLoading } = useAppLoaderContext();
   const socket = AppSocket();
   const { mutate, isPending, isSuccess } = useMutation({
-    mutationFn: (variables: { id: number }) =>
-      ReleaseClientResult(variables.id),
+    mutationFn: (variables: { id: number; status: string }) =>
+      ProcessClientResult(variables, variables.id),
     onSuccess: (res) => {
       const data = res as BaseResponseType<boolean>;
       if (data.isSuccess) {
@@ -37,6 +37,7 @@ const useForAuthorization = () => {
     setLoading(true);
     mutate({
       id,
+      status: "DONE",
     });
   };
 
