@@ -199,10 +199,10 @@ export default function HematologyComponent() {
       toast.error("Missing client or package ID.");
       return;
     }
-    if (totalPercentage !== 100) {
-      toast.error("Total percentage of differential count must equal 100.");
-      return;
-    }
+    // if (totalPercentage !== 100) {
+    //   toast.error("Total percentage of differential count must equal 100.");
+    //   return;
+    // }
     setLoading(true);
     mutate({
       userId: Cookies.get("userid") || "",
