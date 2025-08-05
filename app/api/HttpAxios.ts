@@ -4,7 +4,11 @@ import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
 const httpHelper = axios.create({
+<<<<<<< HEAD
   baseURL: "http://192.168.1.26:80",
+=======
+  baseURL: "https://localhost:7188",
+>>>>>>> e9ab70699f053023cb31f3aa60ff0e58b7751db5
   // baseURL: "https://qlg1vp4r-7188.asse.devtunnels.ms",
   timeout: 60000,
   headers: {

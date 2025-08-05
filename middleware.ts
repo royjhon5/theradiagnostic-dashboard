@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
-  console.log("User from cookie:", user);
+  console.log(user);
 
   const isLoggedIn = !!(user?.username && user?.role);
 

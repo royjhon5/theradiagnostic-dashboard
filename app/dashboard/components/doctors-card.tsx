@@ -1,15 +1,16 @@
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+"use client";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import doctorData from "../doctordata.json";
 import { Badge } from "@/components/ui/badge";
-import { IconCircleFilled } from "@tabler/icons-react";
+import useGetUsers from "@/app/settings/user-management/hooks/useGetUsers";
 
 export default function DoctorsListing() {
+  const { usersData } = useGetUsers();
   return (
     <Card className="w-full border">
       <CardHeader className="px-6 py-4 flex flex-row justify-between items-center">
-        <h2 className="text-lg font-medium">Doctors</h2>
+        <h2 className="text-lg font-medium">Employees</h2>
         <a href="#" className="text-sm text-emerald-500 font-medium">
           See All
         </a>
@@ -18,36 +19,24 @@ export default function DoctorsListing() {
         <div className="grid grid-cols-3 mb-2">
           <div className="text-sm text-zinc-500 ">Name</div>
           <div className="text-sm text-zinc-500 text-center">Specialist</div>
-          <div className="text-sm text-zinc-500 text-center">Status</div>
+          <div className="text-sm text-zinc-500 text-center">License No.</div>
         </div>
         <ScrollArea className="h-80">
-          {doctorData.map((doctor, index) => (
+          {usersData.map((doctor, index) => (
             <div
               key={index}
               className="grid grid-cols-3 items-center py-2 px-3"
             >
               <div className="flex flex-start gap-2">
-                <Avatar>
-                  <AvatarImage src={doctor.image_avatar} alt="Marcus Curtis" />
-                </Avatar>
                 <span className="text-sm font-small text-center">
-                  {doctor.fullname}
+                  {doctor.firstName} {doctor.lastName}
                 </span>
               </div>
               <div className="text-sm text-zinc-500 text-center">
-                {doctor.specialist}
+                {doctor.roles}
               </div>
               <div className="flex flex-row justify-center items-center">
-                <Badge variant="outline">
-                  <IconCircleFilled
-                    className={
-                      doctor.status === "active"
-                        ? "animate-pulse fill-green-500 mr-2"
-                        : "fill-red-700 mr-2"
-                    }
-                  />
-                  {doctor.status === "active" ? "Active" : "Offline"}
-                </Badge>
+                <Badge variant="outline">{doctor.licenseNumber}</Badge>
               </div>
             </div>
           ))}
