@@ -1,10 +1,8 @@
 import Image from "next/image";
-import { ChartAreaInteractive } from "./components/chart-area-interactive";
 import DoctorsListing from "./components/doctors-card";
 import PatientListing from "./components/patients-card";
 import { SectionCards } from "./components/section-cards";
 import { Calendar } from "@/components/ui/calendar";
-import CardTimeLine from "./components/timeline-card";
 import ClientDashboard from "./components/client-stats";
 import { cookies } from "next/headers";
 import TodaysAppointment from "./components/todays-appointment-card";
@@ -13,11 +11,13 @@ import AvailableStaffCard from "./components/available-staff-card";
 export default async function Page() {
   const cookieStore = await cookies();
   const userCookie = cookieStore.get("user");
+  let user = null;
   let role = null;
   if (userCookie?.value) {
     try {
       const userData = JSON.parse(userCookie.value);
       role = userData.role;
+      user = userData.username;
     } catch (error) {
       console.error("Failed to parse user cookie:", error);
     }
@@ -28,7 +28,7 @@ export default async function Page() {
       <div className="col-span-4">
         <div className="flex flex-col gap-2 py-4 md:gap-3 md:py-6">
           {role === "doctor" ? "" : <SectionCards />}
-          <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-3 @5xl/main:grid-cols-3">
+          <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-2">
             {role === "doctor" ? (
               <>
                 <TodaysAppointment />
@@ -39,13 +39,12 @@ export default async function Page() {
               <>
                 <DoctorsListing />
                 <PatientListing />
-                <ClientDashboard />
               </>
             )}
           </div>
           <div className="px-4 lg:px-6">
             <div className="grid grid-cols-1">
-              <ChartAreaInteractive />
+              {/* <ChartAreaInteractive /> */}
             </div>
           </div>
         </div>
@@ -60,10 +59,10 @@ export default async function Page() {
             priority
             className="rounded-full"
           />
-          <h2 className="text-xl font-bold">Jakob Goerge</h2>
-          <p>Administrator</p>
-          <Calendar className="border rounded-lg w-full bg-background" />
-          <CardTimeLine />
+          <h2 className="text-xl font-bold">{user}</h2>
+          <p>{role}</p>
+          <Calendar className="border rounded-lg w-full bg-background flex justify-center" />
+          {/* <CardTimeLine /> */}
         </div>
       </div>
     </div>

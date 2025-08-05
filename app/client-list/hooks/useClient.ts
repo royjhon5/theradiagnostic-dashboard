@@ -21,6 +21,7 @@ const useClient = () => {
     isPending,
     refetchClient: refetch,
     clients: data?.response ? data.response : [],
+    clientdata: data?.response ?? [],
     options: clientOptions ? clientOptions : [],
   };
 };

@@ -47,6 +47,7 @@ export type ClientDto = {
   insuranceInfo: string;
   appointmentDate: string;
   appointmentType: string;
+  status: string;
 };
 
 export type GetClientDTO = {
