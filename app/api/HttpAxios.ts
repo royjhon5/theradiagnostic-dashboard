@@ -4,12 +4,8 @@ import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
 const httpHelper = axios.create({
-<<<<<<< HEAD
   baseURL: "http://192.168.1.26:80",
   // baseURL: "https://qlg1vp4r-7188.asse.devtunnels.ms",
-=======
-  baseURL: "https://localhost:7188",
->>>>>>> f12697b71e656de121722ce54acb79dd7aa926e6
   timeout: 60000,
   headers: {
     Authorization: `Bearer ${Cookies.get("token")}`,
